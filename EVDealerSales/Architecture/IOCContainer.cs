@@ -1,6 +1,8 @@
-﻿using EVDealerSales.Models.Interfaces;
+﻿using EVDealerSales.Models;
+using EVDealerSales.Models.Interfaces;
 using EVDealerSales.Models.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -30,15 +32,15 @@ namespace EVDealerSales.WebMVC.Architecture
                 .AddEnvironmentVariables()
                 .Build();
 
-            // Lấy connection string từ "DefaultConnection"
-            //var connectionString = configuration.GetConnectionString("DefaultConnection");
+            // Get the connection string from "DefaultConnection"
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-            //// Đăng ký DbContext với Npgsql - Postgres
-            //services.AddDbContext<EVDealerSaleDbContext>(options =>
-            //    options.UseNpgsql(connectionString,
-            //        sql => sql.MigrationsAssembly(typeof(MovieTheaterDbContext).Assembly.FullName)
-            //    )
-            //);
+            // Register DbContext with SQL Server
+            services.AddDbContext<EVDealerSalesDbContext>(options =>
+                options.UseSqlServer(connectionString,
+                    sql => sql.MigrationsAssembly(typeof(EVDealerSalesDbContext).Assembly.FullName)
+                )
+            );
 
             return services;
         }

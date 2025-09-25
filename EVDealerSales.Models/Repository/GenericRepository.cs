@@ -8,11 +8,11 @@ namespace EVDealerSales.Models.Repository
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : BaseEntity
     {
         private readonly IClaimsService _claimsService;
-        private readonly EVDealerDbContext _dbContext;
+        private readonly EVDealerSalesDbContext _dbContext;
         private readonly DbSet<TEntity> _dbSet;
         private readonly ICurrentTime _timeService;
 
-        public GenericRepository(EVDealerDbContext context, ICurrentTime timeService, IClaimsService claimsService)
+        public GenericRepository(EVDealerSalesDbContext context, ICurrentTime timeService, IClaimsService claimsService)
         {
             _dbSet = context.Set<TEntity>();
             _dbContext = context;

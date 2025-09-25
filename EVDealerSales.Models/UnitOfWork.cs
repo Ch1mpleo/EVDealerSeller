@@ -5,9 +5,9 @@ namespace EVDealerSales.Models
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly EVDealerDbContext _dbContext;
+        private readonly EVDealerSalesDbContext _dbContext;
 
-        public UnitOfWork(EVDealerDbContext dbContext)
+        public UnitOfWork(EVDealerSalesDbContext dbContext)
         {
             _dbContext = dbContext;
         }
