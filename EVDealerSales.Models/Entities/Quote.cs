@@ -1,4 +1,6 @@
-﻿namespace EVDealerSales.Models.Entities
+﻿using EVDealerSales.Models.Enums;
+
+namespace EVDealerSales.Models.Entities
 {
 
     // Báo giá
@@ -15,7 +17,7 @@
 
         public QuoteStatus Status { get; set; }
 
-        public DateTime? ValidUntil { get; set; }
+        public DateTime? ValidUntil { get; set; } 
         public string Remarks { get; set; }
     }
 }

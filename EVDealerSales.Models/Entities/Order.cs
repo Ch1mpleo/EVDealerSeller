@@ -1,4 +1,6 @@
-﻿namespace EVDealerSales.Models.Entities
+﻿using EVDealerSales.Models.Enums;
+
+namespace EVDealerSales.Models.Entities
 {
     public class Order : BaseEntity
     {
@@ -9,7 +11,7 @@
         public Guid StaffId { get; set; }
         public User Staff { get; set; }
         public DateTime OrderDate { get; set; }
-        public string Status { get; set; } = "pending";
+        public OrderStatus Status { get; set; }
         public string DiscountType { get; set; }
         public decimal? DiscountValue { get; set; }
         public string DiscountNote { get; set; }

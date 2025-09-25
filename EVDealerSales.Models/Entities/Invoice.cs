@@ -1,4 +1,6 @@
-﻿namespace EVDealerSales.Models.Entities
+﻿using EVDealerSales.Models.Enums;
+
+namespace EVDealerSales.Models.Entities
 {
     public class Invoice : BaseEntity
     {

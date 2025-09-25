@@ -1,4 +1,6 @@
-﻿namespace EVDealerSales.Models.Entities
+﻿using EVDealerSales.Models.Enums;
+
+namespace EVDealerSales.Models.Entities
 {
     public class Delivery : BaseEntity
     {
@@ -6,6 +8,6 @@
         public Order Order { get; set; }
         public DateTime? PlannedDate { get; set; }
         public DateTime? ActualDate { get; set; }
-        public DeliveryStatus Status { get; set; };
+        public DeliveryStatus Status { get; set; }
     }
 }
