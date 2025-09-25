@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EVDealerSales.Models
 {
-    public class EVDealerDbContext : DbContext
+    public class EVDealerSalesDbContext : DbContext
     {
-        public EVDealerDbContext()
+        public EVDealerSalesDbContext()
         { }
 
-        public EVDealerDbContext(DbContextOptions<EVDealerDbContext> options)
+        public EVDealerSalesDbContext(DbContextOptions<EVDealerSalesDbContext> options)
             : base(options)
         {
         }
