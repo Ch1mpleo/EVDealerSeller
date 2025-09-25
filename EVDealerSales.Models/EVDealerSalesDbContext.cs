@@ -74,26 +74,29 @@ namespace EVDealerSales.Models
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.Customer)
                 .WithMany(c => c.Orders)
-                .HasForeignKey(o => o.CustomerId);
+                .HasForeignKey(o => o.CustomerId)
+                .OnDelete(DeleteBehavior.Restrict); // Prevent cascading delete
 
             // Order ↔ User (staff, many-to-one)
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.Staff)
                 .WithMany(u => u.Orders)
-                .HasForeignKey(o => o.StaffId);
+                .HasForeignKey(o => o.StaffId)
+                .OnDelete(DeleteBehavior.Restrict); // Prevent cascading delete
 
             // Order ↔ Quote (optional, one-to-one-ish)
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.Quote)
                 .WithMany()
                 .HasForeignKey(o => o.QuoteId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Restrict); // Prevent cascading delete
 
             // OrderItem ↔ Order (many-to-one)
             modelBuilder.Entity<OrderItem>()
                 .HasOne(oi => oi.Order)
                 .WithMany(o => o.Items)
-                .HasForeignKey(oi => oi.OrderId);
+                .HasForeignKey(oi => oi.OrderId)
+                .OnDelete(DeleteBehavior.Cascade); // Allow cascading delete
 
             // OrderItem ↔ Vehicle (many-to-one)
             modelBuilder.Entity<OrderItem>()
@@ -105,13 +108,15 @@ namespace EVDealerSales.Models
             modelBuilder.Entity<Contract>()
                 .HasOne(c => c.Order)
                 .WithOne(o => o.Contract)
-                .HasForeignKey<Contract>(c => c.OrderId);
+                .HasForeignKey<Contract>(c => c.OrderId)
+                .OnDelete(DeleteBehavior.Cascade); // Allow cascading delete
 
             // Invoice ↔ Order (many-to-one)
             modelBuilder.Entity<Invoice>()
                 .HasOne(i => i.Order)
                 .WithMany(o => o.Invoices)
-                .HasForeignKey(i => i.OrderId);
+                .HasForeignKey(i => i.OrderId)
+                .OnDelete(DeleteBehavior.Restrict); // Prevent cascading delete
 
             // Invoice ↔ Customer (many-to-one)
             modelBuilder.Entity<Invoice>()
@@ -129,7 +134,8 @@ namespace EVDealerSales.Models
             modelBuilder.Entity<Delivery>()
                 .HasOne(d => d.Order)
                 .WithOne(o => o.Delivery)
-                .HasForeignKey<Delivery>(d => d.OrderId);
+                .HasForeignKey<Delivery>(d => d.OrderId)
+                .OnDelete(DeleteBehavior.Cascade); // Allow cascading delete
 
             // Feedback ↔ Customer (many-to-one)
             modelBuilder.Entity<Feedback>()
@@ -142,21 +148,21 @@ namespace EVDealerSales.Models
                 .HasOne(fb => fb.Order)
                 .WithMany(o => o.Feedbacks)
                 .HasForeignKey(fb => fb.OrderId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Restrict); // Prevent cascading delete
 
             // Feedback ↔ User (creator, optional)
             modelBuilder.Entity<Feedback>()
                 .HasOne(fb => fb.Creator)
                 .WithMany(u => u.CreatedFeedbacks)
                 .HasForeignKey(fb => fb.CreatedBy)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Restrict); // Prevent cascading delete
 
             // Feedback ↔ User (resolver, optional)
             modelBuilder.Entity<Feedback>()
                 .HasOne(fb => fb.Resolver)
                 .WithMany(u => u.ResolvedFeedbacks)
                 .HasForeignKey(fb => fb.ResolvedBy)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.NoAction); // Prevent cascading delete
         }
     }
 }

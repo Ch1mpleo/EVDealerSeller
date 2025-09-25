@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EVDealerSales.Models.Migrations
 {
     [DbContext(typeof(EVDealerSalesDbContext))]
-    [Migration("20250925160534_InitDb")]
+    [Migration("20250925190721_InitDb")]
     partial class InitDb
     {
         /// <inheritdoc />
@@ -717,7 +717,7 @@ namespace EVDealerSales.Models.Migrations
                     b.HasOne("EVDealerSales.Models.Entities.User", "Creator")
                         .WithMany("CreatedFeedbacks")
                         .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("EVDealerSales.Models.Entities.Customer", "Customer")
                         .WithMany("Feedbacks")
@@ -728,12 +728,12 @@ namespace EVDealerSales.Models.Migrations
                     b.HasOne("EVDealerSales.Models.Entities.Order", "Order")
                         .WithMany("Feedbacks")
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("EVDealerSales.Models.Entities.User", "Resolver")
                         .WithMany("ResolvedFeedbacks")
                         .HasForeignKey("ResolvedBy")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Creator");
 
@@ -755,7 +755,7 @@ namespace EVDealerSales.Models.Migrations
                     b.HasOne("EVDealerSales.Models.Entities.Order", "Order")
                         .WithMany("Invoices")
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Customer");
@@ -768,18 +768,18 @@ namespace EVDealerSales.Models.Migrations
                     b.HasOne("EVDealerSales.Models.Entities.Customer", "Customer")
                         .WithMany("Orders")
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("EVDealerSales.Models.Entities.Quote", "Quote")
                         .WithMany()
                         .HasForeignKey("QuoteId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("EVDealerSales.Models.Entities.User", "Staff")
                         .WithMany("Orders")
                         .HasForeignKey("StaffId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Customer");
