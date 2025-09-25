@@ -1,6 +1,31 @@
 services:
   evdealersales.webmvc:
-    image: ${DOCKER_REGISTRY-}evdealersaleswebmvc
     build:
       context: .
-      dockerfile: EVDealerSales/Dockerfile
+      dockerfile: EVDealerSales.WebMVC/Dockerfile
+    image: evdealersales-webmvc:latest
+    depends_on:
+      - evdealersales.database
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=evdealersales.database;Database=EVDealerSalesDb;User Id=sa;Password=12345;TrustServerCertificate=True;
+      - "JWT__SecretKey=EVDealerSales_SECRETKEY_SIEUCAPBAOMAT_VAYMACHUADU16KYTU"
+      - "JWT__Issuer=EVDealerSales_Issuer"
+      - "JWT__Audience=EVDealerSales_Audience" 
+    ports:
+      - "5000:8080"
+
+  evdealersales.database:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: evdealersales-sqlserver
+    environment:
+      SA_PASSWORD: "12345"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+
+volumes:
+  sqlserver-data:
+   driver: local
