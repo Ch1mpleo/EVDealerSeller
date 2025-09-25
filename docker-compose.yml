@@ -2,7 +2,7 @@ services:
   evdealersales.webmvc:
     build:
       context: .
-      dockerfile: EVDealerSales.WebMVC/Dockerfile
+      dockerfile: EVDealerSales/Dockerfile
     image: evdealersales-webmvc:latest
     depends_on:
       - evdealersales.database
