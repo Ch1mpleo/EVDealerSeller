@@ -1,0 +1,6 @@
+services:
+  evdealersales.webmvc:
+    image: ${DOCKER_REGISTRY-}evdealersaleswebmvc
+    build:
+      context: .
+      dockerfile: EVDealerSales/Dockerfile

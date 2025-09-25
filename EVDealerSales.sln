@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36511.14
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11018.127 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVDealerSales.WebMVC", "EVDealerSales\EVDealerSales.WebMVC.csproj", "{7E06CB3E-7449-4A27-A964-C9DD0F21A305}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVDealerSales.Models", "EVDealerSales.Models\EVDealerSales.Models.csproj", "{765D1A05-7D3D-423D-86D8-B6E1D3FB94A0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVDealerSales.Services", "EVDealerSales.Services\EVDealerSales.Services.csproj", "{48266FD6-C595-4F54-B6E4-6A34CE85E872}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{81DDED9D-158B-E303-5F62-77A2896D2A5A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{48266FD6-C595-4F54-B6E4-6A34CE85E872}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48266FD6-C595-4F54-B6E4-6A34CE85E872}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48266FD6-C595-4F54-B6E4-6A34CE85E872}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
