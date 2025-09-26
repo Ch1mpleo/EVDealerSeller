@@ -13,7 +13,7 @@ namespace EVDealerSales.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult LandingPage()
         {
             return View();
         }

@@ -13,7 +13,7 @@ services:
       - "JWT__Issuer=EVDealerSales_Issuer"
       - "JWT__Audience=EVDealerSales_Audience" 
     ports:
-      - "5000:8080"
+      - "5000:5000"
 
   evdealersales.database:
     image: mcr.microsoft.com/mssql/server:2022-latest

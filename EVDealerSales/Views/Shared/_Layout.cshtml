@@ -7,40 +7,150 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/EVDealerSales.styles.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    @RenderSection("Styles", required: false)
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">EVDealerSales</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+    <header class="modern-header">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container">
+                <a class="navbar-brand fw-bold" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-lightning-charge-fill me-2"></i>
+                    EVDealerSales
+                </a>
+
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-area="" asp-controller="Vehicles" asp-action="Index">Vehicles</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Services" asp-action="Index">Services</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="About" asp-action="Index">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Contact" asp-action="Index">Contact</a>
                         </li>
                     </ul>
+
+                    <div class="navbar-nav">
+                        <a class="nav-link me-3" href="tel:+1234567890">
+                            <i class="bi bi-telephone me-1"></i>
+                            Call 113 not me nigga 🥀💔
+                        </a>
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
+    <main class="main-content">
+        @RenderBody()
+    </main>
+
+    <footer class="modern-footer">
         <div class="container">
-            &copy; 2025 - EVDealerSales - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="row gy-4">
+                <div class="col-lg-4">
+                    <div class="footer-brand">
+                        <h5 class="fw-bold mb-3">
+                            <i class="bi bi-lightning-charge-fill me-2"></i>
+                            EVDealerSales
+                        </h5>
+                        <p class="text-muted mb-3">
+                            Leading the future of sustainable transportation with premium electric vehicles
+                            and exceptional customer service.
+                        </p>
+                        <div class="social-links">
+                            <a href="#" class="social-link me-3"><i class="bi bi-facebook"></i></a>
+                            <a href="#" class="social-link me-3"><i class="bi bi-twitter"></i></a>
+                            <a href="#" class="social-link me-3"><i class="bi bi-instagram"></i></a>
+                            <a href="#" class="social-link"><i class="bi bi-linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="fw-semibold mb-3">Vehicles</h6>
+                    <ul class="list-unstyled footer-links">
+                        <li><a href="#">Electric Cars</a></li>
+                        <li><a href="#">Electric SUVs</a></li>
+                        <li><a href="#">Electric Trucks</a></li>
+                        <li><a href="#">Luxury EVs</a></li>
+                        <li><a href="#">Commercial EVs</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="fw-semibold mb-3">Services</h6>
+                    <ul class="list-unstyled footer-links">
+                        <li><a href="#">Sales</a></li>
+                        <li><a href="#">Financing</a></li>
+                        <li><a href="#">Service & Repair</a></li>
+                        <li><a href="#">Charging Solutions</a></li>
+                        <li><a href="#">Trade-In</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="fw-semibold mb-3">Company</h6>
+                    <ul class="list-unstyled footer-links">
+                        <li><a asp-area="" asp-controller="About" asp-action="Index">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">News</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="fw-semibold mb-3">Contact</h6>
+                    <ul class="list-unstyled footer-contact">
+                        <li class="mb-2">
+                            <i class="bi bi-geo-alt me-2"></i>
+                            123 Electric Ave<br>
+                            Green City, GC 12345
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-telephone me-2"></i>
+                            113 🥀💔
+                        </li>
+                        <li>
+                            <i class="bi bi-envelope me-2"></i>
+                            info@evdealersales.com
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr class="my-4">
+
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="text-muted mb-0">
+                        &copy; 2025 EVDealerSales. All rights reserved.
+                    </p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="text-muted mb-0">
+                        Powering the future of transportation
+                    </p>
+                </div>
+            </div>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
