@@ -86,20 +86,11 @@ namespace EVDealerSales.WebMVC.Architecture
                 });
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("CustomerPolicy", policy =>
-                    policy.RequireRole("Customer"));
+                options.AddPolicy("StaffPolicy", policy =>
+                    policy.RequireRole("Staff"));
 
-                options.AddPolicy("MemberPolicy", policy =>
-                    policy.RequireRole("Member"));
-
-                options.AddPolicy("EmployeePolicy", policy =>
-                    policy.RequireRole("Employee"));
-
-                options.AddPolicy("AdminPolicy", policy =>
-                    policy.RequireRole("Admin"));
-
-                options.AddPolicy("SystemOwnerPolicy", policy =>
-                    policy.RequireRole("SystemOwner"));
+                options.AddPolicy("ManagerPolicy", policy =>
+                    policy.RequireRole("Manager"));
             });
 
             return services;
