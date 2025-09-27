@@ -7,9 +7,11 @@ namespace EVDealerSales.Models
     {
         private readonly EVDealerSalesDbContext _dbContext;
 
-        public UnitOfWork(EVDealerSalesDbContext dbContext)
+        public UnitOfWork(EVDealerSalesDbContext dbContext,
+            IGenericRepository<User> userRepository)
         {
             _dbContext = dbContext;
+            Users = userRepository;
         }
 
         public IGenericRepository<User> Users { get; }

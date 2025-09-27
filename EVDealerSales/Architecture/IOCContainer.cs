@@ -2,6 +2,8 @@
 using EVDealerSales.Models.Commons;
 using EVDealerSales.Models.Interfaces;
 using EVDealerSales.Models.Repository;
+using EVDealerSales.Services.Interfaces;
+using EVDealerSales.Services.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -52,6 +54,7 @@ namespace EVDealerSales.WebMVC.Architecture
             services.AddScoped<ICurrentTime, CurrentTime>();
             services.AddScoped<IClaimsService, ClaimsService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IAuthService, AuthService>();
 
             services.AddHttpContextAccessor();
 
