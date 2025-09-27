@@ -1,5 +1,3 @@
-using System.Diagnostics;
-using EVDealerSales.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EVDealerSales.Controllers
