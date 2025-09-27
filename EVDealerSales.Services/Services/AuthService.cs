@@ -14,10 +14,10 @@ namespace EVDealerSales.Services.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger _logger;
 
-        public AuthService(IUnitOfWork unitOfWork)
+        public AuthService(IUnitOfWork unitOfWork, ILogger logger)
         {
             _unitOfWork = unitOfWork;
-            _logger = Log.Logger;
+            _logger = logger;
         }
 
         public async Task<LoginResponseDto?> LoginAsync(LoginRequestDto loginDto, IConfiguration configuration)
