@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EVDealerSales.Models.Migrations
 {
     [DbContext(typeof(EVDealerSalesDbContext))]
-    [Migration("20250925190721_InitDb")]
+    [Migration("20250927145746_InitDb")]
     partial class InitDb
     {
         /// <inheritdoc />
@@ -622,6 +622,10 @@ namespace EVDealerSales.Models.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
                         .IsRequired()
