@@ -1,0 +1,38 @@
+﻿@model EVDealerSales.Models.Commons.Pagination<EVDealerSales.Models.DTOs.VehicleDTOs.VehicleDto>
+@{
+    ViewData["Title"] = "Vehicle List";
+}
+<h2>Vehicle List</h2>
+<form method="get">
+    <input name="search" value="@ViewBag.Search" placeholder="Search..." />
+    <button type="submit">Search</button>
+</form>
+<table border="1">
+    <tr>
+        <th>Model Name</th>
+        <th>Trim Name</th>
+        <th>Model Year</th>
+        <th>Base Price</th>
+        <th>Is Active</th>
+        <th>Actions</th>
+    </tr>
+    @foreach (var v in Model)
+    {
+        <tr>
+            <td>@v.ModelName</td>
+            <td>@v.TrimName</td>
+            <td>@v.ModelYear</td>
+            <td>@v.BasePrice</td>
+            <td>@v.IsActive</td>
+            <td>
+                <a asp-action="Details" asp-route-id="@v.Id">Details</a> |
+                <a asp-action="Edit" asp-route-id="@v.Id">Edit</a> |
+                <a asp-action="Delete" asp-route-id="@v.Id"
+                   onclick="return confirm('Bạn có chắc chắn muốn xóa xe @v.ModelName không?');">
+                    Delete
+                </a>
+            </td>
+        </tr>
+    }
+</table>
+<a asp-action="Create">Create New Vehicle</a>

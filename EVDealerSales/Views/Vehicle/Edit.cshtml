@@ -1,0 +1,30 @@
+﻿@model EVDealerSales.Models.DTOs.VehicleDTOs.UpdateVehicleDto
+@{
+    ViewData["Title"] = "Edit Vehicle";
+}
+<h2>Edit Vehicle</h2>
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div>
+        <label>Model Name</label>
+        <input asp-for="ModelName" />
+    </div>
+    <div>
+        <label>Trim Name</label>
+        <input asp-for="TrimName" />
+    </div>
+    <div>
+        <label>Model Year</label>
+        <input asp-for="ModelYear" type="number" />
+    </div>
+    <div>
+        <label>Base Price</label>
+        <input asp-for="BasePrice" type="number" step="0.01" />
+    </div>
+    <div>
+        <label>Is Active</label>
+        <input asp-for="IsActive" type="checkbox" />
+    </div>
+    <button type="submit">Save</button>
+    <a asp-action="Index">Back to List</a>
+</form>

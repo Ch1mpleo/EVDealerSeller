@@ -1,0 +1,14 @@
+﻿@model EVDealerSales.Models.DTOs.VehicleDTOs.VehicleDto
+@{
+    ViewData["Title"] = "Vehicle Details";
+}
+<h2>Vehicle Details</h2>
+<div>
+    <strong>Model Name:</strong> @Model.ModelName <br />
+    <strong>Trim Name:</strong> @Model.TrimName <br />
+    <strong>Model Year:</strong> @Model.ModelYear <br />
+    <strong>Base Price:</strong> @Model.BasePrice <br />
+    <strong>Is Active:</strong> @Model.IsActive <br />
+</div>
+<a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+<a asp-action="Index">Back to List</a>

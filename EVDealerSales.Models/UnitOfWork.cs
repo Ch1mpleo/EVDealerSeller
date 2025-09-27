@@ -8,13 +8,16 @@ namespace EVDealerSales.Models
         private readonly EVDealerSalesDbContext _dbContext;
 
         public UnitOfWork(EVDealerSalesDbContext dbContext,
-            IGenericRepository<User> userRepository)
+            IGenericRepository<User> userRepository,
+            IGenericRepository<Vehicle> vehicleRepository)
         {
             _dbContext = dbContext;
             Users = userRepository;
+            Vehicles = vehicleRepository;
         }
 
         public IGenericRepository<User> Users { get; }
+        public IGenericRepository<Vehicle> Vehicles { get; }
         public void Dispose()
         {
             _dbContext.Dispose();
