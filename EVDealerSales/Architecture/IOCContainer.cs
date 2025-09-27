@@ -1,4 +1,5 @@
 ﻿using EVDealerSales.Models;
+using EVDealerSales.Models.Commons;
 using EVDealerSales.Models.Interfaces;
 using EVDealerSales.Models.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -48,6 +49,9 @@ namespace EVDealerSales.WebMVC.Architecture
         public static IServiceCollection SetupBusinessServicesLayer(this IServiceCollection services)
         {
             // Inject service vào DI container
+            services.AddScoped<ICurrentTime, CurrentTime>();
+            services.AddScoped<IClaimsService, ClaimsService>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddHttpContextAccessor();
 
