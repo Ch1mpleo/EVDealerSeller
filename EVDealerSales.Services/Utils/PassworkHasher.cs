@@ -52,5 +52,43 @@ namespace EVDealerSales.Services.Utils
                 return hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             }
         }
+
+        public static string GenerateNumeric(int length = 6)
+        {
+            if (length <= 0) throw new ArgumentOutOfRangeException(nameof(length), "Length phải lớn hơn 0");
+            var digits = new char[length];
+            using var rng = RandomNumberGenerator.Create();
+            var buffer = new byte[4];
+
+            for (var i = 0; i < length; i++)
+            {
+                rng.GetBytes(buffer);
+                var value = BitConverter.ToUInt32(buffer, 0);
+                digits[i] = (char)('0' + value % 10);
+            }
+
+            return new string(digits);
+        }
+
+        /// <summary>
+        ///     Gen OTP kết hợp chữ cái hoa, chữ cái thường và chữ số với độ dài cho trước (mặc định 8).
+        /// </summary>
+        public static string GenerateAlphanumeric(int length = 8)
+        {
+            if (length <= 0) throw new ArgumentOutOfRangeException(nameof(length), "Length phải lớn hơn 0");
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var result = new StringBuilder(length);
+            using var rng = RandomNumberGenerator.Create();
+            var buffer = new byte[4];
+
+            for (var i = 0; i < length; i++)
+            {
+                rng.GetBytes(buffer);
+                var value = BitConverter.ToUInt32(buffer, 0);
+                result.Append(chars[(int)(value % (uint)chars.Length)]);
+            }
+
+            return result.ToString();
+        }
     }
 }
