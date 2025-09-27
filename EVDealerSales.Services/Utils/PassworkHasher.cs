@@ -12,18 +12,15 @@ namespace EVDealerSales.Services.Utils
             if (string.IsNullOrEmpty(password))
                 throw new ArgumentException("Password cannot be null or empty.");
 
-            using (var rng = new RNGCryptoServiceProvider())
-            {
-                // Generate a random salt
-                var salt = new byte[SaltSize];
-                rng.GetBytes(salt);
+            // Generate a random salt using RandomNumberGenerator
+            var salt = new byte[SaltSize];
+            RandomNumberGenerator.Fill(salt);
 
-                // Hash the password
-                var hash = HashPasswordWithSalt(password, salt);
+            // Hash the password
+            var hash = HashPasswordWithSalt(password, salt);
 
-                // Combine the salt and hash into a single string
-                return $"{Convert.ToBase64String(salt)}:{Convert.ToBase64String(hash)}";
-            }
+            // Combine the salt and hash into a single string
+            return $"{Convert.ToBase64String(salt)}:{Convert.ToBase64String(hash)}";
         }
 
         public bool VerifyPassword(string password, string? storedHash)

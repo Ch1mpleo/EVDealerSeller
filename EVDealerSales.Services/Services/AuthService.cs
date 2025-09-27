@@ -29,7 +29,7 @@ namespace EVDealerSales.Services.Services
                 if (loginDto == null || string.IsNullOrWhiteSpace(loginDto.Email) || string.IsNullOrWhiteSpace(loginDto.Password))
                 {
                     _logger.Warning("Login failed: missing email or password.");
-                    return null;
+                    throw new ArgumentException("Email and password are required.");
                 }
 
                 var user = await _unitOfWork.Users.FirstOrDefaultAsync(u => u.Email == loginDto.Email && u.IsActive);
@@ -37,15 +37,15 @@ namespace EVDealerSales.Services.Services
                 if (user == null)
                 {
                     _logger.Warning($"Login failed: user {loginDto.Email} not found or inactive.");
-                    return null;
+                    throw new KeyNotFoundException("User not found or inactive.");
                 }
 
                 var passwordHasher = new PasswordHasher();
-                //if (!passwordHasher.VerifyPassword(loginDto.Password, user.PasswordHash))
-                //{
-                //    _logger.Warning($"Login failed: invalid password for {loginDto.Email}.");
-                //    return null;
-                //}
+                if (!passwordHasher.VerifyPassword(loginDto.Password, user.Password))
+                {
+                    _logger.Warning($"Login failed: invalid password for {loginDto.Email}.");
+                    throw new UnauthorizedAccessException("Invalid credentials.");
+                }
 
                 var jwtToken = JwtUtils.GenerateJwtToken(
                     user.Id,
@@ -97,13 +97,6 @@ namespace EVDealerSales.Services.Services
             try
             {
                 _logger.Information("Registering new user");
-                if (registrationDto == null ||
-                    string.IsNullOrWhiteSpace(registrationDto.FullName) ||
-                    string.IsNullOrWhiteSpace(registrationDto.Email) ||
-                    string.IsNullOrWhiteSpace(registrationDto.Phone))
-                {
-                    return null;
-                }
 
                 //if (await UserExistsAsync(registrationDto.Email))
                 //{
@@ -111,9 +104,7 @@ namespace EVDealerSales.Services.Services
                 //    throw ErrorHelper.Conflict("Email have been used.");
                 //}
 
-                var rawPassword = PasswordHasher.GenerateAlphanumeric(12);
-
-                var hashedPassword = new PasswordHasher().HashPassword(rawPassword);
+                var hashedPassword = new PasswordHasher().HashPassword(registrationDto.Password);
 
                 var user = new User
                 {
@@ -121,6 +112,7 @@ namespace EVDealerSales.Services.Services
                     Email = registrationDto.Email,
                     Phone = registrationDto.Phone,
                     Role = RoleType.DealerStaff,
+                    Password = hashedPassword ?? throw new Exception("Password hashing failed."),
                     IsActive = true
                 };
 
