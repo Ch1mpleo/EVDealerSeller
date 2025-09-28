@@ -3,5 +3,6 @@
     public class QuoteDto
     {
         virtual public int Id { get; set; }
+        virtual public string CustomerName { get; set; }
     }
 }
