@@ -18,7 +18,7 @@ namespace EVDealerSales.WebMVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult LoginPage()
         {
             return View();
         }
@@ -55,7 +55,7 @@ namespace EVDealerSales.WebMVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult Register()
+        public IActionResult RegisterPage()
         {
             return View();
         }
