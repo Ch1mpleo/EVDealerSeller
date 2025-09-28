@@ -2,5 +2,6 @@
 {
     public class QuoteDto
     {
+        virtual public int Id { get; set; }
     }
 }
