@@ -1,0 +1,114 @@
+﻿@model EVDealerSales.Models.Commons.Pagination<EVDealerSales.Models.DTOs.VehicleDTOs.VehicleDto>
+@{
+    ViewData["Title"] = "Vehicle List";
+}
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle me-2"></i>
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold mb-0"><i class="bi bi-car-front me-2 text-primary"></i>Vehicle List</h2>
+        <a asp-action="CreatePage" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i> Add Vehicle
+        </a>
+    </div>
+    <form method="get" class="row g-2 mb-3">
+        <div class="col-md-4">
+            <input name="search" value="@ViewBag.Search" class="form-control" placeholder="Search by model or trim..." />
+        </div>
+        <div class="col-md-2">
+            <select name="sortBy" class="form-select">
+                <option value="">Sort By</option>
+                <option value="modelname">Model Name</option>
+                <option value="modelyear">Model Year</option>
+                <option value="baseprice">Base Price</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <select name="isDescending" class="form-select">
+                <option value="false">Ascending</option>
+                <option value="true">Descending</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-outline-primary w-100">
+                <i class="bi bi-search"></i> Search
+            </button>
+        </div>
+    </form>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle bg-white">
+            <thead class="table-light">
+                <tr>
+                    <th>Model Name</th>
+                    <th>Trim Name</th>
+                    <th>Model Year</th>
+                    <th>Base Price</th>
+                    <th>Battery (kWh)</th>
+                    <th>Range (KM)</th>
+                    <th>Top Speed</th>
+                    <th>Is Active</th>
+                    <th style="width: 180px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var v in Model)
+                {
+                    <tr>
+                        <td>@v.ModelName</td>
+                        <td>@v.TrimName</td>
+                        <td>@v.ModelYear</td>
+                        <td>@v.BasePrice.ToString("C0")</td>
+                        <td>@v.BatteryCapacity</td>
+                        <td>@v.RangeKM</td>
+                        <td>@v.TopSpeed</td>
+                        <td>
+                            @if (v.IsActive)
+                            {
+                                <span class="badge bg-success"><i class="bi bi-check-circle"></i> Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary"><i class="bi bi-x-circle"></i> Inactive</span>
+                            }
+                        </td>
+                        <td>
+                            <a asp-action="DetailsPage" asp-route-id="@v.Id" class="btn btn-sm btn-outline-info me-1">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a asp-action="EditPage" asp-route-id="@v.Id" class="btn btn-sm btn-outline-warning me-1">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a asp-action="DeletePage" asp-route-id="@v.Id" class="btn btn-sm btn-outline-danger"
+                               onclick="return confirm('Are you sure you want to delete this vehicle?');">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <!-- Pagination -->
+    <nav>
+        <ul class="pagination justify-content-center">
+            <li class="page-item @(Model.HasPrevious ? "" : "disabled")">
+                <a class="page-link" asp-action="Index" asp-route-page="@(Model.CurrentPage - 1)" asp-route-search="@ViewBag.Search">Previous</a>
+            </li>
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-page="@i" asp-route-search="@ViewBag.Search">@i</a>
+                </li>
+            }
+            <li class="page-item @(Model.HasNext ? "" : "disabled")">
+                <a class="page-link" asp-action="Index" asp-route-page="@(Model.CurrentPage + 1)" asp-route-search="@ViewBag.Search">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>
