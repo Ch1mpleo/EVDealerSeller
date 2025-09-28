@@ -13,7 +13,7 @@
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold mb-0"><i class="bi bi-car-front me-2 text-primary"></i>Vehicle List</h2>
-        <a asp-action="Create" class="btn btn-primary">
+        <a asp-action="CreatePage" class="btn btn-primary">
             <i class="bi bi-plus-circle me-1"></i> Add Vehicle
         </a>
     </div>
@@ -49,6 +49,9 @@
                     <th>Trim Name</th>
                     <th>Model Year</th>
                     <th>Base Price</th>
+                    <th>Battery (kWh)</th>
+                    <th>Range (KM)</th>
+                    <th>Top Speed</th>
                     <th>Is Active</th>
                     <th style="width: 180px;">Actions</th>
                 </tr>
@@ -61,6 +64,9 @@
                         <td>@v.TrimName</td>
                         <td>@v.ModelYear</td>
                         <td>@v.BasePrice.ToString("C0")</td>
+                        <td>@v.BatteryCapacity</td>
+                        <td>@v.RangeKM</td>
+                        <td>@v.TopSpeed</td>
                         <td>
                             @if (v.IsActive)
                             {
@@ -72,13 +78,13 @@
                             }
                         </td>
                         <td>
-                            <a asp-action="Details" asp-route-id="@v.Id" class="btn btn-sm btn-outline-info me-1">
+                            <a asp-action="DetailsPage" asp-route-id="@v.Id" class="btn btn-sm btn-outline-info me-1">
                                 <i class="bi bi-eye"></i>
                             </a>
-                            <a asp-action="Edit" asp-route-id="@v.Id" class="btn btn-sm btn-outline-warning me-1">
+                            <a asp-action="EditPage" asp-route-id="@v.Id" class="btn btn-sm btn-outline-warning me-1">
                                 <i class="bi bi-pencil"></i>
                             </a>
-                            <a asp-action="Delete" asp-route-id="@v.Id" class="btn btn-sm btn-outline-danger"
+                            <a asp-action="DeletePage" asp-route-id="@v.Id" class="btn btn-sm btn-outline-danger"
                                onclick="return confirm('Are you sure you want to delete this vehicle?');">
                                 <i class="bi bi-trash"></i>
                             </a>
@@ -105,4 +111,4 @@
             </li>
         </ul>
     </nav>
-</div>v
+</div>

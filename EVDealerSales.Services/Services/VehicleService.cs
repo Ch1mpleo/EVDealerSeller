@@ -23,12 +23,36 @@ namespace EVDealerSales.Services.Services
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(dto.ModelName))
+                    throw new ArgumentException("Model name is required.");
+                if (string.IsNullOrWhiteSpace(dto.TrimName))
+                    throw new ArgumentException("Trim name is required.");
+                if (!dto.ModelYear.HasValue || dto.ModelYear < 1886 || dto.ModelYear > DateTime.Now.Year + 1)
+                    throw new ArgumentException("Model year is invalid.");
+                if (dto.BasePrice < 0)
+                    throw new ArgumentException("Base price must be non-negative.");
+                if (dto.BatteryCapacity < 0)
+                    throw new ArgumentException("Battery capacity must be non-negative.");
+                if (dto.RangeKM < 0)
+                    throw new ArgumentException("RangeKM must be non-negative.");
+                if (dto.ChargingTime < 0)
+                    throw new ArgumentException("Charging time must be non-negative.");
+                if (dto.TopSpeed < 0)
+                    throw new ArgumentException("Top speed must be non-negative.");
+                if (!string.IsNullOrWhiteSpace(dto.ImageUrl) && !Uri.IsWellFormedUriString(dto.ImageUrl, UriKind.Absolute))
+                    throw new ArgumentException("ImageUrl is not a valid URL.");
+
                 var vehicle = new Vehicle
                 {
                     ModelName = dto.ModelName,
                     TrimName = dto.TrimName,
                     ModelYear = dto.ModelYear ?? 0,
                     BasePrice = dto.BasePrice,
+                    ImageUrl = dto.ImageUrl,
+                    BatteryCapacity = dto.BatteryCapacity,
+                    RangeKM = dto.RangeKM,
+                    ChargingTime = dto.ChargingTime,
+                    TopSpeed = dto.TopSpeed,
                     IsActive = dto.IsActive
                 };
 
@@ -42,6 +66,11 @@ namespace EVDealerSales.Services.Services
                     TrimName = createdVehicle.TrimName,
                     ModelYear = createdVehicle.ModelYear ?? 0,
                     BasePrice = createdVehicle.BasePrice,
+                    ImageUrl = createdVehicle.ImageUrl,
+                    BatteryCapacity = createdVehicle.BatteryCapacity,
+                    RangeKM = createdVehicle.RangeKM,
+                    ChargingTime = createdVehicle.ChargingTime,
+                    TopSpeed = createdVehicle.TopSpeed,
                     IsActive = createdVehicle.IsActive
                 };
             }
@@ -118,6 +147,11 @@ namespace EVDealerSales.Services.Services
                     TrimName = v.TrimName,
                     ModelYear = v.ModelYear ?? 0,
                     BasePrice = v.BasePrice,
+                    ImageUrl = v.ImageUrl,
+                    BatteryCapacity = v.BatteryCapacity,
+                    RangeKM = v.RangeKM,
+                    ChargingTime = v.ChargingTime,
+                    TopSpeed = v.TopSpeed,
                     IsActive = v.IsActive
                 }).ToList();
 
@@ -150,6 +184,11 @@ namespace EVDealerSales.Services.Services
                     TrimName = vehicle.TrimName,
                     ModelYear = vehicle.ModelYear ?? 0,
                     BasePrice = vehicle.BasePrice,
+                    ImageUrl = vehicle.ImageUrl,
+                    BatteryCapacity = vehicle.BatteryCapacity,
+                    RangeKM = vehicle.RangeKM,
+                    ChargingTime = vehicle.ChargingTime,
+                    TopSpeed = vehicle.TopSpeed,
                     IsActive = vehicle.IsActive
                 };
             }
@@ -173,29 +212,53 @@ namespace EVDealerSales.Services.Services
 
                 bool isUpdated = false;
 
-                if(!string.IsNullOrWhiteSpace(dto.ModelName) && dto.ModelName != vehicle.ModelName)
+                if (!string.IsNullOrWhiteSpace(dto.ModelName) && dto.ModelName != vehicle.ModelName)
                 {
                     vehicle.ModelName = dto.ModelName;
                     isUpdated = true;
                 }
 
-                if(!string.IsNullOrWhiteSpace(dto.TrimName) && dto.TrimName != vehicle.TrimName)
+                if (!string.IsNullOrWhiteSpace(dto.TrimName) && dto.TrimName != vehicle.TrimName)
                 {
                     vehicle.TrimName = dto.TrimName;
                     isUpdated = true;
                 }
 
-                if(dto.ModelYear.HasValue && dto.ModelYear != vehicle.ModelYear)
-                {
-                    vehicle.ModelYear = dto.ModelYear;
-                    isUpdated = true;
-                }
-
-                if (dto.ModelYear.HasValue && vehicle.ModelYear != dto.ModelYear)
+                if (dto.ModelYear.HasValue && dto.ModelYear != vehicle.ModelYear)
                 {
                     if (dto.ModelYear < 1886)
                         throw new ArgumentException("ModelYear is invalid.");
                     vehicle.ModelYear = dto.ModelYear;
+                    isUpdated = true;
+                }
+
+                if (!string.IsNullOrWhiteSpace(dto.ImageUrl) && dto.ImageUrl != vehicle.ImageUrl)
+                {
+                    vehicle.ImageUrl = dto.ImageUrl;
+                    isUpdated = true;
+                }
+
+                if (dto.BatteryCapacity != vehicle.BatteryCapacity)
+                {
+                    vehicle.BatteryCapacity = dto.BatteryCapacity;
+                    isUpdated = true;
+                }
+
+                if (dto.RangeKM != vehicle.RangeKM)
+                {
+                    vehicle.RangeKM = dto.RangeKM;
+                    isUpdated = true;
+                }
+
+                if (dto.ChargingTime != vehicle.ChargingTime)
+                {
+                    vehicle.ChargingTime = dto.ChargingTime;
+                    isUpdated = true;
+                }
+
+                if (dto.TopSpeed != vehicle.TopSpeed)
+                {
+                    vehicle.TopSpeed = dto.TopSpeed;
                     isUpdated = true;
                 }
 
@@ -210,6 +273,7 @@ namespace EVDealerSales.Services.Services
                     vehicle.IsActive = dto.IsActive;
                     isUpdated = true;
                 }
+
                 if (!isUpdated)
                 {
                     _logger.LogWarning($"[UpdateVehicle] No changes detected for VehicleId: {id}");
@@ -218,8 +282,13 @@ namespace EVDealerSales.Services.Services
                         Id = vehicle.Id,
                         ModelName = vehicle.ModelName,
                         TrimName = vehicle.TrimName,
-                        ModelYear = vehicle.ModelYear ?? 0,
+                        ModelYear = vehicle.ModelYear,
                         BasePrice = vehicle.BasePrice,
+                        ImageUrl = vehicle.ImageUrl,
+                        BatteryCapacity = vehicle.BatteryCapacity,
+                        RangeKM = vehicle.RangeKM,
+                        ChargingTime = vehicle.ChargingTime,
+                        TopSpeed = vehicle.TopSpeed,
                         IsActive = vehicle.IsActive
                     };
                 }
@@ -232,8 +301,13 @@ namespace EVDealerSales.Services.Services
                     Id = vehicle.Id,
                     ModelName = vehicle.ModelName,
                     TrimName = vehicle.TrimName,
-                    ModelYear = vehicle.ModelYear ?? 0,
+                    ModelYear = vehicle.ModelYear,
                     BasePrice = vehicle.BasePrice,
+                    ImageUrl = vehicle.ImageUrl,
+                    BatteryCapacity = vehicle.BatteryCapacity,
+                    RangeKM = vehicle.RangeKM,
+                    ChargingTime = vehicle.ChargingTime,
+                    TopSpeed = vehicle.TopSpeed,
                     IsActive = vehicle.IsActive
                 };
             }

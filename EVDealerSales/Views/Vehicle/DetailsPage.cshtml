@@ -19,6 +19,25 @@
                         <dd class="col-sm-8">@Model.ModelYear</dd>
                         <dt class="col-sm-4">Base Price</dt>
                         <dd class="col-sm-8">@Model.BasePrice.ToString("C0")</dd>
+                        <dt class="col-sm-4">Image</dt>
+                        <dd class="col-sm-8">
+                            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                            {
+                                <img src="@Model.ImageUrl" alt="Vehicle Image" class="img-fluid rounded" style="max-height:150px;" />
+                            }
+                            else
+                            {
+                                <span class="text-muted">No image</span>
+                            }
+                        </dd>
+                        <dt class="col-sm-4">Battery Capacity</dt>
+                        <dd class="col-sm-8">@Model.BatteryCapacity</dd>
+                        <dt class="col-sm-4">Range (KM)</dt>
+                        <dd class="col-sm-8">@Model.RangeKM</dd>
+                        <dt class="col-sm-4">Charging Time (min)</dt>
+                        <dd class="col-sm-8">@Model.ChargingTime</dd>
+                        <dt class="col-sm-4">Top Speed (km/h)</dt>
+                        <dd class="col-sm-8">@Model.TopSpeed</dd>
                         <dt class="col-sm-4">Is Active</dt>
                         <dd class="col-sm-8">
                             @if (Model.IsActive)
@@ -35,7 +54,7 @@
                         <a asp-action="Index" class="btn btn-outline-secondary">
                             <i class="bi bi-arrow-left"></i> Back
                         </a>
-                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                        <a asp-action="EditPage" asp-route-id="@Model.Id" class="btn btn-warning">
                             <i class="bi bi-pencil"></i> Edit
                         </a>
                     </div>

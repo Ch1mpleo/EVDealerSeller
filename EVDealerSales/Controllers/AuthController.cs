@@ -24,11 +24,11 @@ namespace EVDealerSales.WebMVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginRequestDto loginDto)
+        public async Task<IActionResult> LoginPage(LoginRequestDto loginDto)
         {
             if (!ModelState.IsValid)
             {
-                return View("Login", loginDto);
+                return View("LoginPage", loginDto);
             }
 
             try
@@ -37,7 +37,7 @@ namespace EVDealerSales.WebMVC.Controllers
                 if (response == null)
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return View("Login", loginDto);
+                    return View("LoginPage", loginDto);
                 }
                 _logger.LogInformation($"User {loginDto.Email} logged in successfully.");
 
@@ -50,7 +50,7 @@ namespace EVDealerSales.WebMVC.Controllers
             {
                 _logger.LogError($"Login error for {loginDto.Email}: {ex.Message}");
                 ModelState.AddModelError(string.Empty, ex.Message);
-                return View("Login", loginDto);
+                return View("LoginPage", loginDto);
             }
         }
 
@@ -61,7 +61,7 @@ namespace EVDealerSales.WebMVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(UserRegistrationDto registrationDto)
+        public async Task<IActionResult> RegisterPage(UserRegistrationDto registrationDto)
         {
             if (!ModelState.IsValid)
             {
@@ -78,7 +78,7 @@ namespace EVDealerSales.WebMVC.Controllers
                 }
 
                 // Đăng ký thành công, chuyển hướng đến trang đăng nhập
-                return RedirectToAction("Login");
+                return RedirectToAction("LoginPage");
             }
             catch (Exception ex)
             {

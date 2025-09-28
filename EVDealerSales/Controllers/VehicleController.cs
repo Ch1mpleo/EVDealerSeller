@@ -21,28 +21,41 @@ namespace EVDealerSales.WebMVC.Controllers
             return View(vehicles);
         }
 
-        public async Task<IActionResult> Details(Guid id)
+        public async Task<IActionResult> DetailsPage(Guid id)
         {
             var vehicle = await _vehicleService.GetVehicleByIdAsync(id);
             if (vehicle == null) return NotFound();
             return View(vehicle);
         }
 
-        public IActionResult Create()
+        public IActionResult CreatePage()
         {
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateVehicleDto dto)
+        public async Task<IActionResult> CreatePage(CreateVehicleDto dto)
         {
             if (!ModelState.IsValid) return View(dto);
-            await _vehicleService.CreateVehicleAsync(dto);
-            return RedirectToAction(nameof(Index));
+             try
+            {
+                await _vehicleService.CreateVehicleAsync(dto);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View(dto);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred.");
+                return View(dto);
+            }
         }
 
-        public async Task<IActionResult> Edit(Guid id)
+        public async Task<IActionResult> EditPage(Guid id)
         {
             var vehicle = await _vehicleService.GetVehicleByIdAsync(id);
             if (vehicle == null) return NotFound();
@@ -53,6 +66,11 @@ namespace EVDealerSales.WebMVC.Controllers
                 TrimName = vehicle.TrimName,
                 ModelYear = vehicle.ModelYear,
                 BasePrice = vehicle.BasePrice,
+                ImageUrl = vehicle.ImageUrl,
+                BatteryCapacity = vehicle.BatteryCapacity,
+                RangeKM = vehicle.RangeKM,
+                ChargingTime = vehicle.ChargingTime,
+                TopSpeed = vehicle.TopSpeed,
                 IsActive = vehicle.IsActive
             };
             return View(updateDto);
@@ -60,7 +78,7 @@ namespace EVDealerSales.WebMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, UpdateVehicleDto dto)
+        public async Task<IActionResult> EditPage(Guid id, UpdateVehicleDto dto)
         {
             if (!ModelState.IsValid) return View(dto);
             await _vehicleService.UpdateVehicleAsync(id, dto);
@@ -68,7 +86,7 @@ namespace EVDealerSales.WebMVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> DeletePage(Guid id)
         {
             var vehicle = await _vehicleService.GetVehicleByIdAsync(id);
             if (vehicle == null) return NotFound();
