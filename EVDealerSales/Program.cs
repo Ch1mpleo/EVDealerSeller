@@ -57,6 +57,9 @@ catch (Exception e)
     app.Logger.LogError(e, "An problem occurred during migration!");
 }
 
+// Middleware
+app.UseMiddleware<EVDealerSales.WebMVC.Middlewares.JwtMiddleware>();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
