@@ -3,17 +3,16 @@ using EVDealerSales.Models.DTOs.CustomerDTOs;
 using EVDealerSales.Models.DTOs.UserDTOs;
 using EVDealerSales.Models.Enums;
 using EVDealerSales.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EVDealerSales.WebMVC.Controllers
 {
-    [Authorize(Roles = "DealerManager")]
+    //[Authorize(Roles = "DealerManager")]
     public class ManagerController : Controller
     {
         private readonly IManagerService _managerService;
-        private readonly ILogger<ManagerController> _logger;
+        private readonly ILogger _logger;
         private const int DefaultPageSize = 10;
 
         public ManagerController(IManagerService managerService, ILogger<ManagerController> logger)

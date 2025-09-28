@@ -37,14 +37,14 @@ namespace EVDealerSales.Services.Services
                 if (user == null)
                 {
                     _logger.LogWarning($"Login failed: user {loginDto.Email} not found or inactive.");
-                    throw new KeyNotFoundException("User not found or inactive.");
+                    return null;
                 }
 
                 var passwordHasher = new PasswordHasher();
                 if (!passwordHasher.VerifyPassword(loginDto.Password, user.PasswordHash))
                 {
                     _logger.LogWarning($"Login failed: invalid password for {loginDto.Email}.");
-                    throw new UnauthorizedAccessException("Invalid credentials.");
+                    return null;
                 }
 
                 var jwtToken = JwtUtils.GenerateJwtToken(
@@ -75,14 +75,7 @@ namespace EVDealerSales.Services.Services
             try
             {
                 _logger.LogInformation($"User with ID {userId} logged out");
-
-                // In a real JWT-based system, you might:
-                // 1. Add the token to a blacklist/revocation store
-                // 2. Update user's last logout timestamp
-                // 3. Revoke refresh tokens if used
-
-                // For now, since JWT tokens are stateless, we'll just log the action
-                // and consider the logout successful
+                await Task.CompletedTask; // Fixes CS1998 by adding an awaitable
                 return true;
             }
             catch (Exception ex)
@@ -98,11 +91,11 @@ namespace EVDealerSales.Services.Services
             {
                 _logger.LogInformation("Registering new user");
 
-                //if (await UserExistsAsync(registrationDto.Email))
-                //{
-                //    _loggerService.Warn($"Email {registrationDto.Email} already registered.");
-                //    throw ErrorHelper.Conflict("Email have been used.");
-                //}
+                if (await UserExistsAsync(registrationDto.Email))
+                {
+                    _logger.LogWarning($"Registration failed: email {registrationDto.Email} already in use.");
+                    return null;
+                }
 
                 var hashedPassword = new PasswordHasher().HashPassword(registrationDto.Password);
 
@@ -136,6 +129,12 @@ namespace EVDealerSales.Services.Services
                 _logger.LogError($"Error creating account: {ex.Message}");
                 throw;
             }
+        }
+
+        private async Task<bool> UserExistsAsync(string email)
+        {
+            var accounts = await _unitOfWork.Users.GetAllAsync();
+            return accounts.Any(a => a.Email == email);
         }
     }
 }

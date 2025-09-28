@@ -8,11 +8,13 @@ namespace EVDealerSales.WebMVC.Controllers
     {
         private readonly IAuthService _authService;
         private readonly IConfiguration _configuration;
+        private readonly ILogger _logger;
 
-        public AuthController(IAuthService authService, IConfiguration configuration)
+        public AuthController(IAuthService authService, IConfiguration configuration, ILogger<AuthController> logger)
         {
             _authService = authService;
             _configuration = configuration;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -26,7 +28,7 @@ namespace EVDealerSales.WebMVC.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View("Index", loginDto);
+                return View("Login", loginDto);
             }
 
             try
@@ -37,16 +39,18 @@ namespace EVDealerSales.WebMVC.Controllers
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return View("Login", loginDto);
                 }
+                _logger.LogInformation($"User {loginDto.Email} logged in successfully.");
 
                 // Lưu token vào session hoặc cookie nếu cần
                 //HttpContext.Session.SetString("AuthToken", response.Token);
 
-                return RedirectToAction("LandingPage", "Home");
+                return RedirectToAction("Employees", "Manager");
             }
             catch (Exception ex)
             {
+                _logger.LogError($"Login error for {loginDto.Email}: {ex.Message}");
                 ModelState.AddModelError(string.Empty, ex.Message);
-                return View("Index", loginDto);
+                return View("Login", loginDto);
             }
         }
 
