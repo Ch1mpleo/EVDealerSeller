@@ -64,6 +64,7 @@ namespace EVDealerSales.WebMVC.Controllers
         {
             if (!ModelState.IsValid) return View(dto);
             await _vehicleService.UpdateVehicleAsync(id, dto);
+            TempData["SuccessMessage"] = "Vehicle updated successfully!";
             return RedirectToAction(nameof(Index));
         }
 
