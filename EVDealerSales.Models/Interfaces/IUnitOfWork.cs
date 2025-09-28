@@ -6,6 +6,7 @@ namespace EVDealerSales.Models.Interfaces
     {
         IGenericRepository<User> Users { get; }
         IGenericRepository<Customer> Customers { get; }
+        IGenericRepository<Vehicle> Vehicles { get; }
         Task<int> SaveChangesAsync();
     }
 }
