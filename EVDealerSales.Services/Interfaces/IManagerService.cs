@@ -14,6 +14,7 @@ namespace EVDealerSales.Services.Interfaces
         Task<bool> EmployeeIsActiveAsync(Guid id);
 
         // Customer Management
+        Task<GetCustomerDto> AddCustomerAsync(CreateCustomerDto createCustomerDto);
         Task<Pagination<GetCustomerDto>> GetCustomersAsync(int pageNumber, int pageSize, string searchTerm = null);
         Task<GetCustomerDto> GetCustomerByIdAsync(Guid id);
         Task<bool> UpdateCustomerAsync(Guid id, GetCustomerDto customerDto);

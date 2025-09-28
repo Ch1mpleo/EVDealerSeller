@@ -240,6 +240,38 @@ namespace EVDealerSales.WebMVC.Controllers
             }
         }
 
+        // GET: Manager/CreateCustomer
+        public IActionResult CreateCustomerPage()
+        {
+            return View(new CreateCustomerDto());
+        }
+
+        // POST: Manager/CreateCustomer
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateCustomerPage(CreateCustomerDto model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            try
+            {
+                await _managerService.AddCustomerAsync(model);
+                TempData["SuccessMessage"] = "Customer created successfully!";
+                return RedirectToAction(nameof(Customers));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating customer");
+                TempData["ErrorMessage"] = ex.Data.Contains("StatusCode") && (int)ex.Data["StatusCode"] == 409
+                    ? "A customer with this email already exists."
+                    : "There was an error creating the customer.";
+                return View(model);
+            }
+        }
+
         // GET: Manager/EditCustomer/{id}
         public async Task<IActionResult> EditCustomer(Guid id)
         {

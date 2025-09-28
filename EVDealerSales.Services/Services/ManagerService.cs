@@ -14,11 +14,16 @@ namespace EVDealerSales.Services.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger _logger;
+        private readonly IClaimsService _claimsService; // Added for audit trail
 
-        public ManagerService(IUnitOfWork unitOfWork, ILogger<ManagerService> logger)
+        public ManagerService(
+            IUnitOfWork unitOfWork,
+            ILogger<ManagerService> logger,
+            IClaimsService claimsService) // Inject current user service
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
+            _claimsService = claimsService;
         }
 
         #region Employee Management
@@ -48,7 +53,10 @@ namespace EVDealerSales.Services.Services
                     throw ErrorHelper.Internal("Failed to process password");
                 }
 
-                // Create the new employee
+                // Create the new employee with audit fields
+                var currentUserId = _claimsService.GetCurrentUserId;
+                var now = DateTime.UtcNow;
+
                 var employee = new User
                 {
                     FullName = createEmployeeDto.FullName,
@@ -56,7 +64,10 @@ namespace EVDealerSales.Services.Services
                     Phone = createEmployeeDto.Phone,
                     PasswordHash = hashedPassword,
                     Role = createEmployeeDto.Role,
-                    IsActive = createEmployeeDto.IsActive
+                    IsActive = createEmployeeDto.IsActive,
+                    // Audit fields
+                    CreatedAt = now,
+                    CreatedBy = currentUserId
                 };
 
                 await _unitOfWork.Users.AddAsync(employee);
@@ -180,6 +191,10 @@ namespace EVDealerSales.Services.Services
                 employee.Role = employeeDto.Role;
                 employee.IsActive = employeeDto.IsActive;
 
+                // Add audit fields
+                employee.UpdatedAt = DateTime.UtcNow;
+                employee.UpdatedBy = _claimsService.GetCurrentUserId;
+
                 await _unitOfWork.Users.Update(employee);
                 await _unitOfWork.SaveChangesAsync();
 
@@ -198,7 +213,7 @@ namespace EVDealerSales.Services.Services
         {
             try
             {
-                _logger.LogInformation("Deactivating employee with ID: {EmployeeId}", id);
+                _logger.LogInformation("Changing active status for employee with ID: {EmployeeId}", id);
 
                 var employee = await _unitOfWork.Users.GetByIdAsync(id);
                 if (employee == null || employee.IsDeleted)
@@ -208,6 +223,11 @@ namespace EVDealerSales.Services.Services
                 }
 
                 employee.IsActive = !employee.IsActive;
+
+                // Add audit fields for status change
+                employee.UpdatedAt = DateTime.UtcNow;
+                employee.UpdatedBy = _claimsService.GetCurrentUserId;
+
                 await _unitOfWork.Users.Update(employee);
                 await _unitOfWork.SaveChangesAsync();
 
@@ -216,7 +236,7 @@ namespace EVDealerSales.Services.Services
             }
             catch (Exception ex) when (!(ex.Data.Contains("StatusCode") && (int)ex.Data["StatusCode"] == 404))
             {
-                _logger.LogError(ex, "Error occurred while deactivating employee with ID: {EmployeeId}. Message: {Message}",
+                _logger.LogError(ex, "Error occurred while changing active status for employee with ID: {EmployeeId}. Message: {Message}",
                     id, ex.Message);
                 throw;
             }
@@ -325,6 +345,10 @@ namespace EVDealerSales.Services.Services
                 customer.Phone = customerDto.Phone;
                 customer.Address = customerDto.Address;
 
+                // Add audit fields
+                customer.UpdatedAt = DateTime.UtcNow;
+                customer.UpdatedBy = _claimsService.GetCurrentUserId;
+
                 await _unitOfWork.Customers.Update(customer);
                 await _unitOfWork.SaveChangesAsync();
 
@@ -352,7 +376,15 @@ namespace EVDealerSales.Services.Services
                     throw ErrorHelper.NotFound($"Customer with ID {id} not found");
                 }
 
-                await _unitOfWork.Customers.SoftRemove(customer);
+                // Add audit fields before deletion
+                var currentUserId = _claimsService.GetCurrentUserId;
+                var now = DateTime.UtcNow;
+
+                customer.IsDeleted = true;
+                customer.DeletedAt = now;
+                customer.DeletedBy = currentUserId;
+
+                await _unitOfWork.Customers.Update(customer);
                 await _unitOfWork.SaveChangesAsync();
 
                 _logger.LogInformation("Successfully deleted customer with ID: {CustomerId}", id);
@@ -362,6 +394,68 @@ namespace EVDealerSales.Services.Services
             {
                 _logger.LogError(ex, "Error occurred while deleting customer with ID: {CustomerId}. Message: {Message}",
                     id, ex.Message);
+                throw;
+            }
+        }
+
+        public async Task<GetCustomerDto> AddCustomerAsync(CreateCustomerDto createCustomerDto)
+        {
+            try
+            {
+                _logger.LogInformation("Adding new customer with email: {Email}", createCustomerDto.Email);
+
+                if (string.IsNullOrEmpty(createCustomerDto.Email))
+                {
+                    _logger.LogWarning("Email is required to add a new customer");
+                    throw ErrorHelper.BadRequest("Email is required");
+                }
+
+                // Check if customer with this email already exists
+                var existingCustomer = await _unitOfWork.Customers.FirstOrDefaultAsync(
+                    c => c.Email.ToLower() == createCustomerDto.Email.ToLower() && !c.IsDeleted);
+
+                if (existingCustomer != null)
+                {
+                    _logger.LogWarning("Customer with email {Email} already exists", createCustomerDto.Email);
+                    throw ErrorHelper.Conflict($"Customer with email {createCustomerDto.Email} already exists");
+                }
+
+                // Create the new customer entity with audit fields
+                var currentUserId = _claimsService.GetCurrentUserId;
+                var now = DateTime.UtcNow;
+
+                var customer = new Customer
+                {
+                    FirstName = createCustomerDto.FirstName,
+                    LastName = createCustomerDto.LastName,
+                    Email = createCustomerDto.Email,
+                    Phone = createCustomerDto.Phone,
+                    Address = createCustomerDto.Address,
+                    // Audit fields
+                    CreatedAt = now,
+                    CreatedBy = currentUserId
+                };
+
+                await _unitOfWork.Customers.AddAsync(customer);
+                await _unitOfWork.SaveChangesAsync();
+
+                _logger.LogInformation("Successfully added new customer with ID: {CustomerId}", customer.Id);
+
+                return new GetCustomerDto
+                {
+                    Id = customer.Id,
+                    FirstName = customer.FirstName,
+                    LastName = customer.LastName,
+                    Email = customer.Email,
+                    Phone = customer.Phone,
+                    Address = customer.Address
+                };
+            }
+            catch (Exception ex) when (!(ex.Data.Contains("StatusCode") &&
+                                       ((int)ex.Data["StatusCode"] == 404 || (int)ex.Data["StatusCode"] == 409)))
+            {
+                _logger.LogError(ex, "Error occurred while adding customer with email: {Email}. Message: {Message}",
+                    createCustomerDto.Email, ex.Message);
                 throw;
             }
         }
