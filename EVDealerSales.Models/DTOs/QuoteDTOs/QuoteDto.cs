@@ -5,5 +5,7 @@
         virtual public int Id { get; set; }
         virtual public string CustomerName { get; set; }
         virtual public string CustomerEmail { get; set; }
+        virtual public string VehicleModel { get; set; }
+
     }
 }
