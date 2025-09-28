@@ -1,0 +1,107 @@
+@using EVDealerSales.Models.DTOs.UserDTOs
+@model GetEmployeeDto
+@{
+    ViewData["Title"] = "Employee Details";
+}
+
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+                    <h4 class="mb-0">Employee Details</h4>
+                    <div>
+                        <a asp-action="EditEmployee" asp-route-id="@Model.Id" class="btn btn-warning">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a asp-action="Employees" class="btn btn-light">
+                            <i class="fas fa-arrow-left"></i> Back to List
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>Success!</strong> @TempData["SuccessMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>Error!</strong> @TempData["ErrorMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <div class="row">
+                        <div class="col-md-4 text-center mb-4">
+                            <div class="mb-3">
+                                <img src="https://via.placeholder.com/200" alt="@Model.FullName" class="rounded-circle img-thumbnail" />
+                            </div>
+                            <div class="mb-3">
+                                <h4>@Model.FullName</h4>
+                                <span class="badge bg-@(Model.IsActive ? "success" : "danger")">@(Model.IsActive ? "Active" : "Inactive")</span>
+                            </div>
+                            <form asp-action="ToggleEmployeeStatus" asp-route-id="@Model.Id" method="post">
+                                <button type="submit" class="btn btn-@(Model.IsActive ? "danger" : "success") btn-sm">
+                                    <i class="fas fa-@(Model.IsActive ? "lock" : "unlock")"></i>
+                                    @(Model.IsActive ? "Deactivate Account" : "Activate Account")
+                                </button>
+                            </form>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <th class="table-light" style="width: 30%">Full Name</th>
+                                            <td>@Model.FullName</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="table-light">Email</th>
+                                            <td>@Model.Email</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="table-light">Phone</th>
+                                            <td>@Model.Phone</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="table-light">Role</th>
+                                            <td>@Model.Role</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="table-light">Status</th>
+                                            <td>
+                                                @if (Model.IsActive)
+                                                {
+                                                    <span class="badge bg-success">Active</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-danger">Inactive</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Auto-dismiss alerts after 5 seconds
+            setTimeout(function () {
+                $('.alert').alert('close');
+            }, 5000);
+        });
+    </script>
+}

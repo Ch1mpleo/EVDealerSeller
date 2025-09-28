@@ -55,7 +55,9 @@ namespace EVDealerSales.WebMVC.Architecture
             services.AddScoped<IClaimsService, ClaimsService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IManagerService, ManagerService>();
             services.AddScoped<IVehicleService, VehicleService>();
+          
             services.AddHttpContextAccessor();
 
             return services;
