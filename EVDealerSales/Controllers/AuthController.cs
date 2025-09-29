@@ -41,8 +41,8 @@ namespace EVDealerSales.WebMVC.Controllers
                 }
                 _logger.LogInformation($"User {loginDto.Email} logged in successfully.");
 
-                // Lưu token vào session hoặc cookie nếu cần
-                //HttpContext.Session.SetString("AuthToken", response.Token);
+                // Store the token in session
+                HttpContext.Session.SetString("AuthToken", response.Token);
 
                 return RedirectToAction("Employees", "Manager");
             }
@@ -88,12 +88,12 @@ namespace EVDealerSales.WebMVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Logout(Guid userId)
+        [ValidateAntiForgeryToken]
+        public IActionResult Logout()
         {
-            await _authService.LogoutAsync(userId);
-            // Xóa token nếu lưu ở session/cookie
-            //HttpContext.Session.Remove("AuthToken");
-            return RedirectToAction("LandingPage");
+            HttpContext.Session.Remove("AuthToken");
+            return RedirectToAction("LandingPage", "Home");
         }
+
     }
 }

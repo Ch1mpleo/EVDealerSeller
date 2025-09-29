@@ -28,7 +28,8 @@ namespace EVDealerSales.Services.Utils
             var claims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Sub, userId.ToString()),
-            new(ClaimTypes.NameIdentifier, userId.ToString()), // Thêm NameIdentifier
+            new(ClaimTypes.NameIdentifier, userId.ToString()),
+            new(ClaimTypes.Name, email),
             new(JwtRegisteredClaimNames.Email, email),
             new(ClaimTypes.Role, role),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),

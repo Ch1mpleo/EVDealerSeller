@@ -57,11 +57,9 @@ catch (Exception e)
     app.Logger.LogError(e, "An problem occurred during migration!");
 }
 
-// Middleware
-app.UseMiddleware<EVDealerSales.WebMVC.Middlewares.JwtMiddleware>();
-
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseSession();
+app.UseAuthentication();       // Validate JWT token and set HttpContext.User
+app.UseAuthorization();        // Apply [Authorize] attribute checks
 
 app.MapControllerRoute(
     name: "default",

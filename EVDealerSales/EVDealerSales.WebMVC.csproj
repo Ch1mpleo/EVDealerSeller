@@ -27,4 +27,9 @@
     <ProjectReference Include="..\EVDealerSales.Services\EVDealerSales.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Middlewares\" />
+    <Folder Include="Models\Commons\" />
+  </ItemGroup>
+
 </Project>

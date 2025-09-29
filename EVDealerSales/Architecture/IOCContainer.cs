@@ -7,6 +7,7 @@ using EVDealerSales.Services.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using System.Text;
 
 namespace EVDealerSales.WebMVC.Architecture
@@ -57,7 +58,7 @@ namespace EVDealerSales.WebMVC.Architecture
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IManagerService, ManagerService>();
             services.AddScoped<IVehicleService, VehicleService>();
-          
+
             services.AddHttpContextAccessor();
 
             return services;
@@ -90,7 +91,23 @@ namespace EVDealerSales.WebMVC.Architecture
                         ValidAudience = configuration["JWT:Audience"],
                         IssuerSigningKey =
                             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:SecretKey"] ??
-                                                                            throw new InvalidOperationException()))
+                                                                            throw new InvalidOperationException())),
+                        ClockSkew = TimeSpan.Zero,
+                        NameClaimType = ClaimTypes.Name,
+                        RoleClaimType = ClaimTypes.Role
+                    };
+                    x.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            //Read from Session instead of cookie
+                            var token = context.HttpContext.Session.GetString("AuthToken");
+                            if (!string.IsNullOrEmpty(token))
+                            {
+                                context.Token = token;
+                            }
+                            return Task.CompletedTask;
+                        }
                     };
                 });
             services.AddAuthorization(options =>
