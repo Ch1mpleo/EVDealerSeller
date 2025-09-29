@@ -164,5 +164,7 @@ namespace EVDealerSales.Models
                 .HasForeignKey(fb => fb.ResolvedBy)
                 .OnDelete(DeleteBehavior.NoAction); // Prevent cascading delete
         }
+
+
     }
 }

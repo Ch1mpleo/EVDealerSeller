@@ -1,4 +1,6 @@
-﻿using EVDealerSales.WebMVC.Architecture;
+﻿using EVDealerSales.Models;
+using EVDealerSales.WebMVC.Architecture;
+using EVDealerSales.WebMVC.Helper;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -51,6 +53,13 @@ app.UseRouting();
 try
 {
     app.ApplyMigrations(app.Logger);
+
+    // Seed data
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<EVDealerSalesDbContext>();
+        await DbSeeder.SeedUsersAsync(dbContext);
+    }
 }
 catch (Exception e)
 {

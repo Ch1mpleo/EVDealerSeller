@@ -39,12 +39,14 @@ namespace EVDealerSales.WebMVC.Controllers
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return View("Login", loginDto);
                 }
+
                 _logger.LogInformation($"User {loginDto.Email} logged in successfully.");
 
-                // Store the token in session
+                // Store token in session for later use
                 HttpContext.Session.SetString("AuthToken", response.Token);
 
-                return RedirectToAction("Employees", "Manager");
+                // Always go to LandingPage
+                return RedirectToAction("LandingPage", "Home");
             }
             catch (Exception ex)
             {
@@ -53,6 +55,8 @@ namespace EVDealerSales.WebMVC.Controllers
                 return View("Login", loginDto);
             }
         }
+
+
 
         [HttpGet]
         public IActionResult RegisterPage()
@@ -78,7 +82,7 @@ namespace EVDealerSales.WebMVC.Controllers
                 }
 
                 // Đăng ký thành công, chuyển hướng đến trang đăng nhập
-                return RedirectToAction("Login");
+                return RedirectToAction("LoginPage");
             }
             catch (Exception ex)
             {

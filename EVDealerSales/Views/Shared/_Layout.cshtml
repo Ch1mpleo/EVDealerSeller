@@ -89,6 +89,32 @@
                                             <i class="bi bi-person me-2"></i>
                                             Profile
                                         </a>
+
+                                    @if (userRole == "DealerStaff")
+                                    {
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Staff" asp-action="Customers">
+                                                <i class="bi bi-people me-2"></i>
+                                                Manage Customers
+                                            </a>
+                                        </li>
+                                    }
+                                    else if (userRole == "DealerManager")
+                                    {
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Manager" asp-action="Employees">
+                                                <i class="bi bi-person-badge me-2"></i>
+                                                Manage Employees
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Reports" asp-action="Index">
+                                                <i class="bi bi-bar-chart-line me-2"></i>
+                                                Reports
+                                            </a>
+                                        </li>
+                                    }
+
                                     </li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>

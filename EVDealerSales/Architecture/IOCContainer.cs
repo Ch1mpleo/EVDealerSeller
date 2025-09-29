@@ -113,10 +113,10 @@ namespace EVDealerSales.WebMVC.Architecture
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("StaffPolicy", policy =>
-                    policy.RequireRole("Staff"));
+                    policy.RequireRole("DealerStaff"));
 
                 options.AddPolicy("ManagerPolicy", policy =>
-                    policy.RequireRole("Manager"));
+                    policy.RequireRole("DealerManager"));
             });
 
             return services;
