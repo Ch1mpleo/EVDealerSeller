@@ -1,108 +1,296 @@
-﻿@model EVDealerSales.Models.Commons.Pagination<EVDealerSales.Models.DTOs.VehicleDTOs.VehicleDto>
+﻿@using EVDealerSales.Models.Commons
+@using EVDealerSales.Models.DTOs.VehicleDTOs
+@model Pagination<VehicleDto>
 @{
-    ViewData["Title"] = "Vehicle List";
+    ViewData["Title"] = "Vehicle Management";
 }
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <i class="bi bi-check-circle me-2"></i>
-        @TempData["SuccessMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold mb-0"><i class="bi bi-car-front me-2 text-primary"></i>Vehicle List</h2>
-        <a asp-action="Create" class="btn btn-primary">
-            <i class="bi bi-plus-circle me-1"></i> Add Vehicle
-        </a>
-    </div>
-    <form method="get" class="row g-2 mb-3">
-        <div class="col-md-4">
-            <input name="search" value="@ViewBag.Search" class="form-control" placeholder="Search by model or trim..." />
+
+<link rel="stylesheet" href="~/css/vehicle.css" />
+
+<div class="vehicle-container">
+    <div class="container-fluid">
+        <div class="vehicle-header">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h1>
+                        <i class="fas fa-car-side"></i>
+                        Vehicle Inventory
+                    </h1>
+                    <p style="color: #666; margin: 0.5rem 0 0 0; font-size: 0.875rem;">
+                        Manage your electric vehicle inventory and specifications
+                    </p>
+                </div>
+                <div class="header-actions">
+                    <a asp-action="Create" class="btn-modern">
+                        <i class="fas fa-plus"></i>
+                        Add Vehicle
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="col-md-2">
-            <select name="sortBy" class="form-select">
-                <option value="">Sort By</option>
-                <option value="modelname">Model Name</option>
-                <option value="modelyear">Model Year</option>
-                <option value="baseprice">Base Price</option>
-            </select>
-        </div>
-        <div class="col-md-2">
-            <select name="isDescending" class="form-select">
-                <option value="false">Ascending</option>
-                <option value="true">Descending</option>
-            </select>
-        </div>
-        <div class="col-md-2">
-            <button type="submit" class="btn btn-outline-primary w-100">
-                <i class="bi bi-search"></i> Search
-            </button>
-        </div>
-    </form>
-    <div class="table-responsive">
-        <table class="table table-striped table-hover align-middle bg-white">
-            <thead class="table-light">
-                <tr>
-                    <th>Model Name</th>
-                    <th>Trim Name</th>
-                    <th>Model Year</th>
-                    <th>Base Price</th>
-                    <th>Is Active</th>
-                    <th style="width: 180px;">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var v in Model)
+
+        <div class="vehicle-card">
+            <div class="vehicle-card-body">
+                @if (TempData["SuccessMessage"] != null)
                 {
-                    <tr>
-                        <td>@v.ModelName</td>
-                        <td>@v.TrimName</td>
-                        <td>@v.ModelYear</td>
-                        <td>@v.BasePrice.ToString("C0")</td>
-                        <td>
-                            @if (v.IsActive)
+                    <div class="alert-modern success">
+                        <i class="fas fa-check-circle"></i>
+                        @TempData["SuccessMessage"]
+                    </div>
+                }
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert-modern error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        @TempData["ErrorMessage"]
+                    </div>
+                }
+
+                <form asp-action="Index" method="get" class="search-container">
+                    <div class="flex-grow-1">
+                        <input type="text"
+                               class="search-modern"
+                               name="search"
+                               value="@ViewBag.Search"
+                               placeholder="Search by model or trim..." />
+                    </div>
+                    <div class="search-filters">
+                        <select name="sortBy" class="form-control-modern" style="width: auto; min-width: 150px;">
+                            <option value="">Sort By</option>
+                            <option value="ModelName" selected="@(ViewBag.SortBy == "ModelName")">Model Name</option>
+                            <option value="ModelYear" selected="@(ViewBag.SortBy == "ModelYear")">Model Year</option>
+                            <option value="BasePrice" selected="@(ViewBag.SortBy == "BasePrice")">Base Price</option>
+                        </select>
+                        <select name="isDescending" class="form-control-modern" style="width: auto; min-width: 120px;">
+                            <option value="false">Ascending</option>
+                            <option value="true">Descending</option>
+                        </select>
+                        <button type="submit" class="btn-modern">
+                            <i class="fas fa-search"></i>
+                            Search
+                        </button>
+                        @if (!string.IsNullOrEmpty(ViewBag.Search))
+                        {
+                            <a asp-action="Index" class="btn-modern-secondary">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        }
+                    </div>
+                </form>
+
+                <div class="table-modern">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 80px;">Image</th>
+                                <th>Vehicle</th>
+                                <th>Specifications</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th style="width: 150px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Count == 0)
                             {
-                                <span class="badge bg-success"><i class="bi bi-check-circle"></i> Active</span>
+                                <tr>
+                                    <td colspan="6" style="text-align: center; padding: 3rem; color: #666;">
+                                        <div style="margin-bottom: 1rem;">
+                                            <i class="fas fa-car-side" style="font-size: 2rem; color: #333;"></i>
+                                        </div>
+                                        <div style="font-size: 1rem; margin-bottom: 0.5rem; color: #ccc;">No vehicles found</div>
+                                        <div style="font-size: 0.875rem;">
+                                            @if (!string.IsNullOrEmpty(ViewBag.Search))
+                                            {
+                                                <span>Try adjusting your search criteria</span>
+                                            }
+                                            else
+                                            {
+                                                <span>Get started by adding your first vehicle</span>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
                             }
                             else
                             {
-                                <span class="badge bg-secondary"><i class="bi bi-x-circle"></i> Inactive</span>
+                                @foreach (var vehicle in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="vehicle-thumbnail">
+                                                <img src="@vehicle.ImageUrl" alt="@vehicle.ModelName" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <div style="font-weight: 500; color: #fff; font-size: 0.875rem;">
+                                                    @vehicle.ModelName @vehicle.TrimName
+                                                </div>
+                                                <div style="font-size: 0.75rem; color: #666;">
+                                                    @vehicle.ModelYear
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div style="display: flex; gap: 1rem; font-size: 0.75rem;">
+                                                <div>
+                                                    <i class="fas fa-battery-full" style="color: #0070f3;"></i>
+                                                    @vehicle.BatteryCapacity kWh
+                                                </div>
+                                                <div>
+                                                    <i class="fas fa-road" style="color: #00d4aa;"></i>
+                                                    @vehicle.RangeKM km
+                                                </div>
+                                                <div>
+                                                    <i class="fas fa-tachometer-alt" style="color: #ff6b35;"></i>
+                                                    @vehicle.TopSpeed km/h
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div style="font-weight: 500; color: #0070f3; font-size: 0.875rem;">
+                                                $@vehicle.BasePrice.ToString("N0")
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="status-badge @(vehicle.IsActive ? "active" : "inactive")">
+                                                @(vehicle.IsActive ? "Active" : "Inactive")
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <a asp-action="Detail"
+                                                   asp-route-id="@vehicle.Id"
+                                                   class="btn-action view"
+                                                   title="View Details">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a asp-action="Edit"
+                                                   asp-route-id="@vehicle.Id"
+                                                   class="btn-action edit"
+                                                   title="Edit Vehicle">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <button type="button"
+                                                        class="btn-action delete"
+                                                        onclick="showDeleteModal('@vehicle.Id', '@vehicle.ModelName @vehicle.TrimName')"
+                                                        title="Delete Vehicle">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
                             }
-                        </td>
-                        <td>
-                            <a asp-action="Details" asp-route-id="@v.Id" class="btn btn-sm btn-outline-info me-1">
-                                <i class="bi bi-eye"></i>
+                        </tbody>
+                    </table>
+                </div>
+
+                @if (Model.TotalPages > 1)
+                {
+                    <div class="pagination-modern">
+                        @if (Model.HasPrevious)
+                        {
+                            <a class="page-link"
+                               asp-action="Index"
+                               asp-route-page="@(Model.CurrentPage - 1)"
+                               asp-route-pageSize="@Model.PageSize"
+                               asp-route-search="@ViewBag.Search"
+                               asp-route-sortBy="@ViewBag.SortBy"
+                               asp-route-isDescending="@ViewBag.IsDescending">
+                                <i class="fas fa-chevron-left"></i>
                             </a>
-                            <a asp-action="Edit" asp-route-id="@v.Id" class="btn btn-sm btn-outline-warning me-1">
-                                <i class="bi bi-pencil"></i>
+                        }
+
+                        @for (var i = Math.Max(1, Model.CurrentPage - 2); i <= Math.Min(Model.TotalPages, Model.CurrentPage + 2); i++)
+                        {
+                            <a class="page-link @(i == Model.CurrentPage ? "active" : "")"
+                               asp-action="Index"
+                               asp-route-page="@i"
+                               asp-route-pageSize="@Model.PageSize"
+                               asp-route-search="@ViewBag.Search"
+                               asp-route-sortBy="@ViewBag.SortBy"
+                               asp-route-isDescending="@ViewBag.IsDescending">
+                                @i
                             </a>
-                            <a asp-action="Delete" asp-route-id="@v.Id" class="btn btn-sm btn-outline-danger"
-                               onclick="return confirm('Are you sure you want to delete this vehicle?');">
-                                <i class="bi bi-trash"></i>
+                        }
+
+                        @if (Model.HasNext)
+                        {
+                            <a class="page-link"
+                               asp-action="Index"
+                               asp-route-page="@(Model.CurrentPage + 1)"
+                               asp-route-pageSize="@Model.PageSize"
+                               asp-route-search="@ViewBag.Search"
+                               asp-route-sortBy="@ViewBag.SortBy"
+                               asp-route-isDescending="@ViewBag.IsDescending">
+                                <i class="fas fa-chevron-right"></i>
                             </a>
-                        </td>
-                    </tr>
+                        }
+                    </div>
                 }
-            </tbody>
-        </table>
+            </div>
+        </div>
     </div>
-    <!-- Pagination -->
-    <nav>
-        <ul class="pagination justify-content-center">
-            <li class="page-item @(Model.HasPrevious ? "" : "disabled")">
-                <a class="page-link" asp-action="Index" asp-route-page="@(Model.CurrentPage - 1)" asp-route-search="@ViewBag.Search">Previous</a>
-            </li>
-            @for (int i = 1; i <= Model.TotalPages; i++)
-            {
-                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                    <a class="page-link" asp-action="Index" asp-route-page="@i" asp-route-search="@ViewBag.Search">@i</a>
-                </li>
+</div>
+
+<div class="modal-overlay" id="deleteModal" style="display: none;">
+    <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header">
+            <h3>Confirm Delete</h3>
+            <button class="modal-close" onclick="hideDeleteModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <div style="background: rgba(238, 0, 0, 0.1); border: 1px solid #e00; border-radius: 6px; padding: 0.75rem; margin-bottom: 1rem;">
+                <div style="color: #e00; font-weight: 500; margin-bottom: 0.25rem; font-size: 0.875rem;">
+                    <i class="fas fa-exclamation-triangle"></i> Warning
+                </div>
+                <div style="color: #ccc; font-size: 0.75rem;">
+                    This action cannot be undone. The vehicle will be permanently removed from the system.
+                </div>
+            </div>
+
+            <p id="deleteMessage" style="margin-bottom: 1rem; color: #ccc; font-size: 0.875rem;"></p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn-modern-secondary" onclick="hideDeleteModal()">Cancel</button>
+            <form id="deleteForm" method="post" style="display: inline;">
+                <button type="submit" class="btn-modern-danger">
+                    <i class="fas fa-trash"></i>
+                    Delete Vehicle
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function showDeleteModal(vehicleId, vehicleName) {
+            const modal = document.getElementById('deleteModal');
+            const form = document.getElementById('deleteForm');
+            const message = document.getElementById('deleteMessage');
+
+            form.action = `/Vehicle/Delete/${vehicleId}`;
+            message.innerHTML = `Are you sure you want to delete <strong style="color: #0070f3;">${vehicleName}</strong>?`;
+
+            modal.style.display = 'flex';
+        }
+
+        function hideDeleteModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+        }
+
+        document.getElementById('deleteModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideDeleteModal();
             }
-            <li class="page-item @(Model.HasNext ? "" : "disabled")">
-                <a class="page-link" asp-action="Index" asp-route-page="@(Model.CurrentPage + 1)" asp-route-search="@ViewBag.Search">Next</a>
-            </li>
-        </ul>
-    </nav>
-</div>v
+        });
+
+        setTimeout(function () {
+            const alerts = document.querySelectorAll('.alert-modern');
+            alerts.forEach(alert => alert.style.display = 'none');
+        }, 5000);
+    </script>
+}

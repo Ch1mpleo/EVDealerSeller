@@ -2,7 +2,7 @@
 using EVDealerSales.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EVDealerSales.WebMVC.Controllers.Staff
+namespace EVDealerSales.WebMVC.Controllers
 {
     public class VehicleController : Controller
     {
@@ -13,13 +13,24 @@ namespace EVDealerSales.WebMVC.Controllers.Staff
             _vehicleService = vehicleService;
         }
 
+        #region View Vehicles - Staff
         public async Task<IActionResult> BrowseVehicles(string? search, string? sortBy, bool isDescending = false, int page = 1, int pageSize = 10)
         {
             var vehicles = await _vehicleService.GetAllVehicleAsync(search, sortBy, isDescending, page, pageSize);
             ViewBag.Search = search;
             return View(vehicles);
         }
+        public async Task<IActionResult> DetailVehicles(Guid id)
+        {
+            var vehicle = await _vehicleService.GetVehicleByIdAsync(id);
+            if (vehicle == null) return NotFound();
+            return View(vehicle);
+        }
 
+        #endregion
+
+
+        #region Manage Vehicles - Manager
         public async Task<IActionResult> Index(string? search, string? sortBy, bool isDescending = false, int page = 1, int pageSize = 10)
         {
             var vehicles = await _vehicleService.GetAllVehicleAsync(search, sortBy, isDescending, page, pageSize);
@@ -27,7 +38,7 @@ namespace EVDealerSales.WebMVC.Controllers.Staff
             return View(vehicles);
         }
 
-        public async Task<IActionResult> Details(Guid id)
+        public async Task<IActionResult> Detail(Guid id)
         {
             var vehicle = await _vehicleService.GetVehicleByIdAsync(id);
             if (vehicle == null) return NotFound();
@@ -82,6 +93,8 @@ namespace EVDealerSales.WebMVC.Controllers.Staff
             await _vehicleService.DeleteVehicleAsync(id);
             return RedirectToAction(nameof(Index));
         }
+
+        #endregion
 
     }
 }

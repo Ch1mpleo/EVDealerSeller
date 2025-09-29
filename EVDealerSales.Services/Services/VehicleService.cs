@@ -28,6 +28,11 @@ namespace EVDealerSales.Services.Services
                     TrimName = dto.TrimName,
                     ModelYear = dto.ModelYear ?? 0,
                     BasePrice = dto.BasePrice,
+                    ImageUrl = dto.ImageUrl,
+                    BatteryCapacity = dto.BatteryCapacity,
+                    RangeKM = dto.RangeKM,
+                    ChargingTime = dto.ChargingTime,
+                    TopSpeed = dto.TopSpeed,
                     IsActive = dto.IsActive
                 };
 
@@ -41,6 +46,11 @@ namespace EVDealerSales.Services.Services
                     TrimName = createdVehicle.TrimName,
                     ModelYear = createdVehicle.ModelYear ?? 0,
                     BasePrice = createdVehicle.BasePrice,
+                    ImageUrl = createdVehicle.ImageUrl,
+                    BatteryCapacity = createdVehicle.BatteryCapacity,
+                    RangeKM = createdVehicle.RangeKM,
+                    ChargingTime = createdVehicle.ChargingTime,
+                    TopSpeed = createdVehicle.TopSpeed,
                     IsActive = createdVehicle.IsActive
                 };
             }
@@ -228,6 +238,11 @@ namespace EVDealerSales.Services.Services
                         TrimName = vehicle.TrimName,
                         ModelYear = vehicle.ModelYear ?? 0,
                         BasePrice = vehicle.BasePrice,
+                        ImageUrl = vehicle.ImageUrl,
+                        BatteryCapacity = vehicle.BatteryCapacity,
+                        RangeKM = vehicle.RangeKM,
+                        ChargingTime = vehicle.ChargingTime,
+                        TopSpeed = vehicle.TopSpeed,
                         IsActive = vehicle.IsActive
                     };
                 }
@@ -242,6 +257,11 @@ namespace EVDealerSales.Services.Services
                     TrimName = vehicle.TrimName,
                     ModelYear = vehicle.ModelYear ?? 0,
                     BasePrice = vehicle.BasePrice,
+                    ImageUrl = vehicle.ImageUrl,
+                    BatteryCapacity = vehicle.BatteryCapacity,
+                    RangeKM = vehicle.RangeKM,
+                    ChargingTime = vehicle.ChargingTime,
+                    TopSpeed = vehicle.TopSpeed,
                     IsActive = vehicle.IsActive
                 };
             }
