@@ -3,7 +3,7 @@ using EVDealerSales.Models.DTOs.CustomerDTOs;
 using EVDealerSales.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EVDealerSales.WebMVC.Controllers
+namespace EVDealerSales.WebMVC.Controllers.Staff
 {
     public class StaffController : Controller
     {
@@ -15,11 +15,6 @@ namespace EVDealerSales.WebMVC.Controllers
         {
             _staffService = staffService;
             _logger = logger;
-        }
-
-        public IActionResult Customers()
-        {
-            return View();
         }
 
         #region Customer Management

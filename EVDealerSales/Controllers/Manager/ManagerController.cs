@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace EVDealerSales.WebMVC.Controllers
+namespace EVDealerSales.WebMVC.Controllers.Manager
 {
     [Authorize(Policy = "ManagerPolicy")]
     public class ManagerController : Controller

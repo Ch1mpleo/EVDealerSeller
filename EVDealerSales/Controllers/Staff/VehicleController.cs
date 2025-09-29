@@ -1,9 +1,8 @@
 ﻿using EVDealerSales.Models.DTOs.VehicleDTOs;
 using EVDealerSales.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.AccessControl;
 
-namespace EVDealerSales.WebMVC.Controllers
+namespace EVDealerSales.WebMVC.Controllers.Staff
 {
     public class VehicleController : Controller
     {

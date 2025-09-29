@@ -45,5 +45,70 @@ namespace EVDealerSales.WebMVC.Helper
 
             await context.SaveChangesAsync();
         }
+
+        public static async Task SeedVehiclesAsync(EVDealerSalesDbContext context)
+        {
+            if (!await context.Vehicles.AnyAsync())
+            {
+                var vehicles = new List<Vehicle>
+                {
+                    new Vehicle
+                    {
+                        ModelName = "Model S",
+                        TrimName = "Plaid",
+                        ModelYear = 2025,
+                        BasePrice = 89990M,
+                        ImageUrl = "https://images.unsplash.com/photo-1580273916550-e323be2ae537?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                        BatteryCapacity = 100M,
+                        RangeKM = 637,
+                        ChargingTime = 45, // minutes for 10-80%
+                        TopSpeed = 322,
+                        IsActive = true
+                    },
+                    new Vehicle
+                    {
+                        ModelName = "iX",
+                        TrimName = "M60",
+                        ModelYear = 2025,
+                        BasePrice = 108900M,
+                        ImageUrl = "https://plus.unsplash.com/premium_photo-1664303847960-586318f59035?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                        BatteryCapacity = 111.5M,
+                        RangeKM = 561,
+                        ChargingTime = 35,
+                        TopSpeed = 250,
+                        IsActive = true
+                    },
+                    new Vehicle
+                    {
+                        ModelName = "EQS",
+                        TrimName = "580 4MATIC",
+                        ModelYear = 2025,
+                        BasePrice = 125900M,
+                        ImageUrl = "https://plus.unsplash.com/premium_photo-1683134240084-ba074973f75e?q=80&w=1595&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                        BatteryCapacity = 107.8M,
+                        RangeKM = 587,
+                        ChargingTime = 31,
+                        TopSpeed = 210,
+                        IsActive = true
+                    },
+                    new Vehicle
+                    {
+                        ModelName = "Ioniq 6",
+                        TrimName = "Limited AWD",
+                        ModelYear = 2025,
+                        BasePrice = 52600M,
+                        ImageUrl = "https://images.unsplash.com/photo-1502877338535-766e1452684a?q=80&w=1172&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                        BatteryCapacity = 77.4M,
+                        RangeKM = 509,
+                        ChargingTime = 18,
+                        TopSpeed = 230,
+                        IsActive = true
+                    }
+                };
+
+                await context.Vehicles.AddRangeAsync(vehicles);
+                await context.SaveChangesAsync();
+            }
+        }
     }
 }
