@@ -243,8 +243,8 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn-modern-secondary" onclick="hideStatusModal()">Cancel</button>
-            <form id="statusForm" method="post" style="display: inline;">
-                <!-- Enhanced confirm button with icon -->
+            <form id="statusForm" method="post" asp-controller="Manager" asp-action="ToggleEmployeeStatus">
+                @Html.AntiForgeryToken()
                 <button type="submit" id="confirmButton" class="btn-modern-danger">
                     <i class="fas fa-user-slash"></i>
                     Deactivate
@@ -271,7 +271,7 @@
             const action = isActive ? 'deactivate' : 'activate';
             const actionClass = isActive ? 'btn-modern-danger' : 'btn-modern-success';
 
-            form.action = `/Employee/ToggleEmployeeStatus/${employeeId}`;
+            form.action = `/Manager/ToggleEmployeeStatus/${employeeId}`;
             message.innerHTML = `Are you sure you want to ${action} <strong style="color: #0070f3;">${employeeName}</strong>?`;
 
             avatar.textContent = employeeName.substring(0, 1).toUpperCase();

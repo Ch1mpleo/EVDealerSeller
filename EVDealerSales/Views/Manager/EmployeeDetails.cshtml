@@ -58,12 +58,6 @@
                         <h2 style="color: #fff; margin-bottom: 0.25rem; font-size: 1.25rem;">@Model.FullName</h2>
                         <p style="color: #666; margin-bottom: 1rem; font-size: 0.875rem;">ID: @Model.Id</p>
 
-                        <div style="margin-bottom: 1rem;">
-                            <span class="status-badge @(Model.IsActive ? "active" : "inactive")" style="font-size: 0.875rem; padding: 0.375rem 0.75rem;">
-                                @(Model.IsActive ? "Active" : "Inactive")
-                            </span>
-                        </div>
-
                         <div style="display: flex; flex-direction: column; gap: 0.5rem;">
                             <a asp-action="EditEmployee" asp-route-id="@Model.Id" class="btn-modern" style="justify-content: center;">
                                 <i class="fas fa-edit"></i>
@@ -182,8 +176,10 @@
                 <div class="modal-footer">
                     <button type="button" class="btn-modern-secondary" onclick="hideStatusModal()">Cancel</button>
                     <form id="statusForm" method="post" style="display: inline;">
+                        @Html.AntiForgeryToken()
                         <button type="submit" id="confirmButton" class="btn-modern-danger">Confirm</button>
                     </form>
+
                 </div>
             </div>
         </div>
@@ -203,7 +199,7 @@
             const action = isActive ? 'deactivate' : 'activate';
             const actionClass = isActive ? 'btn-modern-danger' : 'btn-modern-success';
 
-            form.action = `/Employee/ToggleEmployeeStatus/${employeeId}`;
+            form.action = `/Manager/ToggleEmployeeStatus/${employeeId}`;
             message.innerHTML = `Are you sure you want to ${action} <strong style="color: #0070f3;">${employeeName}</strong>?`;
 
             confirmButton.className = actionClass;
