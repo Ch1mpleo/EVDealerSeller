@@ -25,13 +25,9 @@
                         and luxury design. Join thousands of drivers who've made the switch to electric.
                     </p>
                     <div class="hero-actions">
-                        <a href="#vehicles" class="btn btn-primary btn-lg me-3">
+                        <a asp-controller="Vehicle" asp-action="BrowseVehicles" class="btn btn-primary btn-lg me-3">
                             <i class="bi bi-car-front me-2"></i>
                             Browse Vehicles
-                        </a>
-                        <a href="#" class="btn btn-outline-light btn-lg">
-                            <i class="bi bi-calculator me-2"></i>
-                            Get Quote
                         </a>
                     </div>
                 </div>
@@ -76,101 +72,6 @@
                     <div class="stat-number">24/7</div>
                     <div class="stat-label">Support</div>
                     <div class="stat-description">always here to help</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Featured Vehicles Section -->
-<section id="vehicles" class="featured-vehicles py-5">
-    <div class="container">
-        <div class="row mb-5">
-            <div class="col-lg-8 mx-auto text-center">
-                <h2 class="section-title mb-4">Featured Electric Vehicles</h2>
-                <p class="section-description">
-                    Discover our premium collection of electric vehicles, each designed to deliver
-                    exceptional performance, comfort, and sustainability.
-                </p>
-            </div>
-        </div>
-
-        <div class="row g-4">
-            <div class="col-lg-4 col-md-6">
-                <div class="vehicle-card">
-                    <div class="vehicle-image">
-                        <img src="/placeholder.svg?height=250&width=400"
-                             alt="Electric Sedan" class="img-fluid">
-                        <div class="vehicle-badge">New Arrival</div>
-                    </div>
-                    <div class="vehicle-info">
-                        <h4 class="vehicle-name">Tesla Model S</h4>
-                        <p class="vehicle-description">Premium luxury sedan with autopilot capabilities</p>
-                        <div class="vehicle-specs">
-                            <span class="spec-item">
-                                <i class="bi bi-speedometer2 me-1"></i>
-                                405 mi range
-                            </span>
-                            <span class="spec-item">
-                                <i class="bi bi-lightning-charge me-1"></i>
-                                Supercharging
-                            </span>
-                        </div>
-                        <div class="vehicle-price">Starting at $89,990</div>
-                        <a href="#" class="btn btn-primary w-100 mt-3">View Details</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6">
-                <div class="vehicle-card">
-                    <div class="vehicle-image">
-                        <img src="/placeholder.svg?height=250&width=400"
-                             alt="Electric SUV" class="img-fluid">
-                        <div class="vehicle-badge">Best Seller</div>
-                    </div>
-                    <div class="vehicle-info">
-                        <h4 class="vehicle-name">BMW iX</h4>
-                        <p class="vehicle-description">Spacious electric SUV perfect for families</p>
-                        <div class="vehicle-specs">
-                            <span class="spec-item">
-                                <i class="bi bi-speedometer2 me-1"></i>
-                                324 mi range
-                            </span>
-                            <span class="spec-item">
-                                <i class="bi bi-people me-1"></i>
-                                7 seats
-                            </span>
-                        </div>
-                        <div class="vehicle-price">Starting at $84,100</div>
-                        <a href="#" class="btn btn-primary w-100 mt-3">View Details</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6">
-                <div class="vehicle-card">
-                    <div class="vehicle-image">
-                        <img src="/placeholder.svg?height=250&width=400"
-                             alt="Electric Truck" class="img-fluid">
-                        <div class="vehicle-badge">Coming Soon</div>
-                    </div>
-                    <div class="vehicle-info">
-                        <h4 class="vehicle-name">Ford F-150 Lightning</h4>
-                        <p class="vehicle-description">America's best-selling truck, now electric</p>
-                        <div class="vehicle-specs">
-                            <span class="spec-item">
-                                <i class="bi bi-speedometer2 me-1"></i>
-                                320 mi range
-                            </span>
-                            <span class="spec-item">
-                                <i class="bi bi-tools me-1"></i>
-                                Work ready
-                            </span>
-                        </div>
-                        <div class="vehicle-price">Starting at $59,974</div>
-                        <a href="#" class="btn btn-primary w-100 mt-3">Reserve Now</a>
-                    </div>
                 </div>
             </div>
         </div>
@@ -234,7 +135,7 @@
             </div>
             <div class="col-lg-6">
                 <div class="benefits-image">
-                    <img src="/placeholder.svg?height=500&width=600"
+                    <img src="https://images.unsplash.com/photo-1671785120538-c24cbe823ccc?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                          alt="Electric Vehicle Benefits" class="img-fluid rounded-3">
                 </div>
             </div>
@@ -242,27 +143,3 @@
     </div>
 </section>
 
-<!-- CTA Section -->
-<section class="cta-section py-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 mx-auto text-center">
-                <h2 class="cta-title mb-4">Ready to Go Electric?</h2>
-                <p class="cta-description mb-5">
-                    Join the electric revolution today. Schedule a test drive and experience
-                    the future of transportation firsthand.
-                </p>
-                <div class="cta-actions">
-                    <a href="#" class="btn btn-primary btn-lg me-3">
-                        <i class="bi bi-calendar-check me-2"></i>
-                        Schedule Test Drive
-                    </a>
-                    <a href="#" class="btn btn-outline-light btn-lg">
-                        <i class="bi bi-calculator me-2"></i>
-                        Get Quote
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>

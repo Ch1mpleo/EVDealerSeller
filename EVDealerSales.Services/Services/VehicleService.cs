@@ -150,11 +150,15 @@ namespace EVDealerSales.Services.Services
                 return new VehicleDto
                 {
                     Id = vehicle.Id,
+                    ImageUrl = vehicle.ImageUrl,
+                    BatteryCapacity = vehicle.BatteryCapacity,
+                    RangeKM = vehicle.RangeKM,
+                    ChargingTime = vehicle.ChargingTime,
+                    TopSpeed = vehicle.TopSpeed,
                     ModelName = vehicle.ModelName,
                     TrimName = vehicle.TrimName,
                     ModelYear = vehicle.ModelYear ?? 0,
                     BasePrice = vehicle.BasePrice,
-                    IsActive = vehicle.IsActive
                 };
             }
             catch (Exception ex)

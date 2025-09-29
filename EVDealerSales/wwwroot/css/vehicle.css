@@ -497,3 +497,371 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* ========================================
+   Vehicle Detail Page Styles
+   ======================================== */
+
+.vehicle-detail-container {
+    min-height: 100vh;
+    background: #000;
+    padding-bottom: 4rem;
+}
+
+/* Back Navigation */
+.detail-back-nav {
+    padding: 2rem 1rem 1rem 1rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #888;
+    text-decoration: none;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+    .back-link:hover {
+        color: #0070f3;
+        transform: translateX(-4px);
+    }
+
+    .back-link i {
+        font-size: 1rem;
+    }
+
+/* Hero Section with Large Vehicle Image */
+.detail-hero {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.detail-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 600px;
+    background: linear-gradient(135deg, #0a0a0a 0%, #000 100%);
+    border-radius: 24px;
+    overflow: hidden;
+    border: 1px solid #1a1a1a;
+}
+
+.detail-vehicle-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.detail-image-wrapper:hover .detail-vehicle-image {
+    transform: scale(1.05);
+}
+
+.detail-inactive-badge {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background: rgba(220, 38, 38, 0.95);
+    backdrop-filter: blur(10px);
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    box-shadow: 0 8px 32px rgba(220, 38, 38, 0.3);
+}
+
+    .detail-inactive-badge i {
+        font-size: 1.125rem;
+    }
+
+/* Detail Content Section */
+.detail-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 3rem 1rem 0 1rem;
+}
+
+/* Header with Title and Price */
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #1a1a1a;
+}
+
+.detail-title-section {
+    flex: 1;
+}
+
+.detail-model-name {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.1;
+    letter-spacing: -1px;
+}
+
+.detail-trim-year {
+    font-size: 1.25rem;
+    color: #888;
+    margin: 0;
+    font-weight: 500;
+}
+
+    .detail-trim-year span {
+        color: #666;
+    }
+
+.detail-price-section {
+    text-align: right;
+}
+
+.detail-price-label {
+    font-size: 0.875rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0 0 0.5rem 0;
+}
+
+.detail-price {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #0070f3;
+    margin: 0;
+    letter-spacing: -1px;
+}
+
+/* Specifications Section */
+.detail-specs-section {
+    margin-bottom: 3rem;
+}
+
+.detail-section-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 1.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+    .detail-section-title i {
+        color: #0070f3;
+        font-size: 1.75rem;
+    }
+
+.detail-specs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.detail-spec-card {
+    background: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    border-radius: 16px;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+    .detail-spec-card:hover {
+        border-color: #0070f3;
+        background: #000;
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0, 112, 243, 0.15);
+    }
+
+    .detail-spec-card .spec-icon {
+        width: 64px;
+        height: 64px;
+        background: linear-gradient(135deg, #0070f3 0%, #0060d3 100%);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+        .detail-spec-card .spec-icon i {
+            font-size: 2rem;
+            color: #fff;
+        }
+
+    .detail-spec-card .spec-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .detail-spec-card .spec-label {
+        font-size: 0.875rem;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin: 0;
+    }
+
+    .detail-spec-card .spec-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #fff;
+        margin: 0;
+    }
+
+/* Call to Action Section */
+.detail-cta-section {
+    text-align: center;
+    padding: 3rem 0;
+}
+
+.detail-appointment-btn {
+    background: linear-gradient(135deg, #0070f3 0%, #0060d3 100%);
+    border: none;
+    color: #fff;
+    padding: 1.25rem 3rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1.125rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 112, 243, 0.3);
+}
+
+    .detail-appointment-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.6s ease;
+    }
+
+    .detail-appointment-btn:hover::before {
+        left: 100%;
+    }
+
+    .detail-appointment-btn:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 48px rgba(0, 112, 243, 0.4);
+    }
+
+    .detail-appointment-btn i {
+        font-size: 1.25rem;
+        transition: transform 0.3s ease;
+    }
+
+    .detail-appointment-btn:hover i {
+        transform: scale(1.1);
+    }
+
+.detail-cta-note {
+    color: #888;
+    font-size: 0.9375rem;
+    margin: 1rem 0 0 0;
+}
+
+/* Responsive Design for Detail Page */
+@media (max-width: 1024px) {
+    .detail-image-wrapper {
+        height: 500px;
+    }
+
+    .detail-model-name {
+        font-size: 2.5rem;
+    }
+
+    .detail-price {
+        font-size: 2.5rem;
+    }
+
+    .detail-specs-grid {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .detail-image-wrapper {
+        height: 400px;
+        border-radius: 16px;
+    }
+
+    .detail-header {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .detail-price-section {
+        text-align: left;
+    }
+
+    .detail-model-name {
+        font-size: 2rem;
+    }
+
+    .detail-price {
+        font-size: 2rem;
+    }
+
+    .detail-specs-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-appointment-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .detail-image-wrapper {
+        height: 300px;
+    }
+
+    .detail-model-name {
+        font-size: 1.75rem;
+    }
+
+    .detail-section-title {
+        font-size: 1.5rem;
+    }
+
+    .detail-spec-card {
+        padding: 1.5rem;
+    }
+
+        .detail-spec-card .spec-icon {
+            width: 56px;
+            height: 56px;
+        }
+
+            .detail-spec-card .spec-icon i {
+                font-size: 1.75rem;
+            }
+}

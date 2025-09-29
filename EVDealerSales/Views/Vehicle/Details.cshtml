@@ -1,46 +1,126 @@
 ﻿@model EVDealerSales.Models.DTOs.VehicleDTOs.VehicleDto
+
 @{
-    ViewData["Title"] = "Vehicle Details";
+    ViewData["Title"] = $"{Model.ModelName} {Model.TrimName}";
 }
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-lg-6">
-            <div class="card shadow-sm">
-                <div class="card-header bg-info text-white">
-                    <h4 class="mb-0"><i class="bi bi-eye me-2"></i>Vehicle Details</h4>
+
+<link rel="stylesheet" href="~/css/vehicle.css" />
+
+<div class="vehicle-detail-container">
+    <!-- Back Navigation -->
+    <div class="detail-back-nav">
+        <a asp-action="BrowseVehicles" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back to Browse</span>
+        </a>
+    </div>
+
+    <!-- Hero Section with Vehicle Image -->
+    <div class="detail-hero">
+        <div class="detail-image-wrapper">
+            <img src="@Model.ImageUrl" alt="@Model.ModelName @Model.TrimName" class="detail-vehicle-image" />
+            @if (!Model.IsActive)
+            {
+                <div class="detail-inactive-badge">
+                    <i class="fas fa-ban"></i>
+                    <span>Currently Unavailable</span>
                 </div>
-                <div class="card-body">
-                    <dl class="row">
-                        <dt class="col-sm-4">Model Name</dt>
-                        <dd class="col-sm-8">@Model.ModelName</dd>
-                        <dt class="col-sm-4">Trim Name</dt>
-                        <dd class="col-sm-8">@Model.TrimName</dd>
-                        <dt class="col-sm-4">Model Year</dt>
-                        <dd class="col-sm-8">@Model.ModelYear</dd>
-                        <dt class="col-sm-4">Base Price</dt>
-                        <dd class="col-sm-8">@Model.BasePrice.ToString("C0")</dd>
-                        <dt class="col-sm-4">Is Active</dt>
-                        <dd class="col-sm-8">
-                            @if (Model.IsActive)
-                            {
-                                <span class="badge bg-success"><i class="bi bi-check-circle"></i> Active</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-secondary"><i class="bi bi-x-circle"></i> Inactive</span>
-                            }
-                        </dd>
-                    </dl>
-                    <div class="d-flex justify-content-between">
-                        <a asp-action="Index" class="btn btn-outline-secondary">
-                            <i class="bi bi-arrow-left"></i> Back
-                        </a>
-                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
-                            <i class="bi bi-pencil"></i> Edit
-                        </a>
+            }
+        </div>
+    </div>
+
+    <!-- Vehicle Information -->
+    <div class="detail-content">
+        <!-- Header Section -->
+        <div class="detail-header">
+            <div class="detail-title-section">
+                <h1 class="detail-model-name">@Model.ModelName</h1>
+                <p class="detail-trim-year">@Model.TrimName @if(Model.ModelYear.HasValue) {
+                <span>• @Model.ModelYear</span>
+                                }
+</p>
+            </div>
+            <div class="detail-price-section">
+                <p class="detail-price-label">Starting at</p>
+                <p class="detail-price">$@Model.BasePrice.ToString("N0")</p>
+            </div>
+        </div>
+
+        <!-- Specifications Grid -->
+        <div class="detail-specs-section">
+            <h2 class="detail-section-title">
+                <i class="fas fa-bolt"></i>
+                Electric Performance
+            </h2>
+            <div class="detail-specs-grid">
+                <div class="detail-spec-card">
+                    <div class="spec-icon">
+                        <i class="fas fa-battery-full"></i>
+                    </div>
+                    <div class="spec-content">
+                        <p class="spec-label">Battery Capacity</p>
+                        <p class="spec-value">@Model.BatteryCapacity kWh</p>
+                    </div>
+                </div>
+
+                <div class="detail-spec-card">
+                    <div class="spec-icon">
+                        <i class="fas fa-road"></i>
+                    </div>
+                    <div class="spec-content">
+                        <p class="spec-label">Range</p>
+                        <p class="spec-value">@Model.RangeKM km</p>
+                    </div>
+                </div>
+
+                <div class="detail-spec-card">
+                    <div class="spec-icon">
+                        <i class="fas fa-charging-station"></i>
+                    </div>
+                    <div class="spec-content">
+                        <p class="spec-label">Charging Time</p>
+                        <p class="spec-value">@Model.ChargingTime hrs</p>
+                    </div>
+                </div>
+
+                <div class="detail-spec-card">
+                    <div class="spec-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <div class="spec-content">
+                        <p class="spec-label">Top Speed</p>
+                        <p class="spec-value">@Model.TopSpeed km/h</p>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Call to Action -->
+        <div class="detail-cta-section">
+            <button class="detail-appointment-btn" onclick="location.href='#'">
+                <i class="fas fa-calendar-check"></i>
+                <span>Make an Appointment</span>
+            </button>
+            <p class="detail-cta-note">Schedule a test drive and experience the future of driving</p>
+        </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        // Add smooth scroll behavior
+        document.addEventListener('DOMContentLoaded', function() {
+            const detailContent = document.querySelector('.detail-content');
+            if (detailContent) {
+                detailContent.style.opacity = '0';
+                detailContent.style.transform = 'translateY(20px)';
+
+                setTimeout(() => {
+                    detailContent.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    detailContent.style.opacity = '1';
+                    detailContent.style.transform = 'translateY(0)';
+                }, 100);
+            }
+        });
+    </script>
+}
