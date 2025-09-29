@@ -4,7 +4,6 @@ using EVDealerSales.Models.Entities;
 using EVDealerSales.Models.Interfaces;
 using EVDealerSales.Services.Interfaces;
 using Microsoft.Extensions.Logging;
-using System.Text.Json;
 
 namespace EVDealerSales.Services.Services
 {
@@ -65,7 +64,7 @@ namespace EVDealerSales.Services.Services
 
                 await _unitOfWork.Vehicles.SoftRemove(vehicle);
                 await _unitOfWork.SaveChangesAsync();
-                       
+
                 _logger.LogWarning($"Successfully deleted vehicle with {id}.");
 
                 return true;
@@ -114,6 +113,11 @@ namespace EVDealerSales.Services.Services
                 var result = pagedVehicles.Select(v => new VehicleDto
                 {
                     Id = v.Id,
+                    ImageUrl = v.ImageUrl,
+                    BatteryCapacity = v.BatteryCapacity,
+                    RangeKM = v.RangeKM,
+                    ChargingTime = v.ChargingTime,
+                    TopSpeed = v.TopSpeed,
                     ModelName = v.ModelName,
                     TrimName = v.TrimName,
                     ModelYear = v.ModelYear ?? 0,
@@ -173,19 +177,19 @@ namespace EVDealerSales.Services.Services
 
                 bool isUpdated = false;
 
-                if(!string.IsNullOrWhiteSpace(dto.ModelName) && dto.ModelName != vehicle.ModelName)
+                if (!string.IsNullOrWhiteSpace(dto.ModelName) && dto.ModelName != vehicle.ModelName)
                 {
                     vehicle.ModelName = dto.ModelName;
                     isUpdated = true;
                 }
 
-                if(!string.IsNullOrWhiteSpace(dto.TrimName) && dto.TrimName != vehicle.TrimName)
+                if (!string.IsNullOrWhiteSpace(dto.TrimName) && dto.TrimName != vehicle.TrimName)
                 {
                     vehicle.TrimName = dto.TrimName;
                     isUpdated = true;
                 }
 
-                if(dto.ModelYear.HasValue && dto.ModelYear != vehicle.ModelYear)
+                if (dto.ModelYear.HasValue && dto.ModelYear != vehicle.ModelYear)
                 {
                     vehicle.ModelYear = dto.ModelYear;
                     isUpdated = true;

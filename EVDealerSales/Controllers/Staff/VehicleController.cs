@@ -13,6 +13,13 @@ namespace EVDealerSales.WebMVC.Controllers.Staff
             _vehicleService = vehicleService;
         }
 
+        public async Task<IActionResult> BrowseVehicles(string? search, string? sortBy, bool isDescending = false, int page = 1, int pageSize = 10)
+        {
+            var vehicles = await _vehicleService.GetAllVehicleAsync(search, sortBy, isDescending, page, pageSize);
+            ViewBag.Search = search;
+            return View(vehicles);
+        }
+
         public async Task<IActionResult> Index(string? search, string? sortBy, bool isDescending = false, int page = 1, int pageSize = 10)
         {
             var vehicles = await _vehicleService.GetAllVehicleAsync(search, sortBy, isDescending, page, pageSize);
