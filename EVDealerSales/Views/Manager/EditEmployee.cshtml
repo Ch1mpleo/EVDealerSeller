@@ -4,77 +4,172 @@
     ViewData["Title"] = "Edit Employee";
 }
 
-<div class="container-fluid py-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="card mb-4">
-                <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
-                    <h4 class="mb-0">Edit Employee</h4>
-                    <div>
-                        <a asp-action="EmployeeDetails" asp-route-id="@Model.Id" class="btn btn-info">
-                            <i class="fas fa-eye"></i> View Details
-                        </a>
-                        <a asp-action="Employees" class="btn btn-light">
-                            <i class="fas fa-arrow-left"></i> Back to List
-                        </a>
+<link rel="stylesheet" href="~/css/employee.css" />
+
+<div class="employee-container">
+    <div class="container-fluid">
+        <div class="employee-header">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h1>
+                        <i class="fas fa-user-edit"></i>
+                        Edit Employee
+                    </h1>
+                    <p style="color: #666; margin: 0.5rem 0 0 0; font-size: 0.875rem;">
+                        Update employee information and account settings
+                    </p>
+                </div>
+                <div class="header-actions">
+                    <a asp-action="EmployeeDetails" asp-route-id="@Model.Id" class="btn-modern">
+                        <i class="fas fa-eye"></i>
+                        View Details
+                    </a>
+                    <a asp-action="Employees" class="btn-modern-secondary">
+                        <i class="fas fa-arrow-left"></i>
+                        Back
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="employee-card">
+            <div class="employee-card-body">
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert-modern error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        @TempData["ErrorMessage"]
+                    </div>
+                }
+
+                <div class="employee-profile">
+                    <div class="employee-avatar">
+                        @Model.FullName.Substring(0, 1).ToUpper()
+                    </div>
+                    <div class="employee-info">
+                        <h2>@Model.FullName</h2>
+                        <p>ID: @Model.Id</p>
+                    </div>
+                    <div style="margin-left: auto;">
+                        <span class="status-badge @(Model.IsActive ? "active" : "inactive")">
+                            @(Model.IsActive ? "Active" : "Inactive")
+                        </span>
                     </div>
                 </div>
-                <div class="card-body">
-                    @if (TempData["ErrorMessage"] != null)
-                    {
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <strong>Error!</strong> @TempData["ErrorMessage"]
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    }
 
-                    <form asp-action="EditEmployee" asp-route-id="@Model.Id" method="post">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <input type="hidden" asp-for="Id" />
+                <form asp-action="EditEmployee" asp-route-id="@Model.Id" method="post" class="form-modern">
+                    <div asp-validation-summary="ModelOnly" class="alert-modern error" style="display: none;"></div>
+                    <input type="hidden" asp-for="Id" />
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="FullName" class="form-label">Full Name</label>
-                                <input asp-for="FullName" class="form-control" />
-                                <span asp-validation-for="FullName" class="text-danger"></span>
+                    <div style="margin-bottom: 1.5rem;">
+                        <h3 style="color: #ccc; margin-bottom: 1rem; font-size: 1rem; font-weight: 500; border-bottom: 1px solid #333; padding-bottom: 0.5rem;">
+                            Personal Information
+                        </h3>
+
+                        <div class="form-row-modern">
+                            <div class="form-group-modern">
+                                <label asp-for="FullName" class="form-label-modern">Full Name</label>
+                                <input asp-for="FullName" class="form-control-modern" placeholder="Enter full name" />
+                                <span asp-validation-for="FullName" class="text-danger" style="font-size: 0.75rem; margin-top: 0.25rem; display: block;"></span>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Email" class="form-label">Email</label>
-                                <input asp-for="Email" class="form-control" type="email" />
-                                <span asp-validation-for="Email" class="text-danger"></span>
+                            <div class="form-group-modern">
+                                <label asp-for="Email" class="form-label-modern">Email Address</label>
+                                <input asp-for="Email" class="form-control-modern" type="email" placeholder="Enter email address" />
+                                <span asp-validation-for="Email" class="text-danger" style="font-size: 0.75rem; margin-top: 0.25rem; display: block;"></span>
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Phone" class="form-label">Phone</label>
-                                <input asp-for="Phone" class="form-control" />
-                                <span asp-validation-for="Phone" class="text-danger"></span>
+                        <div class="form-row-modern">
+                            <div class="form-group-modern">
+                                <label asp-for="Phone" class="form-label-modern">Phone Number</label>
+                                <input asp-for="Phone" class="form-control-modern" placeholder="Enter phone number" />
+                                <span asp-validation-for="Phone" class="text-danger" style="font-size: 0.75rem; margin-top: 0.25rem; display: block;"></span>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Role" class="form-label">Role</label>
-                                <select asp-for="Role" class="form-select" asp-items="ViewBag.Roles"></select>
-                                <span asp-validation-for="Role" class="text-danger"></span>
+                            <div class="form-group-modern">
+                                <label asp-for="Role" class="form-label-modern">Role</label>
+                                <select asp-for="Role" class="form-control-modern" asp-items="ViewBag.Roles">
+                                    <option value="">Select a role</option>
+                                </select>
+                                <span asp-validation-for="Role" class="text-danger" style="font-size: 0.75rem; margin-top: 0.25rem; display: block;"></span>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="mb-3 form-check">
-                            <input asp-for="IsActive" class="form-check-input" />
-                            <label asp-for="IsActive" class="form-check-label">Is Active</label>
+                    <div style="margin-bottom: 1.5rem;">
+                        <h3 style="color: #ccc; margin-bottom: 1rem; font-size: 1rem; font-weight: 500; border-bottom: 1px solid #333; padding-bottom: 0.5rem;">
+                            Account Settings
+                        </h3>
+
+                        <div class="form-group-modern">
+                            <div style="display: flex; align-items: center; gap: 0.75rem; background: #000; padding: 0.75rem; border-radius: 6px; border: 1px solid #333;">
+                                <input asp-for="IsActive" class="form-check-input" type="checkbox" style="width: 16px; height: 16px; accent-color: #0070f3;" />
+                                <label asp-for="IsActive" class="form-label-modern" style="margin: 0; cursor: pointer; font-size: 0.875rem;">
+                                    Account Active
+                                    <div style="font-size: 0.75rem; color: #666; margin-top: 0.25rem;">
+                                        Control system access for this employee
+                                    </div>
+                                </label>
+                            </div>
                         </div>
+                    </div>
 
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> Save Changes
+                    <div style="margin-bottom: 1.5rem;">
+                        <h3 style="color: #ccc; margin-bottom: 1rem; font-size: 1rem; font-weight: 500; border-bottom: 1px solid #333; padding-bottom: 0.5rem;">
+                            Password Management
+                        </h3>
+
+                        <div style="background: #000; padding: 1rem; border-radius: 6px; border: 1px solid #333;">
+                            <div style="display: flex; align-items: start; gap: 0.75rem; margin-bottom: 0.75rem;">
+                                <i class="fas fa-info-circle" style="color: #0070f3; margin-top: 0.125rem;"></i>
+                                <div>
+                                    <div style="color: #ccc; font-size: 0.875rem; margin-bottom: 0.25rem;">
+                                        Passwords cannot be viewed or edited directly for security reasons.
+                                    </div>
+                                    <div style="color: #666; font-size: 0.75rem;">
+                                        Use password reset to send new credentials via email.
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-modern-secondary" onclick="alert('Password reset functionality would be implemented here')">
+                                <i class="fas fa-key"></i>
+                                Reset Password
                             </button>
                         </div>
-                    </form>
-                </div>
+                    </div>
+
+                    <div style="display: flex; gap: 0.75rem; justify-content: flex-end; padding-top: 1rem; border-top: 1px solid #333;">
+                        <a asp-action="Employees" class="btn-modern-secondary">
+                            Cancel
+                        </a>
+                        <a asp-action="EmployeeDetails" asp-route-id="@Model.Id" class="btn-modern-secondary">
+                            <i class="fas fa-eye"></i>
+                            View Details
+                        </a>
+                        <button type="submit" class="btn-modern">
+                            <i class="fas fa-save"></i>
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        setTimeout(function () {
+            const alerts = document.querySelectorAll('.alert-modern');
+            alerts.forEach(alert => alert.style.display = 'none');
+        }, 5000);
+
+        document.querySelector('form').addEventListener('submit', function() {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+        });
+    </script>
 }

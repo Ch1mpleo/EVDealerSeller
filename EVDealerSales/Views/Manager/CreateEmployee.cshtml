@@ -4,100 +4,196 @@
     ViewData["Title"] = "Create Employee";
 }
 
-<div class="container-fluid py-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="card mb-4">
-                <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
-                    <h4 class="mb-0">Create New Employee</h4>
-                    <a asp-action="Employees" class="btn btn-light">
-                        <i class="fas fa-arrow-left"></i> Back to List
+<link rel="stylesheet" href="~/css/employee.css" />
+
+<div class="employee-container">
+    <div class="container-fluid">
+        <div class="employee-header">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h1>
+                        <i class="fas fa-user-plus"></i>
+                        Add Employee
+                    </h1>
+                    <p style="color: #666; margin: 0.5rem 0 0 0; font-size: 0.875rem;">
+                        Create a new employee account with access credentials
+                    </p>
+                </div>
+                <div class="header-actions">
+                    <a asp-action="Employees" class="btn-modern-secondary">
+                        <i class="fas fa-arrow-left"></i>
+                        Back
                     </a>
                 </div>
-                <div class="card-body">
-                    @if (TempData["ErrorMessage"] != null)
-                    {
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <strong>Error!</strong> @TempData["ErrorMessage"]
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    }
+            </div>
+        </div>
 
-                    <form asp-action="CreateEmployee" method="post">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="employee-card">
+            <div class="employee-card-body">
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert-modern error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        @TempData["ErrorMessage"]
+                    </div>
+                }
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="FullName" class="form-label">Full Name</label>
-                                <input asp-for="FullName" class="form-control" />
-                                <span asp-validation-for="FullName" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Email" class="form-label">Email</label>
-                                <input asp-for="Email" class="form-control" type="email" />
-                                <span asp-validation-for="Email" class="text-danger"></span>
-                            </div>
-                        </div>
+                <form asp-action="CreateEmployee" method="post" class="form-modern">
+                    <div asp-validation-summary="ModelOnly" class="alert-modern error" style="display: none;"></div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Phone" class="form-label">Phone</label>
-                                <input asp-for="Phone" class="form-control" />
-                                <span asp-validation-for="Phone" class="text-danger"></span>
+                    <div style="margin-bottom: 1.5rem;">
+                        <h3 style="color: #ccc; margin-bottom: 1rem; font-size: 1rem; font-weight: 500; border-bottom: 1px solid #333; padding-bottom: 0.5rem;">
+                            Personal Information
+                        </h3>
+
+                        <div class="form-row-modern">
+                            <div class="form-group-modern">
+                                <label asp-for="FullName" class="form-label-modern">Full Name</label>
+                                <input asp-for="FullName" class="form-control-modern" placeholder="Enter full name" />
+                                <span asp-validation-for="FullName" class="text-danger" style="font-size: 0.75rem; margin-top: 0.25rem; display: block;"></span>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Role" class="form-label">Role</label>
-                                <select asp-for="Role" class="form-select" asp-items="ViewBag.Roles"></select>
-                                <span asp-validation-for="Role" class="text-danger"></span>
+                            <div class="form-group-modern">
+                                <label asp-for="Email" class="form-label-modern">Email Address</label>
+                                <input asp-for="Email" class="form-control-modern" type="email" placeholder="Enter email address" />
+                                <span asp-validation-for="Email" class="text-danger" style="font-size: 0.75rem; margin-top: 0.25rem; display: block;"></span>
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Password" class="form-label">Password</label>
-                                <input asp-for="Password" class="form-control" type="password" />
-                                <span asp-validation-for="Password" class="text-danger"></span>
+                        <div class="form-row-modern">
+                            <div class="form-group-modern">
+                                <label asp-for="Phone" class="form-label-modern">Phone Number</label>
+                                <input asp-for="Phone" class="form-control-modern" placeholder="Enter phone number" />
+                                <span asp-validation-for="Phone" class="text-danger" style="font-size: 0.75rem; margin-top: 0.25rem; display: block;"></span>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Confirm Password</label>
-                                <input name="ConfirmPassword" class="form-control" type="password" />
-                                <span id="passwordMatchError" class="text-danger"></span>
+                            <div class="form-group-modern">
+                                <label asp-for="Role" class="form-label-modern">Role</label>
+                                <select asp-for="Role" class="form-control-modern" asp-items="ViewBag.Roles">
+                                    <option value="">Select a role</option>
+                                </select>
+                                <span asp-validation-for="Role" class="text-danger" style="font-size: 0.75rem; margin-top: 0.25rem; display: block;"></span>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="mb-3 form-check">
-                            <input asp-for="IsActive" class="form-check-input" />
-                            <label asp-for="IsActive" class="form-check-label">Is Active</label>
-                        </div>
+                    <div style="margin-bottom: 1.5rem;">
+                        <h3 style="color: #ccc; margin-bottom: 1rem; font-size: 1rem; font-weight: 500; border-bottom: 1px solid #333; padding-bottom: 0.5rem;">
+                            Security
+                        </h3>
 
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> Create Employee
-                            </button>
+                        <div class="form-row-modern">
+                            <div class="form-group-modern">
+                                <label asp-for="Password" class="form-label-modern">Password</label>
+                                <div style="position: relative;">
+                                    <input asp-for="Password" class="form-control-modern" type="password" id="password" placeholder="Create password" />
+                                    <button type="button" id="togglePassword" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: #666; cursor: pointer; font-size: 0.875rem;">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <span asp-validation-for="Password" class="text-danger" style="font-size: 0.75rem; margin-top: 0.25rem; display: block;"></span>
+                            </div>
+                            <div class="form-group-modern">
+                                <label class="form-label-modern">Confirm Password</label>
+                                <div style="position: relative;">
+                                    <input name="ConfirmPassword" class="form-control-modern" type="password" id="confirmPassword" placeholder="Confirm password" />
+                                    <button type="button" id="toggleConfirmPassword" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: #666; cursor: pointer; font-size: 0.875rem;">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <span id="passwordMatchError" class="text-danger" style="font-size: 0.75rem; margin-top: 0.25rem; display: block;"></span>
+                            </div>
                         </div>
-                    </form>
-                </div>
+                    </div>
+
+                    <div style="margin-bottom: 1.5rem;">
+                        <h3 style="color: #ccc; margin-bottom: 1rem; font-size: 1rem; font-weight: 500; border-bottom: 1px solid #333; padding-bottom: 0.5rem;">
+                            Account Settings
+                        </h3>
+
+                        <div class="form-group-modern">
+                            <div style="display: flex; align-items: center; gap: 0.75rem; background: #000; padding: 0.75rem; border-radius: 6px; border: 1px solid #333;">
+                                <input asp-for="IsActive" class="form-check-input" type="checkbox" style="width: 16px; height: 16px; accent-color: #0070f3;" />
+                                <label asp-for="IsActive" class="form-label-modern" style="margin: 0; cursor: pointer; font-size: 0.875rem;">
+                                    Account Active
+                                    <div style="font-size: 0.75rem; color: #666; margin-top: 0.25rem;">
+                                        Enable immediate system access
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 0.75rem; justify-content: flex-end; padding-top: 1rem; border-top: 1px solid #333;">
+                        <a asp-action="Employees" class="btn-modern-secondary">
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn-modern">
+                            <i class="fas fa-plus"></i>
+                            Create Employee
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
     <script>
-        $(document).ready(function () {
-            // Password validation
-            $('form').submit(function (e) {
-                var password = $('#Password').val();
-                var confirmPassword = $('input[name="ConfirmPassword"]').val();
-                
-                if (password !== confirmPassword) {
-                    $('#passwordMatchError').text('The passwords do not match.');
-                    e.preventDefault();
-                    return false;
-                }
-                return true;
-            });
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordField = document.getElementById('password');
+            const icon = this.querySelector('i');
+
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                passwordField.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        });
+
+        document.getElementById('toggleConfirmPassword').addEventListener('click', function() {
+            const confirmPasswordField = document.getElementById('confirmPassword');
+            const icon = this.querySelector('i');
+
+            if (confirmPasswordField.type === 'password') {
+                confirmPasswordField.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                confirmPasswordField.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        });
+
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                document.getElementById('passwordMatchError').textContent = 'Passwords do not match';
+                e.preventDefault();
+                return false;
+            }
+            return true;
+        });
+
+        document.getElementById('confirmPassword').addEventListener('input', function() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = this.value;
+            const errorSpan = document.getElementById('passwordMatchError');
+
+            if (confirmPassword && password !== confirmPassword) {
+                errorSpan.textContent = 'Passwords do not match';
+                errorSpan.style.color = '#e00';
+            } else if (confirmPassword && password === confirmPassword) {
+                errorSpan.textContent = 'Passwords match';
+                errorSpan.style.color = '#0a0';
+            } else {
+                errorSpan.textContent = '';
+            }
         });
     </script>
 }

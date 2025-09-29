@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EVDealerSales.WebMVC.Controllers
 {
-    [Authorize(Roles = "Manager")]
+    [Authorize(Policy = "ManagerPolicy")]
     public class ManagerController : Controller
     {
         private readonly IManagerService _managerService;
@@ -19,11 +19,6 @@ namespace EVDealerSales.WebMVC.Controllers
         {
             _managerService = managerService;
             _logger = logger;
-        }
-
-        public IActionResult Employees()
-        {
-            return View();
         }
 
         #region Employee Management

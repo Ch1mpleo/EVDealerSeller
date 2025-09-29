@@ -4,91 +4,186 @@
     ViewData["Title"] = "Employee Details";
 }
 
-<div class="container-fluid py-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="card mb-4">
-                <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
-                    <h4 class="mb-0">Employee Details</h4>
-                    <div>
-                        <a asp-action="EditEmployee" asp-route-id="@Model.Id" class="btn btn-warning">
-                            <i class="fas fa-edit"></i> Edit
-                        </a>
-                        <a asp-action="Employees" class="btn btn-light">
-                            <i class="fas fa-arrow-left"></i> Back to List
-                        </a>
+<link rel="stylesheet" href="~/css/employee.css" />
+
+<div class="employee-container">
+    <div class="container-fluid">
+        <div class="employee-header">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h1>
+                        <i class="fas fa-user-circle"></i>
+                        Employee Details
+                    </h1>
+                    <p style="color: #666; margin: 0.5rem 0 0 0; font-size: 0.875rem;">
+                        View complete employee information and account status
+                    </p>
+                </div>
+                <div class="header-actions">
+                    <a asp-action="EditEmployee" asp-route-id="@Model.Id" class="btn-modern">
+                        <i class="fas fa-edit"></i>
+                        Edit
+                    </a>
+                    <a asp-action="Employees" class="btn-modern-secondary">
+                        <i class="fas fa-arrow-left"></i>
+                        Back
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert-modern success">
+                <i class="fas fa-check-circle"></i>
+                @TempData["SuccessMessage"]
+            </div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert-modern error">
+                <i class="fas fa-exclamation-circle"></i>
+                @TempData["ErrorMessage"]
+            </div>
+        }
+
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="employee-card">
+                    <div class="employee-card-body text-center">
+                        <div class="employee-avatar" style="width: 80px; height: 80px; font-size: 2rem; margin: 0 auto 1rem;">
+                            @Model.FullName.Substring(0, 1).ToUpper()
+                        </div>
+
+                        <h2 style="color: #fff; margin-bottom: 0.25rem; font-size: 1.25rem;">@Model.FullName</h2>
+                        <p style="color: #666; margin-bottom: 1rem; font-size: 0.875rem;">ID: @Model.Id</p>
+
+                        <div style="margin-bottom: 1rem;">
+                            <span class="status-badge @(Model.IsActive ? "active" : "inactive")" style="font-size: 0.875rem; padding: 0.375rem 0.75rem;">
+                                @(Model.IsActive ? "Active" : "Inactive")
+                            </span>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <a asp-action="EditEmployee" asp-route-id="@Model.Id" class="btn-modern" style="justify-content: center;">
+                                <i class="fas fa-edit"></i>
+                                Edit Employee
+                            </a>
+
+                            <button type="button"
+                                    class="btn-modern-@(Model.IsActive ? "danger" : "success")"
+                                    style="width: 100%; justify-content: center;"
+                                    onclick="showStatusModal('@Model.Id', '@Model.FullName', @Model.IsActive.ToString().ToLower())">
+                                <i class="fas fa-@(Model.IsActive ? "user-slash" : "user-check")"></i>
+                                @(Model.IsActive ? "Deactivate" : "Activate")
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div class="card-body">
-                    @if (TempData["SuccessMessage"] != null)
-                    {
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <strong>Success!</strong> @TempData["SuccessMessage"]
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    }
-                    @if (TempData["ErrorMessage"] != null)
-                    {
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <strong>Error!</strong> @TempData["ErrorMessage"]
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    }
+            </div>
 
-                    <div class="row">
-                        <div class="col-md-4 text-center mb-4">
-                            <div class="mb-3">
-                                <img src="https://via.placeholder.com/200" alt="@Model.FullName" class="rounded-circle img-thumbnail" />
-                            </div>
-                            <div class="mb-3">
-                                <h4>@Model.FullName</h4>
-                                <span class="badge bg-@(Model.IsActive ? "success" : "danger")">@(Model.IsActive ? "Active" : "Inactive")</span>
-                            </div>
-                            <form asp-action="ToggleEmployeeStatus" asp-route-id="@Model.Id" method="post">
-                                <button type="submit" class="btn btn-@(Model.IsActive ? "danger" : "success") btn-sm">
-                                    <i class="fas fa-@(Model.IsActive ? "lock" : "unlock")"></i>
-                                    @(Model.IsActive ? "Deactivate Account" : "Activate Account")
-                                </button>
-                            </form>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <tbody>
-                                        <tr>
-                                            <th class="table-light" style="width: 30%">Full Name</th>
-                                            <td>@Model.FullName</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="table-light">Email</th>
-                                            <td>@Model.Email</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="table-light">Phone</th>
-                                            <td>@Model.Phone</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="table-light">Role</th>
-                                            <td>@Model.Role</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="table-light">Status</th>
-                                            <td>
-                                                @if (Model.IsActive)
-                                                {
-                                                    <span class="badge bg-success">Active</span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="badge bg-danger">Inactive</span>
-                                                }
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+            <div class="col-md-8 mb-4">
+                <div class="employee-card">
+                    <div class="employee-card-header">
+                        <h3 style="color: #ccc; margin: 0; font-size: 1rem; font-weight: 500;">
+                            Employee Information
+                        </h3>
+                    </div>
+                    <div class="employee-card-body">
+                        <div class="details-table">
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <th>Full Name</th>
+                                        <td>@Model.FullName</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Email Address</th>
+                                        <td>
+                                            <a href="mailto:@Model.Email" style="color: #0070f3; text-decoration: none;">
+                                                @Model.Email
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Phone Number</th>
+                                        <td>
+                                            <a href="tel:@Model.Phone" style="color: #0070f3; text-decoration: none;">
+                                                @Model.Phone
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Role</th>
+                                        <td>
+                                            <span style="background: #333; color: #ccc; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500;">
+                                                @Model.Role
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Account Status</th>
+                                        <td>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <span class="status-badge @(Model.IsActive ? "active" : "inactive")">
+                                                    @(Model.IsActive ? "Active" : "Inactive")
+                                                </span>
+                                                <span style="color: #666; font-size: 0.75rem;">
+                                                    @(Model.IsActive ? "Can access system" : "Cannot access system")
+                                                </span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="statusModal" style="display: none;">
+            <div class="modal-content" style="max-width: 500px;">
+                <div class="modal-header">
+                    <h3 id="modalTitle">Confirm Status Change</h3>
+                    <button class="modal-close" onclick="hideStatusModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; padding: 0.75rem; background: #000; border-radius: 6px; border: 1px solid #333;">
+                        <div class="employee-avatar" style="width: 40px; height: 40px; font-size: 1.25rem;">
+                            @Model.FullName.Substring(0, 1).ToUpper()
+                        </div>
+                        <div>
+                            <div style="font-weight: 500; color: #fff; font-size: 0.875rem;">@Model.FullName</div>
+                            <div style="color: #666; font-size: 0.75rem;">@Model.Role</div>
+                        </div>
+                    </div>
+
+                    <p id="modalMessage" style="margin-bottom: 1rem;"></p>
+
+                    <div id="modalWarning" style="display: none; background: rgba(238, 0, 0, 0.1); border: 1px solid #e00; border-radius: 6px; padding: 0.75rem;">
+                        <div style="color: #e00; font-weight: 500; margin-bottom: 0.25rem; font-size: 0.875rem;">
+                            <i class="fas fa-exclamation-triangle"></i> Warning
+                        </div>
+                        <div style="color: #ccc; font-size: 0.75rem;">
+                            Deactivating this account will prevent system access.
+                        </div>
+                    </div>
+
+                    <div id="modalInfo" style="display: none; background: rgba(0, 170, 0, 0.1); border: 1px solid #0a0; border-radius: 6px; padding: 0.75rem;">
+                        <div style="color: #0a0; font-weight: 500; margin-bottom: 0.25rem; font-size: 0.875rem;">
+                            <i class="fas fa-info-circle"></i> Information
+                        </div>
+                        <div style="color: #ccc; font-size: 0.75rem;">
+                            Activating this account will allow system access.
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-modern-secondary" onclick="hideStatusModal()">Cancel</button>
+                    <form id="statusForm" method="post" style="display: inline;">
+                        <button type="submit" id="confirmButton" class="btn-modern-danger">Confirm</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -97,11 +192,47 @@
 
 @section Scripts {
     <script>
-        $(document).ready(function () {
-            // Auto-dismiss alerts after 5 seconds
-            setTimeout(function () {
-                $('.alert').alert('close');
-            }, 5000);
+        function showStatusModal(employeeId, employeeName, isActive) {
+            const modal = document.getElementById('statusModal');
+            const form = document.getElementById('statusForm');
+            const message = document.getElementById('modalMessage');
+            const confirmButton = document.getElementById('confirmButton');
+            const warning = document.getElementById('modalWarning');
+            const info = document.getElementById('modalInfo');
+
+            const action = isActive ? 'deactivate' : 'activate';
+            const actionClass = isActive ? 'btn-modern-danger' : 'btn-modern-success';
+
+            form.action = `/Employee/ToggleEmployeeStatus/${employeeId}`;
+            message.innerHTML = `Are you sure you want to ${action} <strong style="color: #0070f3;">${employeeName}</strong>?`;
+
+            confirmButton.className = actionClass;
+            confirmButton.innerHTML = `<i class="fas fa-${isActive ? 'user-slash' : 'user-check'}"></i> ${action.charAt(0).toUpperCase() + action.slice(1)}`;
+
+            if (isActive) {
+                warning.style.display = 'block';
+                info.style.display = 'none';
+            } else {
+                warning.style.display = 'none';
+                info.style.display = 'block';
+            }
+
+            modal.style.display = 'flex';
+        }
+
+        function hideStatusModal() {
+            document.getElementById('statusModal').style.display = 'none';
+        }
+
+        document.getElementById('statusModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideStatusModal();
+            }
         });
+
+        setTimeout(function () {
+            const alerts = document.querySelectorAll('.alert-modern');
+            alerts.forEach(alert => alert.style.display = 'none');
+        }, 5000);
     </script>
 }
