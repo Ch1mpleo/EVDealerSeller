@@ -11,11 +11,13 @@ namespace EVDealerSales.Services.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger _logger;
+        private readonly IClaimsService _claimsService;
 
-        public DeliveryService(IUnitOfWork unitOfWork, ILogger<DeliveryService> logger)
+        public DeliveryService(IUnitOfWork unitOfWork, ILogger<DeliveryService> logger, IClaimsService claimsService)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
+            _claimsService = claimsService;
         }
 
         public async Task<DeliveryResponseDto> CreateDeliveryAsync(DeliveryDto dto)
@@ -35,7 +37,6 @@ namespace EVDealerSales.Services.Services
                     throw new ArgumentException("This order already has a delivery.");
 
                 var now = DateTime.UtcNow;
-
                 var status = dto.Status ?? DeliveryStatus.Scheduled;
 
                 var delivery = new Delivery
@@ -45,7 +46,7 @@ namespace EVDealerSales.Services.Services
                     ActualDate = dto.ActualDate?.ToUniversalTime(),
                     Status = status,
                     CreatedAt = now,
-                    CreatedBy = new Guid("00000000-0000-0000-0000-000000000001")
+                    CreatedBy = _claimsService.GetCurrentUserId
                 };
 
                 var created = await _unitOfWork.Deliveries.AddAsync(delivery);
@@ -184,6 +185,10 @@ namespace EVDealerSales.Services.Services
                     return true;
                 }
 
+                // Audit
+                delivery.UpdatedAt = DateTime.UtcNow;
+                delivery.UpdatedBy = _claimsService.GetCurrentUserId;
+
                 await _unitOfWork.Deliveries.Update(delivery);
                 await _unitOfWork.SaveChangesAsync();
 
@@ -221,7 +226,6 @@ namespace EVDealerSales.Services.Services
                 // Business rules
                 if (status == DeliveryStatus.InTransit && delivery.PlannedDate == null)
                 {
-                    // backfill planned date to now if missing
                     delivery.PlannedDate = DateTime.UtcNow;
                 }
                 if (status == DeliveryStatus.Delivered && delivery.ActualDate == null)
@@ -232,6 +236,10 @@ namespace EVDealerSales.Services.Services
                 {
                     delivery.ActualDate = null;
                 }
+
+                // Audit
+                delivery.UpdatedAt = DateTime.UtcNow;
+                delivery.UpdatedBy = _claimsService.GetCurrentUserId;
 
                 await _unitOfWork.Deliveries.Update(delivery);
                 await _unitOfWork.SaveChangesAsync();
@@ -261,7 +269,7 @@ namespace EVDealerSales.Services.Services
 
                 delivery.IsDeleted = true;
                 delivery.DeletedAt = DateTime.UtcNow;
-                delivery.DeletedBy = new Guid("00000000-0000-0000-0000-000000000001");
+                delivery.DeletedBy = _claimsService.GetCurrentUserId;
 
                 await _unitOfWork.Deliveries.Update(delivery);
                 await _unitOfWork.SaveChangesAsync();

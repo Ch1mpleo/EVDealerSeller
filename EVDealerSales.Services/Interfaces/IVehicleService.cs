@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using EVDealerSales.Models.Commons;
 using EVDealerSales.Models.DTOs.VehicleDTOs;
-using EVDealerSales.Models.Commons;
 
 namespace EVDealerSales.Services.Interfaces
 {
@@ -15,5 +10,6 @@ namespace EVDealerSales.Services.Interfaces
         Task<VehicleDto> CreateVehicleAsync(CreateVehicleDto dto);
         Task<VehicleDto> UpdateVehicleAsync(Guid id, UpdateVehicleDto dto);
         Task<bool> DeleteVehicleAsync(Guid id);
+        Task<List<VehicleModelListDto>> GetVehicleModelListAsync();
     }
 }

@@ -10,5 +10,6 @@ namespace EVDealerSales.Services.Interfaces
         Task<GetCustomerDto> GetCustomerByIdAsync(Guid id);
         Task<bool> UpdateCustomerAsync(Guid id, GetCustomerDto customerDto);
         Task<bool> DeleteCustomerAsync(Guid id);
+        Task<List<ListNameCustomerDto>> CustomerListNameAsync();
     }
 }
