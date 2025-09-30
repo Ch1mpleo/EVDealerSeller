@@ -79,7 +79,7 @@
                 @foreach (var vehicle in Model)
                 {
                     <div class="vehicle-card">
-                        <a asp-action="Details" asp-route-id="@vehicle.Id" class="vehicle-image-link">
+                        <a asp-action="DetailVehicles" asp-route-id="@vehicle.Id" class="vehicle-image-link">
                             <div class="vehicle-image-wrapper">
                                 <img src="@(string.IsNullOrEmpty(vehicle.ImageUrl) ? "/placeholder.svg?height=300&width=500" : vehicle.ImageUrl)"
                                      alt="@vehicle.ModelName @vehicle.TrimName"
@@ -139,7 +139,7 @@
                             </div>
 
                             <div class="vehicle-actions">
-                                <a asp-action="Details" asp-route-id="@vehicle.Id" class="btn-view-details">
+                                <a asp-action="DetailVehicles" asp-route-id="@vehicle.Id" class="btn-view-details">
                                     View Details
                                     <i class="bi bi-arrow-right"></i>
                                 </a>
