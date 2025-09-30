@@ -7,6 +7,13 @@ namespace EVDealerSales.Models.Interfaces
         IGenericRepository<User> Users { get; }
         IGenericRepository<Customer> Customers { get; }
         IGenericRepository<Vehicle> Vehicles { get; }
+        IGenericRepository<Quote> Quotes { get; }
+        IGenericRepository<Order> Orders { get; }
+        IGenericRepository<OrderItem> OrderItems { get; }
+        IGenericRepository<Invoice> Invoices { get; }
+        IGenericRepository<Payment> Payments { get; }
+        IGenericRepository<Delivery> Deliveries { get; }
+
         Task<int> SaveChangesAsync();
     }
 }
