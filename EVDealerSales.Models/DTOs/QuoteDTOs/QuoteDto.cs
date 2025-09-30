@@ -6,7 +6,6 @@ namespace EVDealerSales.Models.DTOs.QuoteDTOs
     {
         public Guid Id { get; set; }
         public Guid CustomerId { get; set; }
-        public Guid StaffId { get; set; }
         public Guid VehicleId { get; set; }
         public decimal QuotedPrice { get; set; }
         public decimal? FinalPrice { get; set; }

@@ -6,8 +6,6 @@ namespace EVDealerSales.Models.DTOs.OrderDTOs
     public class OrderDto
     {
         public Guid QuoteId { get; set; }
-        public Guid CustomerId { get; set; }
-        public Guid StaffId { get; set; }
         public DateTime OrderDate { get; set; }
         public OrderStatus Status { get; set; }
         public string DiscountType { get; set; }

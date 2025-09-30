@@ -11,13 +11,13 @@ namespace EVDealerSales.Services.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger _logger;
-        //private readonly IClaimsService _claimsService;
+        private readonly IClaimsService _claimsService;
 
-        public OrderService(IUnitOfWork unitOfWork, ILogger<OrderService> logger/*, IClaimsService claimsService*/)
+        public OrderService(IUnitOfWork unitOfWork, ILogger<OrderService> logger, IClaimsService claimsService)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
-            //_claimsService = claimsService;
+            _claimsService = claimsService;
         }
 
         public async Task<OrderResponseDto> CreateOrderAsync(OrderDto dto)
@@ -52,7 +52,7 @@ namespace EVDealerSales.Services.Services
                 _logger.LogInformation("Associated quote with ID {QuoteId} found.", dto.QuoteId);
 
                 // Create audit fields
-                //var currentUserId = _claimsService.GetCurrentUserId;
+                var currentUserId = _claimsService.GetCurrentUserId;
                 var now = DateTime.UtcNow;
 
                 // Create the single order item using the vehicle from the quote
@@ -63,7 +63,7 @@ namespace EVDealerSales.Services.Services
                     UnitPrice = dto.Items.UnitPrice,
                     LineTotal = dto.Items.LineTotal,
                     CreatedAt = now,
-                    CreatedBy = new Guid("00000000-0000-0000-0000-000000000001") // Placeholder for current user ID
+                    CreatedBy = currentUserId
                 };
 
                 var order = new Order
@@ -79,7 +79,7 @@ namespace EVDealerSales.Services.Services
                     SubtotalAmount = dto.SubtotalAmount,
                     TotalAmount = dto.TotalAmount,
                     CreatedAt = now,
-                    CreatedBy = new Guid("00000000-0000-0000-0000-000000000001"),
+                    CreatedBy = currentUserId,
                     Items = new List<OrderItem> { orderItem }
                 };
 
@@ -242,12 +242,12 @@ namespace EVDealerSales.Services.Services
                 }
 
                 // Add audit fields before deletion
-                //var currentUserId = _claimsService.GetCurrentUserId;
+                var currentUserId = _claimsService.GetCurrentUserId;
                 var now = DateTime.UtcNow;
 
                 order.IsDeleted = true;
                 order.DeletedAt = now;
-                order.DeletedBy = new Guid("00000000-0000-0000-0000-000000000001");
+                order.DeletedBy = currentUserId;
 
                 // Also mark order items as deleted
                 if (order.Items?.Any() == true)
@@ -256,7 +256,7 @@ namespace EVDealerSales.Services.Services
                     {
                         item.IsDeleted = true;
                         item.DeletedAt = now;
-                        item.DeletedBy = new Guid("00000000-0000-0000-0000-000000000001");
+                        item.DeletedBy = currentUserId;
                     }
                 }
 

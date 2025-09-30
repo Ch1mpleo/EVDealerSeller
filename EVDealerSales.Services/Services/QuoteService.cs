@@ -34,8 +34,6 @@ namespace EVDealerSales.Services.Services
                 // Input validation
                 if (quoteDto.CustomerId == Guid.Empty)
                     throw new ArgumentException("Customer ID is required.");
-                if (quoteDto.StaffId == Guid.Empty)
-                    throw new ArgumentException("Staff ID is required.");
                 if (quoteDto.VehicleId == Guid.Empty)
                     throw new ArgumentException("Vehicle ID is required.");
                 if (quoteDto.QuotedPrice <= 0)
@@ -53,13 +51,6 @@ namespace EVDealerSales.Services.Services
                     throw new KeyNotFoundException($"Customer with ID {quoteDto.CustomerId} not found");
                 }
 
-                // Verify if staff exists
-                var staff = await _unitOfWork.Users.GetByIdAsync(quoteDto.StaffId);
-                if (staff == null || staff.IsDeleted || !staff.IsActive)
-                {
-                    _logger.LogWarning("Staff with ID {StaffId} not found, is deleted, or inactive", quoteDto.StaffId);
-                    throw new KeyNotFoundException($"Staff with ID {quoteDto.StaffId} not found or is inactive");
-                }
 
                 // Verify if vehicle exists
                 var vehicle = await _unitOfWork.Vehicles.GetByIdAsync(quoteDto.VehicleId);
@@ -69,14 +60,15 @@ namespace EVDealerSales.Services.Services
                     throw new KeyNotFoundException($"Vehicle with ID {quoteDto.VehicleId} not found");
                 }
 
-                // Add audit fields
                 var currentUserId = _claimsService.GetCurrentUserId;
+                // Verify if staff exists
+                var staff = await _unitOfWork.Users.GetByIdAsync(currentUserId);
                 var now = DateTime.UtcNow;
 
                 var quote = new Quote
                 {
                     CustomerId = quoteDto.CustomerId,
-                    StaffId = quoteDto.StaffId,
+                    StaffId = currentUserId,
                     VehicleId = quoteDto.VehicleId,
                     QuotedPrice = quoteDto.QuotedPrice,
                     FinalPrice = quoteDto.FinalPrice,
@@ -85,7 +77,7 @@ namespace EVDealerSales.Services.Services
                     Remarks = quoteDto.Remarks,
                     // Audit fields
                     CreatedAt = now,
-                    CreatedBy = staff.Id,
+                    CreatedBy = currentUserId,
                 };
 
                 var createdQuote = await _unitOfWork.Quotes.AddAsync(quote);
@@ -284,11 +276,11 @@ namespace EVDealerSales.Services.Services
                     throw new InvalidOperationException("Cannot update quote because it is associated with an existing order.");
                 }
 
+                var staffId = _claimsService.GetCurrentUserId;
+
                 // Input validation
                 if (quoteDto.CustomerId == Guid.Empty)
                     throw new ArgumentException("Customer ID is required.");
-                if (quoteDto.StaffId == Guid.Empty)
-                    throw new ArgumentException("Staff ID is required.");
                 if (quoteDto.VehicleId == Guid.Empty)
                     throw new ArgumentException("Vehicle ID is required.");
                 if (quoteDto.QuotedPrice <= 0)
@@ -319,15 +311,15 @@ namespace EVDealerSales.Services.Services
                 }
 
                 // Check if staff exists and update if different
-                if (quote.StaffId != quoteDto.StaffId)
+                if (quote.StaffId != staffId)
                 {
-                    var staff = await _unitOfWork.Users.GetByIdAsync(quoteDto.StaffId);
+                    var staff = await _unitOfWork.Users.GetByIdAsync(staffId);
                     if (staff == null || staff.IsDeleted || !staff.IsActive)
                     {
-                        _logger.LogWarning("Staff with ID {StaffId} not found, is deleted, or inactive", quoteDto.StaffId);
-                        throw new KeyNotFoundException($"Staff with ID {quoteDto.StaffId} not found or is inactive");
+                        _logger.LogWarning("Staff with ID {StaffId} not found, is deleted, or inactive", staffId);
+                        throw new KeyNotFoundException($"Staff with ID {staffId} not found or is inactive");
                     }
-                    quote.StaffId = quoteDto.StaffId;
+                    quote.StaffId = staffId;
                     isUpdated = true;
                 }
 
