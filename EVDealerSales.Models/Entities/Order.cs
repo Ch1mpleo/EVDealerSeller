@@ -4,7 +4,7 @@ namespace EVDealerSales.Models.Entities
 {
     public class Order : BaseEntity
     {
-        public Guid? QuoteId { get; set; }
+        public Guid QuoteId { get; set; }
         public Quote Quote { get; set; }
         public Guid CustomerId { get; set; }
         public Customer Customer { get; set; }
