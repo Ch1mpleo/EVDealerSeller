@@ -39,9 +39,12 @@
 </div>
 
     <div class="form-group">
-        <label asp-for="ScheduledAt"></label>
-        <input asp-for="ScheduledAt" type="datetime-local" class="form-control" value="@now" />
-        <span asp-validation-for="ScheduledAt" class="text-danger"></span>
+        <label>Schedule Dates</label>
+        <div id="schedule-dates">
+            <input type="datetime-local" name="ScheduledDates" class="form-control" value="@now" />
+        </div>
+        <button type="button" class="btn btn-secondary mt-2" onclick="addDateField()">+ Add another date</button>
+        <span class="text-danger">@ViewData["ScheduleError"]</span>
     </div>
 
     <div class="form-group">
@@ -51,3 +54,21 @@
 
     <button type="submit" class="btn btn-primary">Schedule</button>
 </form>
+@section Scripts {
+    <script>
+                function addDateField() {
+            var container = document.getElementById("schedule-dates");
+            var input = document.createElement("input");
+            input.type = "datetime-local";
+            input.name = "ScheduledDates";
+            input.className = "form-control mt-2";
+
+            var now = new Date();
+            var formatted = now.toISOString().slice(0,16);
+            input.value = formatted;
+
+            container.appendChild(input);
+        }
+
+    </script>
+}

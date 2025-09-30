@@ -22,37 +22,43 @@ namespace EVDealerSales.Services.Services
             _claimsService = claimsService;
         }
 
-        public async Task<TestDriveDto> CreateTestDriveAsync(CreateTestDriveDto createTestDriveDto)
+        public async Task<List<TestDriveDto>> CreateTestDriveAsync(CreateTestDriveDto createTestDriveDto)
         {
             try
             {
-                // Validation
                 if (createTestDriveDto.CustomerId == Guid.Empty)
                     throw new ArgumentException("CustomerId is required");
                 if (createTestDriveDto.VehicleId == Guid.Empty)
                     throw new ArgumentException("VehicleId is required");
-                if (createTestDriveDto.ScheduledAt < DateTime.UtcNow)
-                    throw new ArgumentException("Scheduled time must be in the future");
+                if (createTestDriveDto.ScheduledDates == null || !createTestDriveDto.ScheduledDates.Any())
+                    throw new ArgumentException("At least one scheduled date is required");
 
-                _logger.LogInformation("Creating test drive for customer {CustomerId} and vehicle {VehicleId}", createTestDriveDto.CustomerId, createTestDriveDto.VehicleId);
+                var now = DateTime.UtcNow;
+                var testDrives = new List<TestDrive>();
 
-                var entity = new TestDrive
+                foreach (var scheduledAt in createTestDriveDto.ScheduledDates)
                 {
-                    Id = Guid.NewGuid(),
-                    CustomerId = createTestDriveDto.CustomerId,
-                    VehicleId = createTestDriveDto.VehicleId,
-                    ScheduledAt = createTestDriveDto.ScheduledAt,
-                    Status = TestDriveStatus.Scheduled,
-                    Notes = createTestDriveDto.Notes ?? string.Empty,
-                    StaffId = createTestDriveDto.StaffId
-                };
+                    if (scheduledAt < now)
+                        throw new ArgumentException("Scheduled time must be in the future");
 
-                await _unitOfWork.TestDrives.AddAsync(entity);
+                    var entity = new TestDrive
+                    {
+                        Id = Guid.NewGuid(),
+                        CustomerId = createTestDriveDto.CustomerId,
+                        VehicleId = createTestDriveDto.VehicleId,
+                        ScheduledAt = scheduledAt,
+                        Status = TestDriveStatus.Scheduled,
+                        Notes = createTestDriveDto.Notes ?? string.Empty,
+                        StaffId = _claimsService.GetCurrentUserId
+                    };
+
+                    testDrives.Add(entity);
+                }
+
+                await _unitOfWork.TestDrives.AddRangeAsync(testDrives);
                 await _unitOfWork.SaveChangesAsync();
 
-                _logger.LogInformation("Test drive created successfully with ID: {TestDriveId}", entity.Id);
-
-                return new TestDriveDto
+                return testDrives.Select(entity => new TestDriveDto
                 {
                     Id = entity.Id,
                     CustomerId = entity.CustomerId,
@@ -61,14 +67,15 @@ namespace EVDealerSales.Services.Services
                     Status = entity.Status,
                     Notes = entity.Notes,
                     StaffId = entity.StaffId
-                };
+                }).ToList();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error creating test drive for customer {CustomerId}", createTestDriveDto.CustomerId);
+                _logger.LogError(ex, "Error creating test drives for customer {CustomerId}", createTestDriveDto.CustomerId);
                 throw;
             }
         }
+
 
         public async Task<Pagination<TestDriveDto>> GetAllTestDrivesAsync(string? search, string? sortBy, bool isDescending, int page, int pageSize)
         {

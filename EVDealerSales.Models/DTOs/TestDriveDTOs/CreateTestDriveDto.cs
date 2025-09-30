@@ -10,7 +10,7 @@ namespace EVDealerSales.Models.DTOs.TestDriveDTOs
     {
         public Guid CustomerId { get; set; }
         public Guid VehicleId { get; set; }
-        public DateTime ScheduledAt { get; set; }
+        public List<DateTime> ScheduledDates { get; set; } = new();
         public string? Notes { get; set; }
         public Guid? StaffId { get; set; }
     }

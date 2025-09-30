@@ -54,23 +54,27 @@ namespace EVDealerSales.WebMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Schedule(CreateTestDriveDto dto)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || dto.ScheduledDates == null || !dto.ScheduledDates.Any())
             {
                 var vehicles = await _vehicleService.GetAllVehicleAsync(null, null, false, 1, 100);
                 ViewBag.Vehicles = vehicles;
+                ModelState.AddModelError("", "Please select at least one scheduled date.");
                 return View(dto);
             }
 
             try
             {
-                var result = await _testDriveService.CreateTestDriveAsync(dto);
-                TempData["SuccessMessage"] = "Test drive scheduled successfully!";
-                return RedirectToAction("Details", new { id = result.Id });
+                var results = await _testDriveService.CreateTestDriveAsync(dto); // trả về List<TestDriveDto>
+                TempData["SuccessMessage"] = "Test drives scheduled successfully!";
+
+                // nếu tạo nhiều lịch, chuyển sang danh sách
+                return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error scheduling test drive");
                 ModelState.AddModelError("", ex.Message);
+
                 var vehicles = await _vehicleService.GetAllVehicleAsync(null, null, false, 1, 100);
                 ViewBag.Vehicles = vehicles;
                 return View(dto);
