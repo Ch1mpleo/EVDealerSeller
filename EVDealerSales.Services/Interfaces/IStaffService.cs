@@ -7,6 +7,7 @@ namespace EVDealerSales.Services.Interfaces
     {
         // Customer Management
         Task<Pagination<GetCustomerDto>> GetCustomersAsync(int pageNumber, int pageSize, string searchTerm = null);
+        Task<GetCustomerDto> AddCustomerAsync(CreateCustomerDto customerDto);
         Task<GetCustomerDto> GetCustomerByIdAsync(Guid id);
         Task<bool> UpdateCustomerAsync(Guid id, GetCustomerDto customerDto);
         Task<bool> DeleteCustomerAsync(Guid id);

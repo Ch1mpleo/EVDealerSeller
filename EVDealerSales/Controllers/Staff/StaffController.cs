@@ -111,6 +111,49 @@ namespace EVDealerSales.WebMVC.Controllers.Staff
             return RedirectToAction(nameof(Customers));
         }
 
+        [HttpGet]
+        public IActionResult AddCustomer()
+        {
+            return View();
+        }
+
+        /// POST: Manager/AddCustomer
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddCustomer(CreateCustomerDto model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            try
+            {
+                await _staffService.AddCustomerAsync(model);
+                // Chuyển sang trang đặt lịch, truyền email
+                return RedirectToAction("Schedule", "TestDrive", new { email = model.Email });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error adding customer.");
+                TempData["ErrorMessage"] = ex.Message;
+                return View(model);
+            }
+        }
+        [HttpGet]
+        public IActionResult CheckCustomerEmail()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CheckCustomerEmailApi(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return Json(new { exists = false });
+
+            var customers = await _staffService.GetCustomersAsync(1, 1, email);
+            bool exists = customers.Any(c => c.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+            return Json(new { exists });
+        }
         #endregion
     }
 }

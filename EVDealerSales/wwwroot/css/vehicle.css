@@ -1303,6 +1303,7 @@
 
 .detail-appointment-btn {
     background: linear-gradient(135deg, #0070f3 0%, #0060d3 100%);
+    text-decoration: none !important;
     border: none;
     color: #fff;
     padding: 1.25rem 3rem;
@@ -1322,6 +1323,7 @@
 
     .detail-appointment-btn::before {
         content: "";
+        text-decoration: none !important;
         position: absolute;
         top: 0;
         left: -100%;
@@ -1333,20 +1335,24 @@
 
     .detail-appointment-btn:hover::before {
         left: 100%;
+        text-decoration: none !important;
     }
 
     .detail-appointment-btn:hover {
         transform: translateY(-4px);
         box-shadow: 0 16px 48px rgba(0, 112, 243, 0.4);
+        text-decoration: none !important;
     }
 
     .detail-appointment-btn i {
         font-size: 1.25rem;
         transition: transform 0.3s ease;
+        text-decoration: none !important;
     }
 
     .detail-appointment-btn:hover i {
         transform: scale(1.1);
+        text-decoration: none !important;
     }
 
 .detail-cta-note {

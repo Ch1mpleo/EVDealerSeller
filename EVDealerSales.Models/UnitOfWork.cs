@@ -17,6 +17,7 @@ namespace EVDealerSales.Models
             IGenericRepository<Invoice> invoiceRepository,
             IGenericRepository<Payment> paymentRepository,
             IGenericRepository<Delivery> deliveryRepository
+            IGenericRepository<TestDrive> testDriveRepository
             )
         {
             _dbContext = dbContext;
@@ -29,6 +30,7 @@ namespace EVDealerSales.Models
             Invoices = invoiceRepository;
             Payments = paymentRepository;
             Deliveries = deliveryRepository;
+            TestDrives = testDriveRepository;
         }
 
         public IGenericRepository<User> Users { get; }
@@ -40,6 +42,8 @@ namespace EVDealerSales.Models
         public IGenericRepository<Invoice> Invoices { get; }
         public IGenericRepository<Payment> Payments { get; }
         public IGenericRepository<Delivery> Deliveries { get; }
+        public IGenericRepository<TestDrive> TestDrives { get; }
+        
         public void Dispose()
         {
             _dbContext.Dispose();
