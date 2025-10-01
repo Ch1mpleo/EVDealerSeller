@@ -120,7 +120,7 @@ namespace EVDealerSales.WebMVC.Controllers.Staff
         /// POST: Manager/AddCustomer
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddCustomer(CreateCustomerDto model)
+        public async Task<IActionResult> AddCustomer(CreateCustomerDto model, Guid? vehicleId)
         {
             if (!ModelState.IsValid)
                 return View(model);
@@ -128,8 +128,7 @@ namespace EVDealerSales.WebMVC.Controllers.Staff
             try
             {
                 await _staffService.AddCustomerAsync(model);
-                // Chuyển sang trang đặt lịch, truyền email
-                return RedirectToAction("Schedule", "TestDrive", new { email = model.Email });
+                return RedirectToAction("Schedule", "TestDrive", new { email = model.Email, vehicleId = vehicleId });
             }
             catch (Exception ex)
             {
@@ -138,6 +137,7 @@ namespace EVDealerSales.WebMVC.Controllers.Staff
                 return View(model);
             }
         }
+
         [HttpGet]
         public IActionResult CheckCustomerEmail()
         {
