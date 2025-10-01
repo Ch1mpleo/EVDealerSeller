@@ -11,7 +11,6 @@
 
 <div class="employee-container">
     <div class="container-fluid">
-         Header 
         <div class="employee-header">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
@@ -27,9 +26,7 @@
         </div>
 
         <div class="row">
-             Left Column: Customer & Vehicle Info 
             <div class="col-lg-5">
-                 Customer Info Card 
                 <div class="employee-card mb-3">
                     <div class="employee-card-body">
                         <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
@@ -47,20 +44,19 @@
                             </div>
                         </div>
                         
-                        @if (!string.IsNullOrEmpty(customer.PhoneNumber))
+                        @if (!string.IsNullOrEmpty(customer.Phone))
                         {
                             <div style="padding: 0.75rem; background: #000; border: 1px solid #333; border-radius: 6px;">
                                 <div style="color: #666; font-size: 0.75rem; margin-bottom: 0.25rem;">Phone Number</div>
                                 <div style="color: #fff; font-size: 0.875rem;">
                                     <i class="fas fa-phone" style="margin-right: 0.5rem; color: #0070f3;"></i>
-                                    @customer.PhoneNumber
+                                    @customer.Phone
                                 </div>
                             </div>
                         }
                     </div>
                 </div>
 
-                 Selected Vehicle Preview 
                 <div class="employee-card" id="vehiclePreview" style="display: none;">
                     <div class="employee-card-body">
                         <h3 style="color: #ccc; margin: 0 0 1rem 0; font-size: 0.875rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">
@@ -71,7 +67,6 @@
                 </div>
             </div>
 
-             Right Column: Schedule Form 
             <div class="col-lg-7">
                 <div class="employee-card">
                     <div class="employee-card-body">
