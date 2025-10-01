@@ -1,4 +1,4 @@
-﻿using EVDealerSales.Models.DTOs.OrderDTOs;
+﻿using EVDealerSales.BO.DTOs.OrderDTOs;
 
 namespace EVDealerSales.Services.Interfaces
 {

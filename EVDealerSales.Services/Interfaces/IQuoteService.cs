@@ -1,6 +1,6 @@
-﻿using EVDealerSales.Models.Commons;
-using EVDealerSales.Models.DTOs.QuoteDTOs;
-using EVDealerSales.Models.Enums;
+﻿using EVDealerSales.BO.DTOs.QuoteDTOs;
+using EVDealerSales.BO.Enums;
+using EVDealerSales.Services.Utils;
 
 namespace EVDealerSales.Services.Interfaces
 {

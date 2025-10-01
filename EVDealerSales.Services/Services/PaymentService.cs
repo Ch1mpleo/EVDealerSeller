@@ -1,6 +1,6 @@
-using EVDealerSales.Models.DTOs.PaymentDTOs;
+using EVDealerSales.BO.DTOs.PaymentDTOs;
+using EVDealerSales.BO.Enums;
 using EVDealerSales.Models.Entities;
-using EVDealerSales.Models.Enums;
 using EVDealerSales.Models.Interfaces;
 using EVDealerSales.Services.Interfaces;
 using Microsoft.Extensions.Logging;

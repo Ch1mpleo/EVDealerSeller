@@ -1,4 +1,4 @@
-﻿using EVDealerSales.Models.DTOs.AuthDTOs;
+﻿using EVDealerSales.BO.DTOs.AuthDTOs;
 using Microsoft.Extensions.Configuration;
 
 namespace EVDealerSales.Services.Interfaces

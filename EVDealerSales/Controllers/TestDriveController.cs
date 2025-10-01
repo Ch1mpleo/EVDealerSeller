@@ -1,5 +1,5 @@
-﻿using EVDealerSales.Models.DTOs.TestDriveDTOs;
-using EVDealerSales.Models.Enums;
+﻿using EVDealerSales.BO.DTOs.TestDriveDTOs;
+using EVDealerSales.BO.Enums;
 using EVDealerSales.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

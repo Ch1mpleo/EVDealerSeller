@@ -1,4 +1,4 @@
-﻿using EVDealerSales.Models.Enums;
+﻿using EVDealerSales.BO.Enums;
 
 namespace EVDealerSales.Models.Entities
 {

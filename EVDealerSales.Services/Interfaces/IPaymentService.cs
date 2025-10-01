@@ -1,4 +1,4 @@
-using EVDealerSales.Models.DTOs.PaymentDTOs;
+using EVDealerSales.BO.DTOs.PaymentDTOs;
 
 namespace EVDealerSales.Services.Interfaces
 {

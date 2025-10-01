@@ -1,5 +1,5 @@
-﻿using EVDealerSales.Models.Commons;
-using EVDealerSales.Models.DTOs.CustomerDTOs;
+﻿using EVDealerSales.BO.DTOs.CustomerDTOs;
+using EVDealerSales.Services.Utils;
 
 namespace EVDealerSales.Services.Interfaces
 {

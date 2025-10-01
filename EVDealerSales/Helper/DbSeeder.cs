@@ -1,6 +1,6 @@
-﻿using EVDealerSales.Models;
+﻿using EVDealerSales.BO.Enums;
+using EVDealerSales.Models;
 using EVDealerSales.Models.Entities;
-using EVDealerSales.Models.Enums;
 using EVDealerSales.Services.Utils;
 using Microsoft.EntityFrameworkCore;
 

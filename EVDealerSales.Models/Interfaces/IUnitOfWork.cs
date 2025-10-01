@@ -14,7 +14,7 @@ namespace EVDealerSales.Models.Interfaces
         IGenericRepository<Payment> Payments { get; }
         IGenericRepository<Delivery> Deliveries { get; }
         IGenericRepository<TestDrive> TestDrives { get; }
-        
+
         Task<int> SaveChangesAsync();
     }
 }

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using EVDealerSales.Models.Commons;
-using EVDealerSales.Models.DTOs.TestDriveDTOs;
-using EVDealerSales.Models.Enums;
+﻿using EVDealerSales.BO.DTOs.TestDriveDTOs;
+using EVDealerSales.BO.Enums;
+using EVDealerSales.Services.Utils;
 
 namespace EVDealerSales.Services.Interfaces
 {

@@ -1,4 +1,4 @@
-﻿@model EVDealerSales.Models.DTOs.TestDriveDTOs.UpdateTestDriveDto
+﻿@model EVDealerSales.BO.DTOs.TestDriveDTOs.UpdateTestDriveDto
 
 @{
     ViewBag.Title = "Edit Test Drive";
@@ -18,9 +18,9 @@
     <div class="form-group">
         <label asp-for="Status"></label>
         <select asp-for="Status" class="form-control">
-            @foreach (var status in Enum.GetValues(typeof(EVDealerSales.Models.Enums.TestDriveStatus)))
+            @foreach (var status in Enum.GetValues(typeof(EVDealerSales.BO.Enums.TestDriveStatus)))
             {
-                <option value="@status" selected="@(Model.Status == (EVDealerSales.Models.Enums.TestDriveStatus)status)">
+                <option value="@status" selected="@(Model.Status == (EVDealerSales.BO.Enums.TestDriveStatus)status)">
                     @status
                 </option>
             }

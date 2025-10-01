@@ -1,4 +1,4 @@
-using EVDealerSales.Models.DTOs.InvoiceDTOs;
+using EVDealerSales.BO.DTOs.InvoiceDTOs;
 
 namespace EVDealerSales.Services.Interfaces
 {

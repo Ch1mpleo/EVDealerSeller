@@ -1,4 +1,5 @@
-﻿namespace EVDealerSales.Models.Entities
+﻿
+namespace EVDealerSales.Models.Entities
 {
     public class Vehicle : BaseEntity
     {

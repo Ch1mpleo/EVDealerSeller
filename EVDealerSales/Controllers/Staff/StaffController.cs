@@ -1,6 +1,6 @@
-﻿using EVDealerSales.Models.Commons;
-using EVDealerSales.Models.DTOs.CustomerDTOs;
+﻿using EVDealerSales.BO.DTOs.CustomerDTOs;
 using EVDealerSales.Services.Interfaces;
+using EVDealerSales.Services.Utils;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EVDealerSales.WebMVC.Controllers.Staff

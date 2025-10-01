@@ -1,4 +1,4 @@
-﻿using EVDealerSales.Models.DTOs.VehicleDTOs;
+﻿using EVDealerSales.BO.DTOs.VehicleDTOs;
 using EVDealerSales.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

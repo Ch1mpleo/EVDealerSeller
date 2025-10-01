@@ -1,9 +1,9 @@
-﻿using EVDealerSales.Models.Commons;
-using EVDealerSales.Models.DTOs.QuoteDTOs;
+﻿using EVDealerSales.BO.DTOs.QuoteDTOs;
+using EVDealerSales.BO.Enums;
 using EVDealerSales.Models.Entities;
-using EVDealerSales.Models.Enums;
 using EVDealerSales.Models.Interfaces;
 using EVDealerSales.Services.Interfaces;
+using EVDealerSales.Services.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

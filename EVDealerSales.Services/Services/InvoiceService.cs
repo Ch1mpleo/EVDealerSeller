@@ -1,4 +1,4 @@
-using EVDealerSales.Models.DTOs.InvoiceDTOs;
+using EVDealerSales.BO.DTOs.InvoiceDTOs;
 using EVDealerSales.Models.Entities;
 using EVDealerSales.Models.Interfaces;
 using EVDealerSales.Services.Interfaces;

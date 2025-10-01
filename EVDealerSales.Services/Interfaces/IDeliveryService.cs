@@ -1,5 +1,5 @@
-﻿using EVDealerSales.Models.DTOs.DeliveryDTOs;
-using EVDealerSales.Models.Enums;
+﻿using EVDealerSales.BO.DTOs.DeliveryDTOs;
+using EVDealerSales.BO.Enums;
 
 namespace EVDealerSales.Services.Interfaces
 {

@@ -1,8 +1,8 @@
-﻿using EVDealerSales.Models.Commons;
-using EVDealerSales.Models.DTOs.VehicleDTOs;
+﻿using EVDealerSales.BO.DTOs.VehicleDTOs;
 using EVDealerSales.Models.Entities;
 using EVDealerSales.Models.Interfaces;
 using EVDealerSales.Services.Interfaces;
+using EVDealerSales.Services.Utils;
 using Microsoft.Extensions.Logging;
 
 namespace EVDealerSales.Services.Services

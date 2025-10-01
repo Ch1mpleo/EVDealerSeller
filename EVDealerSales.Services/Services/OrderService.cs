@@ -1,5 +1,5 @@
-﻿using EVDealerSales.Models.DTOs.OrderDTOs;
-using EVDealerSales.Models.DTOs.OrderItemDTOs;
+﻿using EVDealerSales.BO.DTOs.OrderDTOs;
+using EVDealerSales.BO.DTOs.OrderItemDTOs;
 using EVDealerSales.Models.Entities;
 using EVDealerSales.Models.Interfaces;
 using EVDealerSales.Services.Interfaces;

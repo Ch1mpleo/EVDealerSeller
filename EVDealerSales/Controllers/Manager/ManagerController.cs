@@ -1,7 +1,7 @@
-﻿using EVDealerSales.Models.Commons;
-using EVDealerSales.Models.DTOs.UserDTOs;
-using EVDealerSales.Models.Enums;
+﻿using EVDealerSales.BO.DTOs.UserDTOs;
+using EVDealerSales.BO.Enums;
 using EVDealerSales.Services.Interfaces;
+using EVDealerSales.Services.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;

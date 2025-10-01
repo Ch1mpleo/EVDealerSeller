@@ -1,5 +1,4 @@
-﻿using EVDealerSales.Models.Commons;
-using EVDealerSales.Models.DTOs.CustomerDTOs;
+﻿using EVDealerSales.BO.DTOs.CustomerDTOs;
 using EVDealerSales.Models.Entities;
 using EVDealerSales.Models.Interfaces;
 using EVDealerSales.Services.Interfaces;
@@ -14,7 +13,7 @@ namespace EVDealerSales.Services.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger _logger;
         private readonly IClaimsService _claimsService;
-        
+
         public StaffService(IUnitOfWork unitOfWork, ILogger<StaffService> logger, IClaimsService claimsService)
         {
             _unitOfWork = unitOfWork;
@@ -196,7 +195,7 @@ namespace EVDealerSales.Services.Services
                 throw;
             }
         }
-        
+
         public async Task<GetCustomerDto> AddCustomerAsync(CreateCustomerDto customerDto)
         {
             try
@@ -269,6 +268,6 @@ namespace EVDealerSales.Services.Services
 
     }
 
-        #endregion
+    #endregion
 }
 
