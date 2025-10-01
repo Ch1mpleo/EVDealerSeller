@@ -97,7 +97,7 @@
 
         <!-- Call to Action -->
         <div class="detail-cta-section">
-            <a asp-action="CheckCustomerEmail" asp-controller="Staff" class="detail-appointment-btn">
+            <a asp-action="CheckCustomerEmail" asp-controller="Staff" asp-route-vehicleId="@Model.Id" class="detail-appointment-btn">
                 <i class="fas fa-calendar-check"></i>
                 <span>Make an Appointment</span>
             </a>
