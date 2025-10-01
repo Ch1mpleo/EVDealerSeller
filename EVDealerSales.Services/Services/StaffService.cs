@@ -14,6 +14,7 @@ namespace EVDealerSales.Services.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger _logger;
         private readonly IClaimsService _claimsService;
+        
         public StaffService(IUnitOfWork unitOfWork, ILogger<StaffService> logger, IClaimsService claimsService)
         {
             _unitOfWork = unitOfWork;
@@ -122,6 +123,10 @@ namespace EVDealerSales.Services.Services
                 customer.Phone = customerDto.Phone;
                 customer.Address = customerDto.Address;
 
+                // Audit
+                customer.UpdatedAt = DateTime.UtcNow;
+                customer.UpdatedBy = _claimsService.GetCurrentUserId;
+
                 await _unitOfWork.Customers.Update(customer);
                 await _unitOfWork.SaveChangesAsync();
 
@@ -149,7 +154,12 @@ namespace EVDealerSales.Services.Services
                     throw ErrorHelper.NotFound($"Customer with ID {id} not found");
                 }
 
-                await _unitOfWork.Customers.SoftRemove(customer);
+                // Soft delete with audit
+                customer.IsDeleted = true;
+                customer.DeletedAt = DateTime.UtcNow;
+                customer.DeletedBy = _claimsService.GetCurrentUserId;
+
+                await _unitOfWork.Customers.Update(customer);
                 await _unitOfWork.SaveChangesAsync();
 
                 _logger.LogInformation("Successfully deleted customer with ID: {CustomerId}", id);
@@ -163,6 +173,30 @@ namespace EVDealerSales.Services.Services
             }
         }
 
+        public async Task<List<ListNameCustomerDto>> CustomerListNameAsync()
+        {
+            try
+            {
+                _logger.LogInformation("Fetching list of customer names");
+                var customers = await _unitOfWork.Customers
+                    .GetQueryable()
+                    .Where(c => !c.IsDeleted)
+                    .Select(c => new ListNameCustomerDto
+                    {
+                        Id = c.Id,
+                        Name = $"{c.FirstName} {c.LastName}"
+                    })
+                    .ToListAsync();
+                _logger.LogInformation("Successfully retrieved {Count} customer names", customers.Count);
+                return customers;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while fetching customer names. Message: {Message}", ex.Message);
+                throw;
+            }
+        }
+        
         public async Task<GetCustomerDto> AddCustomerAsync(CreateCustomerDto customerDto)
         {
             try
@@ -232,6 +266,7 @@ namespace EVDealerSales.Services.Services
                 throw new Exception("An error occurred while creating the customer. Please try again later.");
             }
         }
+
     }
 
         #endregion

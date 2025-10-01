@@ -13,11 +13,13 @@ namespace EVDealerSales.Services.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger _logger;
+        private readonly IClaimsService _claimsService;
 
-        public ManagerService(IUnitOfWork unitOfWork, ILogger<ManagerService> logger)
+        public ManagerService(IUnitOfWork unitOfWork, ILogger<ManagerService> logger, IClaimsService claimsService)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
+            _claimsService = claimsService;
         }
 
         #region Employee Management
@@ -47,6 +49,9 @@ namespace EVDealerSales.Services.Services
                     throw ErrorHelper.Internal("Failed to process password");
                 }
 
+                var now = DateTime.UtcNow;
+                var currentUserId = _claimsService.GetCurrentUserId;
+
                 // Create the new employee
                 var employee = new User
                 {
@@ -55,7 +60,9 @@ namespace EVDealerSales.Services.Services
                     Phone = createEmployeeDto.Phone,
                     PasswordHash = hashedPassword,
                     Role = createEmployeeDto.Role,
-                    IsActive = createEmployeeDto.IsActive
+                    IsActive = createEmployeeDto.IsActive,
+                    CreatedAt = now,
+                    CreatedBy = currentUserId
                 };
 
                 await _unitOfWork.Users.AddAsync(employee);
@@ -179,6 +186,10 @@ namespace EVDealerSales.Services.Services
                 employee.Role = employeeDto.Role;
                 employee.IsActive = employeeDto.IsActive;
 
+                // Audit
+                employee.UpdatedAt = DateTime.UtcNow;
+                employee.UpdatedBy = _claimsService.GetCurrentUserId;
+
                 await _unitOfWork.Users.Update(employee);
                 await _unitOfWork.SaveChangesAsync();
 
@@ -207,6 +218,11 @@ namespace EVDealerSales.Services.Services
                 }
 
                 employee.IsActive = !employee.IsActive;
+
+                // Audit
+                employee.UpdatedAt = DateTime.UtcNow;
+                employee.UpdatedBy = _claimsService.GetCurrentUserId;
+
                 await _unitOfWork.Users.Update(employee);
                 await _unitOfWork.SaveChangesAsync();
 
@@ -217,6 +233,29 @@ namespace EVDealerSales.Services.Services
             {
                 _logger.LogError(ex, "Error occurred while deactivating employee with ID: {EmployeeId}. Message: {Message}",
                     id, ex.Message);
+                throw;
+            }
+        }
+
+        public async Task<List<ListNameEmployeeDto>> EmployeeListNameAsync()
+        {
+            try
+            {
+                _logger.LogInformation("Fetching list of employee names");
+                var employees = await _unitOfWork.Users.GetQueryable()
+                    .Where(u => !u.IsDeleted && u.IsActive)
+                    .Select(u => new ListNameEmployeeDto
+                    {
+                        Id = u.Id,
+                        Name = u.FullName
+                    })
+                    .ToListAsync();
+                _logger.LogInformation("Successfully retrieved {Count} employee names", employees.Count);
+                return employees;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while fetching employee names. Message: {Message}", ex.Message);
                 throw;
             }
         }

@@ -271,5 +271,25 @@ namespace EVDealerSales.Services.Services
                 throw new Exception("An error occurred while updating the vehicle. Please try again later.");
             }
         }
+
+        public async Task<List<VehicleModelListDto>> GetVehicleModelListAsync()
+        {
+            try
+            {
+                var vehicles = await _unitOfWork.Vehicles.GetAllAsync(v => !v.IsDeleted && v.IsActive);
+                var result = vehicles.Select(v => new VehicleModelListDto
+                {
+                    Id = v.Id,
+                    Model = v.ModelName
+                }).ToList();
+                _logger.LogInformation($"Retrieved {result.Count} active vehicles successfully.");
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to retrieve vehicle names. Exception: {ex.Message}");
+                throw new Exception("An error occurred while retrieving vehicle names. Please try again later.");
+            }
+        }
     }
 }

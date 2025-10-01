@@ -11,5 +11,6 @@ namespace EVDealerSales.Services.Interfaces
         Task<GetEmployeeDto> GetEmployeeByIdAsync(Guid id);
         Task<bool> UpdateEmployeeAsync(Guid id, GetEmployeeDto employeeDto);
         Task<bool> EmployeeIsActiveAsync(Guid id);
+        Task<List<ListNameEmployeeDto>> EmployeeListNameAsync();
     }
 }
