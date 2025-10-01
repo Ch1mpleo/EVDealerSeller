@@ -1,0 +1,74 @@
+﻿@model EVDealerSales.Models.DTOs.TestDriveDTOs.CreateTestDriveDto
+
+@{
+    ViewBag.Title = "Schedule Test Drive";
+    var customer = ViewBag.Customer;
+    var vehicles = ViewBag.Vehicles;
+    // Định dạng datetime-local: yyyy-MM-ddTHH:mm
+    var now = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+}
+
+<h2>Schedule Test Drive</h2>
+
+<div>
+    <p><strong>Customer:</strong> @($"{customer.FirstName} {customer.LastName}") (@customer.Email)</p>
+</div>
+
+<form asp-action="Schedule" method="post">
+    <input type="hidden" asp-for="CustomerId" />
+
+    <div class="form-group">
+    <label for="VehicleId">Select Vehicle</label>
+    <select asp-for="VehicleId" class="form-control">
+            @foreach (var v in vehicles)
+            {
+                if (Model.VehicleId == v.Id)
+                {
+                    <option value="@v.Id" selected>
+                        @v.ModelName (@v.ModelYear)
+                    </option>
+                }
+                else
+                {
+                    <option value="@v.Id">
+                        @v.ModelName (@v.ModelYear)
+                    </option>
+                }
+            }
+    </select>
+</div>
+
+    <div class="form-group">
+        <label>Schedule Dates</label>
+        <div id="schedule-dates">
+            <input type="datetime-local" name="ScheduledDates" class="form-control" value="@now" />
+        </div>
+        <button type="button" class="btn btn-secondary mt-2" onclick="addDateField()">+ Add another date</button>
+        <span class="text-danger">@ViewData["ScheduleError"]</span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Notes"></label>
+        <textarea asp-for="Notes" class="form-control"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Schedule</button>
+</form>
+@section Scripts {
+    <script>
+                function addDateField() {
+            var container = document.getElementById("schedule-dates");
+            var input = document.createElement("input");
+            input.type = "datetime-local";
+            input.name = "ScheduledDates";
+            input.className = "form-control mt-2";
+
+            var now = new Date();
+            var formatted = now.toISOString().slice(0,16);
+            input.value = formatted;
+
+            container.appendChild(input);
+        }
+
+    </script>
+}

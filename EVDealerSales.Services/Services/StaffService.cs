@@ -1,5 +1,6 @@
 ﻿using EVDealerSales.Models.Commons;
 using EVDealerSales.Models.DTOs.CustomerDTOs;
+using EVDealerSales.Models.Entities;
 using EVDealerSales.Models.Interfaces;
 using EVDealerSales.Services.Interfaces;
 using EVDealerSales.Services.Utils;
@@ -12,11 +13,12 @@ namespace EVDealerSales.Services.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger _logger;
-
-        public StaffService(IUnitOfWork unitOfWork, ILogger<StaffService> logger)
+        private readonly IClaimsService _claimsService;
+        public StaffService(IUnitOfWork unitOfWork, ILogger<StaffService> logger, IClaimsService claimsService)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
+            _claimsService = claimsService;
         }
 
         #region Customer Management
@@ -161,6 +163,77 @@ namespace EVDealerSales.Services.Services
             }
         }
 
-        #endregion
+        public async Task<GetCustomerDto> AddCustomerAsync(CreateCustomerDto customerDto)
+        {
+            try
+            {
+                //Validation
+                if (string.IsNullOrWhiteSpace(customerDto.Email))
+                {
+                    throw new ArgumentException("Email is required");
+                }
+                if (string.IsNullOrWhiteSpace(customerDto.FirstName) || string.IsNullOrWhiteSpace(customerDto.LastName))
+                {
+                    throw new ArgumentException("First name and last name are required");
+                }
+
+                _logger.LogInformation("Adding new customer with email: {Email}", customerDto.Email);
+
+                //Check if customer with this email already exists
+                var existingCustomer = await _unitOfWork.Customers
+                    .GetQueryable()
+                    .FirstOrDefaultAsync(c => c.Email.ToLower() == customerDto.Email.ToLower() && !c.IsDeleted);
+
+                if (existingCustomer != null)
+                {
+                    _logger.LogWarning("Customer with email {Email} already exists", customerDto.Email);
+                    throw ErrorHelper.Conflict($"Customer with email {customerDto.Email} already exists");
+                }
+
+                //Create the new customer entity with audit fields
+                var currentUserId = _claimsService.GetCurrentUserId;
+                var now = DateTime.UtcNow;
+
+                var customer = new Customer
+                {
+                    FirstName = customerDto.FirstName,
+                    LastName = customerDto.LastName,
+                    Email = customerDto.Email,
+                    Phone = customerDto.Phone,
+                    Address = customerDto.Address,
+                    //Aduit fields
+                    CreatedAt = now,
+                    CreatedBy = currentUserId,
+                };
+
+                var createdCustomer = await _unitOfWork.Customers.AddAsync(customer);
+                await _unitOfWork.SaveChangesAsync();
+
+                _logger.LogInformation("Successfully added new customer with ID: {CustomerId}", createdCustomer.Id);
+
+                return new GetCustomerDto
+                {
+                    Id = createdCustomer.Id,
+                    FirstName = createdCustomer.FirstName,
+                    LastName = createdCustomer.LastName,
+                    Email = createdCustomer.Email,
+                    Phone = createdCustomer.Phone,
+                    Address = createdCustomer.Address
+                };
+            }
+            catch (ArgumentException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to create customer with email: {Email}. Exception: {Message}",
+                     customerDto.Email, ex.Message);
+                throw new Exception("An error occurred while creating the customer. Please try again later.");
+            }
+        }
     }
+
+        #endregion
 }
+

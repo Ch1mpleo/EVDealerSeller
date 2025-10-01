@@ -1,0 +1,36 @@
+﻿@model EVDealerSales.Models.DTOs.TestDriveDTOs.UpdateTestDriveDto
+
+@{
+    ViewBag.Title = "Edit Test Drive";
+}
+
+<h2>Edit Test Drive</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="ScheduledAt"></label>
+        <input asp-for="ScheduledAt" type="datetime-local" class="form-control" />
+        <span asp-validation-for="ScheduledAt" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Status"></label>
+        <select asp-for="Status" class="form-control">
+            @foreach (var status in Enum.GetValues(typeof(EVDealerSales.Models.Enums.TestDriveStatus)))
+            {
+                <option value="@status" selected="@(Model.Status == (EVDealerSales.Models.Enums.TestDriveStatus)status)">
+                    @status
+                </option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Notes"></label>
+        <textarea asp-for="Notes" class="form-control"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
