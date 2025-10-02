@@ -39,20 +39,25 @@ namespace EVDealerSales.Services.Services
         public async Task<List<MonthlyIncomeReportDto>> GetMonthlyIncomeReportAsync(int year)
         {
             var orders = await _unitOfWork.Orders.GetAllAsync(
-            o => o.Status == OrderStatus.Confirmed && o.OrderDate.Year == year && !o.IsDeleted
-        );
+                o => o.Status == OrderStatus.Confirmed && !o.IsDeleted
+            );
+
             var result = orders
                 .GroupBy(o => o.OrderDate.Month)
                 .Select(g => new MonthlyIncomeReportDto
                 {
+                    // Vì không lọc năm nữa, có thể gán year từ tham số hoặc bỏ hẳn
                     Year = year,
                     Month = g.Key,
                     TotalIncome = g.Sum(x => x.TotalAmount)
                 })
                 .OrderBy(x => x.Month)
                 .ToList();
+
             return result;
         }
+
+
 
         public async Task<List<TestDriveByModelReportDto>> GetTestDriveByModelReportAsync()
         {

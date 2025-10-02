@@ -1,6 +1,7 @@
 ﻿using EVDealerSales.Models;
 using EVDealerSales.WebMVC.Architecture;
 using EVDealerSales.WebMVC.Helper;
+using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -60,6 +61,7 @@ try
         var dbContext = scope.ServiceProvider.GetRequiredService<EVDealerSalesDbContext>();
         await DbSeeder.SeedUsersAsync(dbContext);
         await DbSeeder.SeedVehiclesAsync(dbContext);
+        await DbSeeder.SeedReportsDataAsync(dbContext);
     }
 }
 catch (Exception e)
