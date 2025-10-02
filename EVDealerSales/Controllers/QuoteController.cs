@@ -47,10 +47,22 @@ namespace EVDealerSales.WebMVC.Controllers
 
         // Create
         [HttpGet]
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(Guid? customerId, Guid? vehicleId)
         {
-            await PopulateSelectionsAsync();
-            return View(new QuoteDto { Status = QuoteStatus.Pending });
+            var dto = new QuoteDto
+            {
+                Status = QuoteStatus.Pending
+            };
+
+            // Pre-fill values if passed from TestDrive page
+            if (customerId.HasValue)
+                dto.CustomerId = customerId.Value;
+
+            if (vehicleId.HasValue)
+                dto.VehicleId = vehicleId.Value;
+
+            await PopulateSelectionsAsync(dto.CustomerId, dto.VehicleId);
+            return View(dto);
         }
 
         [HttpPost]
@@ -168,10 +180,13 @@ namespace EVDealerSales.WebMVC.Controllers
                 Selected = selectedVehicleId.HasValue && v.Id == selectedVehicleId.Value
             }).ToList();
 
-            ViewBag.StatusItems = Enum.GetValues(typeof(QuoteStatus))
-                .Cast<QuoteStatus>()
-                .Select(s => new SelectListItem { Text = s.ToString(), Value = ((int)s).ToString() })
-                .ToList();
+            ViewBag.StatusItems = Enum.GetValues(typeof(QuoteStatus)).Cast<QuoteStatus>()
+                .Select(s => new SelectListItem
+                {
+                    Text = s.ToString(),
+                    Value = s.ToString(),   // fix: use string of enum name, not int
+                    Selected = false
+                }).ToList();
         }
     }
 }

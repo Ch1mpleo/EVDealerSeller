@@ -315,15 +315,15 @@ namespace EVDealerSales.Services.Services
 
                 var staffId = _claimsService.GetCurrentUserId;
 
-                // Input validation
+                // Validation
                 if (quoteDto.CustomerId == Guid.Empty)
                     throw new ArgumentException("Customer ID is required.");
                 if (quoteDto.VehicleId == Guid.Empty)
                     throw new ArgumentException("Vehicle ID is required.");
                 if (quoteDto.QuotedPrice <= 0)
                     throw new ArgumentException("Quoted price must be greater than zero.");
-                if (quoteDto.FinalPrice.HasValue && quoteDto.FinalPrice <= 0)
-                    throw new ArgumentException("Final price must be greater than zero if provided.");
+                if (quoteDto.FinalPrice.HasValue && quoteDto.FinalPrice < 0)
+                    throw new ArgumentException("Final price must be positive if provided.");
 
                 var quote = await _unitOfWork.Quotes.GetByIdAsync(id);
                 if (quote == null || quote.IsDeleted)
@@ -334,46 +334,37 @@ namespace EVDealerSales.Services.Services
 
                 bool isUpdated = false;
 
-                // Check if customer exists and update if different
+                // Customer update
                 if (quote.CustomerId != quoteDto.CustomerId)
                 {
                     var customer = await _unitOfWork.Customers.GetByIdAsync(quoteDto.CustomerId);
                     if (customer == null || customer.IsDeleted)
-                    {
-                        _logger.LogWarning("Customer with ID {CustomerId} not found or is deleted", quoteDto.CustomerId);
                         throw new KeyNotFoundException($"Customer with ID {quoteDto.CustomerId} not found");
-                    }
                     quote.CustomerId = quoteDto.CustomerId;
                     isUpdated = true;
                 }
 
-                // Check if staff exists and update if different
+                // Staff update (always reset to current staff user if different)
                 if (quote.StaffId != staffId)
                 {
                     var staff = await _unitOfWork.Users.GetByIdAsync(staffId);
                     if (staff == null || staff.IsDeleted || !staff.IsActive)
-                    {
-                        _logger.LogWarning("Staff with ID {StaffId} not found, is deleted, or inactive", staffId);
-                        throw new KeyNotFoundException($"Staff with ID {staffId} not found or is inactive");
-                    }
+                        throw new KeyNotFoundException($"Staff with ID {staffId} not found or inactive");
                     quote.StaffId = staffId;
                     isUpdated = true;
                 }
 
-                // Check if vehicle exists and update if different
+                // Vehicle update
                 if (quote.VehicleId != quoteDto.VehicleId)
                 {
                     var vehicle = await _unitOfWork.Vehicles.GetByIdAsync(quoteDto.VehicleId);
                     if (vehicle == null || vehicle.IsDeleted)
-                    {
-                        _logger.LogWarning("Vehicle with ID {VehicleId} not found or is deleted", quoteDto.VehicleId);
                         throw new KeyNotFoundException($"Vehicle with ID {quoteDto.VehicleId} not found");
-                    }
                     quote.VehicleId = quoteDto.VehicleId;
                     isUpdated = true;
                 }
 
-                // Update other properties if different
+                // Numeric & enum updates
                 if (quote.QuotedPrice != quoteDto.QuotedPrice)
                 {
                     quote.QuotedPrice = quoteDto.QuotedPrice;
@@ -382,7 +373,7 @@ namespace EVDealerSales.Services.Services
 
                 if (quote.FinalPrice != quoteDto.FinalPrice)
                 {
-                    quote.FinalPrice = quoteDto.FinalPrice;
+                    quote.FinalPrice = quoteDto.FinalPrice; // allows null now
                     isUpdated = true;
                 }
 
@@ -400,45 +391,21 @@ namespace EVDealerSales.Services.Services
                     isUpdated = true;
                 }
 
-                if (!string.IsNullOrWhiteSpace(quoteDto.Remarks) && quote.Remarks != quoteDto.Remarks)
+                // Remarks: always update (even if cleared)
+                if (quote.Remarks != quoteDto.Remarks)
                 {
                     quote.Remarks = quoteDto.Remarks;
                     isUpdated = true;
                 }
 
-                if (!isUpdated)
-                {
-                    _logger.LogWarning("[UpdateQuote] No changes detected for QuoteId: {QuoteId}", id);
-
-                    // Load navigation properties for response
-                    var existingQuote = await _unitOfWork.Quotes
-                        .GetByIdAsync(id, q => q.Customer, q => q.Staff, q => q.Vehicle);
-
-                    return new QuoteResponseDto
-                    {
-                        Id = existingQuote.Id,
-                        CustomerId = existingQuote.CustomerId,
-                        CustomerName = $"{existingQuote.Customer.FirstName} {existingQuote.Customer.LastName}",
-                        StaffId = existingQuote.StaffId,
-                        StaffName = existingQuote.Staff.FullName,
-                        VehicleId = existingQuote.VehicleId,
-                        VehicleModel = existingQuote.Vehicle.ModelName,
-                        QuotedPrice = existingQuote.QuotedPrice,
-                        FinalPrice = existingQuote.FinalPrice,
-                        Status = existingQuote.Status,
-                        ValidUntil = existingQuote.ValidUntil,
-                        Remarks = existingQuote.Remarks
-                    };
-                }
-
-                // Add audit fields
+                // Audit: always updated when user saves
                 quote.UpdatedAt = DateTime.UtcNow;
-                quote.UpdatedBy = _claimsService.GetCurrentUserId;
+                quote.UpdatedBy = staffId;
 
                 await _unitOfWork.Quotes.Update(quote);
                 await _unitOfWork.SaveChangesAsync();
 
-                // Load updated quote with navigation properties
+                // Reload for response
                 var updatedQuote = await _unitOfWork.Quotes
                     .GetByIdAsync(id, q => q.Customer, q => q.Staff, q => q.Vehicle);
 
@@ -462,11 +429,11 @@ namespace EVDealerSales.Services.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to update quote with ID {QuoteId}. Exception: {Message}",
-                    id, ex.Message);
+                _logger.LogError(ex, "Failed to update quote with ID {QuoteId}. Exception: {Message}", id, ex.Message);
                 throw new Exception("An error occurred while updating the quote. Please try again later.");
             }
         }
+
 
         public async Task<bool> DeleteQuoteAsync(Guid id)
         {

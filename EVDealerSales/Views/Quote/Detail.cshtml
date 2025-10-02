@@ -3,50 +3,223 @@
 @model QuoteResponseDto
 
 @{
-    ViewData["Title"] = "Quote";
+    ViewData["Title"] = "Quote Details";
 }
 
-<h2>Quote</h2>
+<link rel="stylesheet" href="~/css/employee.css" />
 
-<dl class="row">
-    <dt class="col-sm-3">Customer</dt>
-    <dd class="col-sm-9">@Model.CustomerName</dd>
+<div class="employee-container">
+    <div class="container-fluid">
 
-    <dt class="col-sm-3">Vehicle</dt>
-    <dd class="col-sm-9">@Model.VehicleModel</dd>
+        <div class="mb-3">
+            <a href="@Url.Action("Index", "Quote")" class="btn-modern">
+                <i class="bi bi-arrow-left"></i>
+                Back to Quotes
+            </a>
+        </div>
 
-    <dt class="col-sm-3">Quoted Price</dt>
-    <dd class="col-sm-9">@Model.QuotedPrice.ToString("C")</dd>
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="employee-card">
+                    <div class="employee-card-body p-4">
 
-    <dt class="col-sm-3">Final Price</dt>
-    <dd class="col-sm-9">@((Model.FinalPrice?.ToString("C")) ?? "-")</dd>
+                        <!-- Header -->
+                        <div class="d-flex justify-content-between align-items-start mb-4">
+                            <div>
+                                <h2 class="mb-1" style="color: #fff; font-size: 1.75rem; font-weight: 600;">
+                                    Quote Details
+                                </h2>
+                                <p style="color: #888; font-size: 0.875rem; margin: 0;">
+                                    Review and manage quote information
+                                </p>
+                            </div>
+                        </div>
 
-    <dt class="col-sm-3">Status</dt>
-    <dd class="col-sm-9">@Model.Status</dd>
+                        <!-- Customer & Vehicle -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <div class="quote-info-card">
+                                    <div class="icon-box">
+                                        <i class="bi bi-person"></i>
+                                    </div>
+                                    <div>
+                                        <div class="quote-label">Customer</div>
+                                        <div class="quote-value">@Model.CustomerName</div>
+                                    </div>
+                                </div>
+                            </div>
 
-    <dt class="col-sm-3">Valid Until</dt>
-    <dd class="col-sm-9">@((Model.ValidUntil?.ToString("yyyy-MM-dd")) ?? "-")</dd>
+                            <div class="col-md-6">
+                                <div class="quote-info-card">
+                                    <div class="icon-box">
+                                        <i class="bi bi-car-front"></i>
+                                    </div>
+                                    <div>
+                                        <div class="quote-label">Vehicle</div>
+                                        <div class="quote-value">@Model.VehicleModel</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-    <dt class="col-sm-3">Remarks</dt>
-    <dd class="col-sm-9">@Model.Remarks</dd>
-</dl>
+                        <!-- Pricing -->
+                        <h3 class="quote-section-title">Pricing Information</h3>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <div class="quote-value-card">
+                                    <div class="quote-label">Quoted Price</div>
+                                    <div class="quote-price">@Model.QuotedPrice.ToString("$#,##0")</div>
+                                </div>
+                            </div>
 
-<div class="mb-3">
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
-    <a asp-action="Index" class="btn btn-secondary">Back</a>
+                            <div class="col-md-6">
+                                <div class="quote-value-card" style="border-color:@(Model.FinalPrice.HasValue ? "rgba(0,112,243,0.3)" : "rgba(255,255,255,0.08)")">
+                                    <div class="quote-label">Final Price</div>
+                                    <div style="color:@(Model.FinalPrice.HasValue ? "#0070f3" : "#666"); font-size:1.5rem; font-weight:700;">
+                                        @(Model.FinalPrice.HasValue? Model.FinalPrice.Value.ToString("$#,##0") : "Not set")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Validity -->
+                        <div class="quote-value-card mb-4">
+                            <div class="quote-label">Valid Until</div>
+                            <div class="quote-value">
+                                @(Model.ValidUntil?.ToString("MMMM dd, yyyy") ?? "No expiry date")
+                            </div>
+                        </div>
+
+                        <!-- Remarks -->
+                        @if (!string.IsNullOrWhiteSpace(Model.Remarks))
+                        {
+                            <h3 class="quote-section-title mt-4">Remarks</h3>
+                            <div class="quote-value-card">
+                                <p style="color:#ccc; margin:0; font-size:0.9rem; line-height:1.6;">@Model.Remarks</p>
+                            </div>
+                        }
+
+                        <!-- Actions -->
+                        <div class="d-flex gap-2 mt-4">
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn-modern" style="flex:1; justify-content:center;">
+                                <i class="bi bi-pencil"></i> Edit Quote
+                            </a>
+                            <a asp-action="Index" class="btn-modern-secondary" style="padding:0 1.5rem;">
+                                Back to List
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Status -->
+            <div class="col-lg-4">
+                <div class="employee-card" style="position: sticky; top:20px;">
+                    <div class="employee-card-body p-4">
+
+                        <!-- Current Status -->
+                        <div class="mb-3">
+                            <div class="quote-label">Current Status</div>
+                            @{
+                                var statusClass = Model.Status.ToString() switch
+                                {
+                                    "Pending" => "background: rgba(102, 102, 102, 0.1); color:#999; border:1px solid rgba(102, 102, 102,0.2);",
+                                    "Accepted" => "background: rgba(0,170,0,0.1); color:#0a0; border:1px solid rgba(0,170,0,0.2);",
+                                    "Rejected" => "background: rgba(238,0,0,0.1); color:#e00; border:1px solid rgba(238,0,0,0.2);",
+                                    "Expired" => "background: rgba(255,193,7,0.1); color:#ffc107; border:1px solid rgba(255,193,7,0.2);",
+                                    _ => "background: rgba(102,102,102,0.1); color:#666; border:1px solid rgba(102,102,102,0.2);"
+                                };
+                            }
+                            <div style="@statusClass padding:0.75rem 1rem; border-radius:8px; font-weight:600; font-size:0.9rem; text-align:center;">
+                                <span style="width:6px; height:6px; border-radius:50%; background:currentColor; display:inline-block;"></span>
+                                @Model.Status
+                            </div>
+                        </div>
+
+                        <!-- Update Status -->
+                        <div class="mt-4">
+                            <div class="quote-label mb-2">Update Status</div>
+                            <form asp-action="UpdateStatus" asp-route-id="@Model.Id" method="post">
+                                @Html.AntiForgeryToken()
+                                <div class="mb-3">
+                                    <select name="status" class="form-control-modern">
+                                        @foreach (QuoteStatus st in Enum.GetValues(typeof(QuoteStatus)))
+                                        {
+                                            <option value="@((int)st)" selected="@(st == Model.Status)">@st</option>
+                                        }
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn-modern w-100" style="height:42px; font-size:0.875rem;">
+                                    <i class="bi bi-check-lg"></i> Update Status
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<form asp-action="UpdateStatus" asp-route-id="@Model.Id" method="post" class="row g-2">
-    @Html.AntiForgeryToken()
-    <div class="col-auto">
-        <select name="status" class="form-select">
-            @foreach (QuoteStatus st in Enum.GetValues(typeof(QuoteStatus)))
-            {
-                <option value="@((int)st)" selected="@(st == Model.Status)">@st</option>
-            }
-        </select>
-    </div>
-    <div class="col-auto">
-        <button type="submit" class="btn btn-outline-primary">Update Status</button>
-    </div>
-</form>
+<style>
+    .quote-info-card {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 8px;
+        padding: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .icon-box {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background: rgba(0,112,243,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #0070f3;
+        font-size: 1.2rem;
+    }
+
+    .quote-label {
+        color: #888;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.25rem;
+    }
+
+    .quote-value {
+        color: #fff;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    .quote-section-title {
+        color: #aaa;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 0.75rem;
+    }
+
+    .quote-value-card {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 8px;
+        padding: 1rem;
+    }
+
+    .quote-price {
+        color: #fff;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+</style>
