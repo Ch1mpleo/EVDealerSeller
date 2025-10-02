@@ -208,7 +208,7 @@ namespace EVDealerSales.Services.Services
             {
                 _logger.LogInformation("Updating status to {Status} for delivery with ID: {DeliveryId}", status, id);
 
-                var delivery = await _unitOfWork.Deliveries.GetByIdAsync(id);
+                var delivery = await _unitOfWork.Deliveries.GetByIdAsync(id, d => d.Order);
                 if (delivery == null || delivery.IsDeleted)
                 {
                     _logger.LogWarning("Delivery with ID {DeliveryId} not found or is deleted.", id);
@@ -236,6 +236,9 @@ namespace EVDealerSales.Services.Services
                 {
                     delivery.ActualDate = null;
                 }
+
+                delivery.Order.Status = OrderStatus.Delivered;
+                await _unitOfWork.Orders.Update(delivery.Order);
 
                 // Audit
                 delivery.UpdatedAt = DateTime.UtcNow;

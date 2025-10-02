@@ -497,6 +497,34 @@ namespace EVDealerSales.Services.Services
                     return true;
                 }
 
+                // If quote is rejected or expired, normalize any associated order's status
+                if (status == QuoteStatus.Rejected || status == QuoteStatus.Expired)
+                {
+                    var order = await _unitOfWork.Orders.FirstOrDefaultAsync(o => o.QuoteId == id && !o.IsDeleted);
+                    if (order != null)
+                    {
+                        order.Status = OrderStatus.Cancelled; // Adjust if you later add a Canceled status
+                        order.UpdatedAt = DateTime.UtcNow;
+                        order.UpdatedBy = _claimsService.GetCurrentUserId;
+                        await _unitOfWork.Orders.Update(order);
+
+                        _logger.LogInformation("Order {OrderId} set to {OrderStatus} due to quote {QuoteId} status {QuoteStatus}",
+                            order.Id, order.Status, id, status);
+
+                        var invoice = await _unitOfWork.Invoices.FirstOrDefaultAsync(i => i.OrderId == order.Id && !i.IsDeleted);
+                        if (invoice != null)
+                        {
+                            invoice.Status = InvoiceStatus.Canceled; // Adjust if you later add a Canceled status
+                            invoice.UpdatedAt = DateTime.UtcNow;
+                            invoice.UpdatedBy = _claimsService.GetCurrentUserId;
+                            await _unitOfWork.Invoices.Update(invoice);
+                            _logger.LogInformation("Invoice {InvoiceId} set to {InvoiceStatus} due to quote {QuoteId} status {QuoteStatus}",
+                                invoice.Id, invoice.Status, id, status);
+                        }
+                        await _unitOfWork.SaveChangesAsync();
+                    }
+                }
+
                 // Add audit fields
                 quote.UpdatedAt = DateTime.UtcNow;
                 quote.UpdatedBy = _claimsService.GetCurrentUserId;
@@ -507,6 +535,7 @@ namespace EVDealerSales.Services.Services
                 _logger.LogInformation("Successfully updated status to {Status} for quote with ID: {QuoteId}", status, id);
                 return true;
             }
+
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while updating status for quote with ID: {QuoteId}. Exception: {Message}",
