@@ -94,9 +94,15 @@
                                     @if (userRole == "DealerStaff")
                                     {
                                         <li>
+                                            <a class="dropdown-item" asp-controller="TestDrive" asp-action="Index">
+                                                <i class="fa-regular fa-calendar-check"></i>
+                                                Manage Appointment
+                                            </a>
+                                        </li>
+                                        <li>
                                             <a class="dropdown-item" asp-controller="Staff" asp-action="Customers">
                                                 <i class="bi bi-people me-2"></i>
-                                                Manage Customers
+                                                Manage Customer
                                             </a>
                                         </li>
                                     }
