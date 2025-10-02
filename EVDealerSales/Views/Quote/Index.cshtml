@@ -124,6 +124,13 @@
                                                 <i class="fas fa-trash"></i> Delete
                                             </button>
                                         </form>
+                                        @if (quote.Status.ToString() == "Accepted")
+                                        {
+                                            <a asp-controller="Order" asp-action="Create" asp-route-quoteId="@quote.Id" class="action-btn action-btn-success">
+                                                <i class="fas fa-shopping-cart"></i> Create Order
+                                            </a>
+                                        }
+
                                     </div>
                                 </div>
                             }

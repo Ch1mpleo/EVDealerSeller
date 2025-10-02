@@ -284,6 +284,19 @@
         border-color: #e00;
     }
 
+.action-btn-success {
+    background: linear-gradient(135deg, #00aa00 0%, #008800 100%);
+    color: #fff;
+    border: 1px solid rgba(0, 170, 0, 0.3);
+}
+
+    .action-btn-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 170, 0, 0.4);
+        color: #fff;
+    }
+
+
 .search-bar {
     display: flex;
     gap: 0.75rem;
@@ -309,6 +322,8 @@
     .search-input::placeholder {
         color: #666;
     }
+
+
 
 .empty-state {
     text-align: center;

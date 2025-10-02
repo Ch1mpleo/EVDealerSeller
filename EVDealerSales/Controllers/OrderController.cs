@@ -45,15 +45,34 @@ namespace EVDealerSales.WebMVC.Controllers
         public async Task<IActionResult> Create(Guid? quoteId = null)
         {
             await PopulateQuoteSelectionsAsync(quoteId);
+
             var dto = new OrderDto
             {
-                QuoteId = quoteId ?? Guid.Empty,
                 OrderDate = DateTime.UtcNow,
                 Status = OrderStatus.Pending,
                 Items = new OrderItemDto { Quantity = 1 }
             };
+
+            if (quoteId.HasValue)
+            {
+                var quote = await _quoteService.GetQuoteByIdAsync(quoteId.Value);
+                if (quote != null)
+                {
+                    dto.QuoteId = quote.Id;
+                    dto.SubtotalAmount = quote.QuotedPrice;
+                    dto.TotalAmount = quote.FinalPrice ?? quote.QuotedPrice;
+                    dto.Items = new OrderItemDto
+                    {
+                        Quantity = 1,
+                        UnitPrice = quote.FinalPrice ?? quote.QuotedPrice,
+                        LineTotal = quote.FinalPrice ?? quote.QuotedPrice
+                    };
+                }
+            }
+
             return View(dto);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]

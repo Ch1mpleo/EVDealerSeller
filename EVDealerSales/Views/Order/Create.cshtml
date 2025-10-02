@@ -14,9 +14,7 @@
 
     <div class="mb-3">
         <label class="form-label">Quote</label>
-        <select asp-for="QuoteId" class="form-select" asp-items="@(ViewBag.Quotes as List<SelectListItem>)">
-            <option value="">-- Select quote --</option>
-        </select>
+        <select asp-for="QuoteId" class="form-select" asp-items="@(ViewBag.Quotes as List<SelectListItem>)"></select>
         <span class="text-danger" asp-validation-for="QuoteId"></span>
     </div>
 
