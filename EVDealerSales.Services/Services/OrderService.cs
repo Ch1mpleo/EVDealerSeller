@@ -83,6 +83,9 @@ namespace EVDealerSales.Services.Services
                     Items = new List<OrderItem> { orderItem }
                 };
 
+                existingQuote.Status = BO.Enums.QuoteStatus.Accepted;
+                await _unitOfWork.Quotes.Update(existingQuote);
+
                 var createdOrder = await _unitOfWork.Orders.AddAsync(order);
                 await _unitOfWork.SaveChangesAsync();
 

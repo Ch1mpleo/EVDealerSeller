@@ -66,6 +66,9 @@ namespace EVDealerSales.Services.Services
                     CreatedBy = currentUserId
                 };
 
+                order.Status = BO.Enums.OrderStatus.Confirmed;
+                await _unitOfWork.Orders.Update(order);
+
                 var created = await _unitOfWork.Invoices.AddAsync(invoice);
                 await _unitOfWork.SaveChangesAsync();
 

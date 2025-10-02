@@ -55,6 +55,9 @@ namespace EVDealerSales.Services.Services
                     CreatedBy = currentUserId
                 };
 
+                invoice.Status = InvoiceStatus.Paid;
+                await _unitOfWork.Invoices.Update(invoice);
+
                 var created = await _unitOfWork.Payments.AddAsync(payment);
                 await _unitOfWork.SaveChangesAsync();
 
