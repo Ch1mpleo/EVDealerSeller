@@ -1,0 +1,53 @@
+@using EVDealerSales.BO.DTOs.OrderDTOs
+@model IEnumerable<ListOrderDto>
+
+@{
+    ViewData["Title"] = "Orders";
+}
+
+<h2>Orders</h2>
+
+<div class="mb-3">
+    <a asp-action="Create" class="btn btn-primary">Create Order</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No orders found.</div>
+}
+else
+{
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Customer</th>
+                <th>Staff</th>
+                <th>Vehicle</th>
+                <th>Order Date</th>
+                <th>Status</th>
+                <th class="text-end">Total</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var o in Model)
+        {
+            <tr>
+                <td>@o.CustomerName</td>
+                <td>@o.StaffName</td>
+                <td>@o.VehicleModel</td>
+                <td>@o.OrderDate.ToString("yyyy-MM-dd")</td>
+                <td>@o.Status</td>
+                <td class="text-end">@o.TotalAmount.ToString("C")</td>
+                <td class="text-end">
+                    <a asp-action="Detail" asp-route-id="@o.Id" class="btn btn-sm btn-outline-primary">Detail</a>
+                    <form asp-action="Delete" asp-route-id="@o.Id" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this order?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

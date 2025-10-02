@@ -1,0 +1,46 @@
+@using EVDealerSales.BO.DTOs.DeliveryDTOs
+@using EVDealerSales.BO.Enums
+@model DeliveryResponseDto
+
+@{
+    ViewData["Title"] = "Delivery";
+}
+
+<h2>Delivery</h2>
+
+<dl class="row">
+    <dt class="col-sm-3">Order</dt>
+    <dd class="col-sm-9">@Model.OrderId</dd>
+
+    <dt class="col-sm-3">Customer</dt>
+    <dd class="col-sm-9">@Model.CustomerName</dd>
+
+    <dt class="col-sm-3">Planned Date</dt>
+    <dd class="col-sm-9">@((Model.PlannedDate?.ToString("yyyy-MM-dd")) ?? "-")</dd>
+
+    <dt class="col-sm-3">Actual Date</dt>
+    <dd class="col-sm-9">@((Model.ActualDate?.ToString("yyyy-MM-dd")) ?? "-")</dd>
+
+    <dt class="col-sm-3">Status</dt>
+    <dd class="col-sm-9">@Model.Status</dd>
+</dl>
+
+<div class="mb-3">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
+</div>
+
+<form asp-action="UpdateStatus" asp-route-id="@Model.Id" method="post" class="row g-2">
+    @Html.AntiForgeryToken()
+    <div class="col-auto">
+        <select name="status" class="form-select">
+            @foreach (DeliveryStatus st in Enum.GetValues(typeof(DeliveryStatus)))
+            {
+                <option value="@((int)st)" selected="@(st == Model.Status)">@st</option>
+            }
+        </select>
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-outline-primary">Update Status</button>
+    </div>
+</form>

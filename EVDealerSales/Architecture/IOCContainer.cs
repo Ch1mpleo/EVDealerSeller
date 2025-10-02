@@ -60,6 +60,11 @@ namespace EVDealerSales.WebMVC.Architecture
             services.AddScoped<IVehicleService, VehicleService>();
             services.AddScoped<IStaffService, StaffService>();
             services.AddScoped<ITestDriveService, TestDriveService>();
+            services.AddScoped<IInvoiceService, InvoiceService>();
+            services.AddScoped<IQuoteService, QuoteService>();
+            services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IDeliveryService, DeliveryService>();
 
             services.AddHttpContextAccessor();
 

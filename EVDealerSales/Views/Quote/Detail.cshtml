@@ -1,0 +1,52 @@
+@using EVDealerSales.BO.DTOs.QuoteDTOs
+@using EVDealerSales.BO.Enums
+@model QuoteResponseDto
+
+@{
+    ViewData["Title"] = "Quote";
+}
+
+<h2>Quote</h2>
+
+<dl class="row">
+    <dt class="col-sm-3">Customer</dt>
+    <dd class="col-sm-9">@Model.CustomerName</dd>
+
+    <dt class="col-sm-3">Vehicle</dt>
+    <dd class="col-sm-9">@Model.VehicleModel</dd>
+
+    <dt class="col-sm-3">Quoted Price</dt>
+    <dd class="col-sm-9">@Model.QuotedPrice.ToString("C")</dd>
+
+    <dt class="col-sm-3">Final Price</dt>
+    <dd class="col-sm-9">@((Model.FinalPrice?.ToString("C")) ?? "-")</dd>
+
+    <dt class="col-sm-3">Status</dt>
+    <dd class="col-sm-9">@Model.Status</dd>
+
+    <dt class="col-sm-3">Valid Until</dt>
+    <dd class="col-sm-9">@((Model.ValidUntil?.ToString("yyyy-MM-dd")) ?? "-")</dd>
+
+    <dt class="col-sm-3">Remarks</dt>
+    <dd class="col-sm-9">@Model.Remarks</dd>
+</dl>
+
+<div class="mb-3">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
+</div>
+
+<form asp-action="UpdateStatus" asp-route-id="@Model.Id" method="post" class="row g-2">
+    @Html.AntiForgeryToken()
+    <div class="col-auto">
+        <select name="status" class="form-select">
+            @foreach (QuoteStatus st in Enum.GetValues(typeof(QuoteStatus)))
+            {
+                <option value="@((int)st)" selected="@(st == Model.Status)">@st</option>
+            }
+        </select>
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-outline-primary">Update Status</button>
+    </div>
+</form>

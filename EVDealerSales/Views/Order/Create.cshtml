@@ -1,0 +1,107 @@
+@using EVDealerSales.BO.DTOs.OrderDTOs
+@using EVDealerSales.BO.DTOs.OrderItemDTOs
+@using EVDealerSales.BO.Enums
+@model OrderDto
+
+@{
+    ViewData["Title"] = "Create Order";
+}
+
+<h2>Create Order</h2>
+
+<form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label class="form-label">Quote</label>
+        <select asp-for="QuoteId" class="form-select" asp-items="@(ViewBag.Quotes as List<SelectListItem>)">
+            <option value="">-- Select quote --</option>
+        </select>
+        <span class="text-danger" asp-validation-for="QuoteId"></span>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md-4">
+            <label asp-for="OrderDate" class="form-label"></label>
+            <input asp-for="OrderDate" class="form-control" type="date" />
+            <span class="text-danger" asp-validation-for="OrderDate"></span>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Status</label>
+            <select asp-for="Status" class="form-select">
+                @foreach (OrderStatus st in Enum.GetValues(typeof(OrderStatus)))
+                {
+                    <option value="@((int)st)" selected="@(st == Model.Status)">@st</option>
+                }
+            </select>
+            <span class="text-danger" asp-validation-for="Status"></span>
+        </div>
+    </div>
+
+    <fieldset class="mt-4">
+        <legend>Discount</legend>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label asp-for="DiscountType" class="form-label"></label>
+                <input asp-for="DiscountType" class="form-control" />
+                <span class="text-danger" asp-validation-for="DiscountType"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="DiscountValue" class="form-label"></label>
+                <input asp-for="DiscountValue" class="form-control" type="number" step="0.01" />
+                <span class="text-danger" asp-validation-for="DiscountValue"></span>
+            </div>
+            <div class="col-12">
+                <label asp-for="DiscountNote" class="form-label"></label>
+                <textarea asp-for="DiscountNote" class="form-control"></textarea>
+                <span class="text-danger" asp-validation-for="DiscountNote"></span>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="mt-4">
+        <legend>Amounts</legend>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label asp-for="SubtotalAmount" class="form-label"></label>
+                <input asp-for="SubtotalAmount" class="form-control" type="number" step="0.01" />
+                <span class="text-danger" asp-validation-for="SubtotalAmount"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="TotalAmount" class="form-label"></label>
+                <input asp-for="TotalAmount" class="form-control" type="number" step="0.01" />
+                <span class="text-danger" asp-validation-for="TotalAmount"></span>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="mt-4">
+        <legend>Item</legend>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label asp-for="Items.Quantity" class="form-label"></label>
+                <input asp-for="Items.Quantity" class="form-control" type="number" min="1" />
+                <span class="text-danger" asp-validation-for="Items.Quantity"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Items.UnitPrice" class="form-label"></label>
+                <input asp-for="Items.UnitPrice" class="form-control" type="number" step="0.01" />
+                <span class="text-danger" asp-validation-for="Items.UnitPrice"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Items.LineTotal" class="form-label"></label>
+                <input asp-for="Items.LineTotal" class="form-control" type="number" step="0.01" />
+                <span class="text-danger" asp-validation-for="Items.LineTotal"></span>
+            </div>
+        </div>
+    </fieldset>
+
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary">Create</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
