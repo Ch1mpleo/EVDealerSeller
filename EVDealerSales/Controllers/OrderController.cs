@@ -95,7 +95,9 @@ namespace EVDealerSales.WebMVC.Controllers
         private async Task PopulateQuoteSelectionsAsync(Guid? selectedQuoteId = null)
         {
             // Pull a large page of quotes to populate the dropdown
-            var quotes = await _quoteService.GetAllQuotesAsync(1, 1000, null);
+            //var quotes = await _quoteService.GetAllQuotesAsync(1, 1000, null);
+            var quotes = await _quoteService.GetAllQuotesNoPaginAsync();
+
             ViewBag.Quotes = quotes.Select(q => new SelectListItem
             {
                 Text = $"{q.CustomerName} - {q.VehicleModel} [{q.Status}]",

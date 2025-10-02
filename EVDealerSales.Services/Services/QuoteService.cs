@@ -207,6 +207,43 @@ namespace EVDealerSales.Services.Services
             }
         }
 
+        public async Task<List<QuoteListDto>> GetAllQuotesNoPaginAsync()
+        {
+            try
+            {
+                var baseQuery = _unitOfWork.Quotes.GetQueryable()
+                    .Where(q => !q.IsDeleted);
+
+                var query = baseQuery
+                    .Include(q => q.Customer)
+                    .Include(q => q.Staff)
+                    .Include(q => q.Vehicle);
+
+                var totalCount = await query.CountAsync();
+                var quotes = await query
+                    .OrderByDescending(q => q.CreatedAt)
+                    .Select(q => new QuoteListDto
+                    {
+                        Id = q.Id,
+                        CustomerName = $"{q.Customer.FirstName} {q.Customer.LastName}",
+                        VehicleModel = q.Vehicle.ModelName,
+                        Status = q.Status,
+                        ValidUntil = q.ValidUntil,
+                    })
+                    .ToListAsync();
+
+                _logger.LogInformation("Successfully retrieved {Count} quotes out of {Total} total",
+                    quotes.Count, totalCount);
+
+                return new List<QuoteListDto>();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to retrieve quotes. Exception: {Message}", ex.Message);
+                throw new Exception("An error occurred while retrieving quotes. Please try again later.");
+            }
+        }
+
         public async Task<Pagination<QuoteListDto>> GetQuotesByCustomerIdAsync(Guid customerId, int pageNumber, int pageSize)
         {
             try
