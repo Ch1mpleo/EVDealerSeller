@@ -66,8 +66,7 @@
                             {
                                 var statusClass = td.Status.ToString().ToLower() switch
                                 {
-                                    "pending" => "status-pending",
-                                    "confirmed" => "status-confirmed",
+                                    "scheduled" => "status-pending",
                                     "completed" => "status-completed",
                                     "cancelled" => "status-cancelled",
                                     _ => "status-pending"

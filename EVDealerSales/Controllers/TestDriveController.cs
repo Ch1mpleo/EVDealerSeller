@@ -128,6 +128,7 @@ namespace EVDealerSales.WebMVC.Controllers
 
             // Lấy tên xe
             var vehicle = await _vehicleService.GetVehicleByIdAsync(testDrive.VehicleId);
+            ViewBag.Vehicle = vehicle;
             ViewBag.VehicleName = vehicle != null ? $"{vehicle.ModelName} ({vehicle.ModelYear})" : testDrive.VehicleId.ToString();
 
             return View(testDrive);
