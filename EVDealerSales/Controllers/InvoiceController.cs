@@ -1,4 +1,5 @@
 using EVDealerSales.BO.DTOs.InvoiceDTOs;
+using EVDealerSales.BO.DTOs.OrderDTOs;
 using EVDealerSales.BO.Enums;
 using EVDealerSales.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -93,7 +94,19 @@ namespace EVDealerSales.WebMVC.Controllers
         private async Task PopulateSelectionsAsync(Guid? selectedOrderId = null)
         {
             var orders = await _orderService.GetAllOrdersAsync();
-            ViewBag.Orders = orders.Select(o => new SelectListItem
+
+            var ordersWithNoInvoice = new List<ListOrderDto>();
+
+            foreach (var order in orders)
+            {
+                var existingInvoice = await _invoiceService.GetInvoiceByOrderIdAsync(order.Id);
+                if ((existingInvoice == null || (selectedOrderId.HasValue && order.Id == selectedOrderId.Value)) && order.Status == OrderStatus.Pending.ToString())
+                {
+                    ordersWithNoInvoice.Add(order);
+                }
+            }
+
+            ViewBag.Orders = ordersWithNoInvoice.Select(o => new SelectListItem
             {
                 Text = $"{o.CustomerName} - {o.VehicleModel} - {o.OrderDate:yyyy-MM-dd} ({o.Status})",
                 Value = o.Id.ToString(),

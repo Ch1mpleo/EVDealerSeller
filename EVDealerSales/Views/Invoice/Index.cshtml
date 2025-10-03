@@ -41,9 +41,9 @@ else
                 <td>@i.OrderId</td>
                 <td>@(i.DueDate?.ToString("yyyy-MM-dd") ?? "-")</td>
                 <td>@i.Status</td>
-                <td class="text-end">@i.TotalAmount.ToString("C")</td>
-                <td class="text-end">@i.PaidAmount.ToString("C")</td>
-                <td class="text-end">@balance.ToString("C")</td>
+                    <td class="text-end">@i.TotalAmount.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</td>
+                    <td class="text-end">@i.PaidAmount.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</td>
+                    <td class="text-end">@balance.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</td>
                 <td class="text-end">
                     <a asp-action="Detail" asp-route-id="@i.Id" class="btn btn-sm btn-outline-primary">Detail</a>
                     <form asp-action="Delete" asp-route-id="@i.Id" method="post" class="d-inline">

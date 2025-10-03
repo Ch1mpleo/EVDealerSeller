@@ -8,5 +8,6 @@ namespace EVDealerSales.Services.Interfaces
         Task<InvoiceResponseDto?> GetInvoiceByIdAsync(Guid id);
         Task<List<ListInvoiceDto>> GetAllInvoicesAsync();
         Task<bool> DeleteInvoiceAsync(Guid id);
+        Task<InvoiceResponseDto> GetInvoiceByOrderIdAsync(Guid id);
     }
 }

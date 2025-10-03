@@ -311,7 +311,7 @@ namespace EVDealerSales.Services.Services
                 if (existingOrder != null)
                 {
                     _logger.LogWarning("Cannot update quote with ID {QuoteId} because it is associated with an existing order", id);
-                    throw new InvalidOperationException("Cannot update quote because it is associated with an existing order.");
+                    return null;
                 }
 
                 var staffId = _claimsService.GetCurrentUserId;
@@ -381,6 +381,32 @@ namespace EVDealerSales.Services.Services
                 if (quote.Status != quoteDto.Status)
                 {
                     quote.Status = quoteDto.Status;
+                    if (quote.Status == QuoteStatus.Rejected || quote.Status == QuoteStatus.Expired)
+                    {
+                        var order = await _unitOfWork.Orders.FirstOrDefaultAsync(o => o.QuoteId == id && !o.IsDeleted);
+                        if (order != null)
+                        {
+                            order.Status = OrderStatus.Cancelled; // Adjust if you later add a Canceled status
+                            order.UpdatedAt = DateTime.UtcNow;
+                            order.UpdatedBy = _claimsService.GetCurrentUserId;
+                            await _unitOfWork.Orders.Update(order);
+
+                            _logger.LogInformation("Order {OrderId} set to {OrderStatus} due to quote {QuoteId} status {QuoteStatus}",
+                                order.Id, order.Status, id, quote.Status);
+
+                            var invoice = await _unitOfWork.Invoices.FirstOrDefaultAsync(i => i.OrderId == order.Id && !i.IsDeleted);
+                            if (invoice != null)
+                            {
+                                invoice.Status = InvoiceStatus.Canceled; // Adjust if you later add a Canceled status
+                                invoice.UpdatedAt = DateTime.UtcNow;
+                                invoice.UpdatedBy = _claimsService.GetCurrentUserId;
+                                await _unitOfWork.Invoices.Update(invoice);
+                                _logger.LogInformation("Invoice {InvoiceId} set to {InvoiceStatus} due to quote {QuoteId} status {QuoteStatus}",
+                                    invoice.Id, invoice.Status, id, quote.Status);
+                            }
+                            await _unitOfWork.SaveChangesAsync();
+                        }
+                    }
                     isUpdated = true;
                 }
 
@@ -478,6 +504,21 @@ namespace EVDealerSales.Services.Services
                 {
                     _logger.LogWarning("Quote with ID {QuoteId} not found or is deleted", id);
                     return false;
+                }
+
+                var existingOrder = await _unitOfWork.Orders.FirstOrDefaultAsync(e => e.QuoteId == id);
+                if (existingOrder != null)
+                {
+                    var existingInvoice = await _unitOfWork.Invoices.FirstOrDefaultAsync(i => i.OrderId == existingOrder.Id && !i.IsDeleted);
+                    if (existingInvoice != null)
+                    {
+                        var existingPayments = await _unitOfWork.Payments.GetAllAsync(p => p.InvoiceId == existingInvoice.Id && !p.IsDeleted);
+                        if (existingPayments != null && existingPayments.Any())
+                        {
+                            _logger.LogWarning("Cannot update status for quote with ID {QuoteId} because it is associated with an order that has payments", id);
+                            return false;
+                        }
+                    }
                 }
 
                 bool isUpdated = false;

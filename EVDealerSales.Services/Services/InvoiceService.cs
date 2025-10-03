@@ -229,12 +229,42 @@ namespace EVDealerSales.Services.Services
             }
         }
 
-        private static string GenerateInvoiceNumber()
+        public async Task<InvoiceResponseDto?> GetInvoiceByOrderIdAsync(Guid orderId)
         {
-            // Simple unique invoice number: INV-YYYYMMDD-xxxx (last 4 of a GUID)
-            var date = DateTime.UtcNow.ToString("yyyyMMdd");
-            var suffix = Guid.NewGuid().ToString("N")[..4].ToUpperInvariant();
-            return $"INV-{date}-{suffix}";
+            try
+            {
+                _logger.LogInformation("Fetching invoice for Order ID: {OrderId}", orderId);
+                var invoice = (await _unitOfWork.Invoices.GetAllAsync(i => i.OrderId == orderId && !i.IsDeleted,
+                    i => i.Customer,
+                    i => i.Order,
+                    i => i.Payments)).FirstOrDefault();
+                if (invoice == null)
+                {
+                    _logger.LogWarning("No invoice found for Order ID {OrderId}.", orderId);
+                    return null;
+                }
+                var paidAmount = invoice.Payments?.Where(p => !p.IsDeleted).Sum(p => p.Amount) ?? 0m;
+                var customerName = $"{invoice.Customer.FirstName} {invoice.Customer.LastName}";
+                return new InvoiceResponseDto
+                {
+                    Id = invoice.Id,
+                    OrderId = invoice.OrderId,
+                    CustomerId = invoice.CustomerId,
+                    CustomerName = customerName,
+                    InvoiceNumber = invoice.InvoiceNumber,
+                    DueDate = invoice.DueDate,
+                    TaxAmount = invoice.TaxAmount,
+                    TotalAmount = invoice.TotalAmount,
+                    Status = invoice.Status,
+                    Notes = invoice.Notes,
+                    PaidAmount = paidAmount
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to retrieve invoice for Order ID {OrderId}. Exception: {Message}", orderId, ex.Message);
+                throw new Exception("An error occurred while retrieving the invoice. Please try again later.");
+            }
         }
     }
 }

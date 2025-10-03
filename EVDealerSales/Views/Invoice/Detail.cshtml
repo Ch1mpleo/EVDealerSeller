@@ -25,19 +25,16 @@
     <dd class="col-sm-9">@Model.Status</dd>
 
     <dt class="col-sm-3">Tax</dt>
-    <dd class="col-sm-9">@((Model.TaxAmount?.ToString("C")) ?? "-")</dd>
+    <dd class="col-sm-9">@((Model.TaxAmount?.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("en-US"))) ?? "-")</dd>
 
     <dt class="col-sm-3">Total</dt>
-    <dd class="col-sm-9">@Model.TotalAmount.ToString("C")</dd>
+    <dd class="col-sm-9">@Model.TotalAmount.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</dd>
 
     <dt class="col-sm-3">Paid</dt>
-    <dd class="col-sm-9">@Model.PaidAmount.ToString("C")</dd>
+    <dd class="col-sm-9">@Model.PaidAmount.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</dd>
 
     <dt class="col-sm-3">Balance</dt>
-    <dd class="col-sm-9">@balance.ToString("C")</dd>
-
-    <dt class="col-sm-3">Notes</dt>
-    <dd class="col-sm-9">@Model.Notes</dd>
+    <dd class="col-sm-9">@balance.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</dd>
 </dl>
 
 <div class="mb-3">

@@ -26,13 +26,13 @@
             <span class="text-danger" asp-validation-for="DueDate"></span>
         </div>
         <div class="col-md-4">
-            <label asp-for="TaxAmount" class="form-label"></label>
-            <input asp-for="TaxAmount" class="form-control" type="number" step="0.01" />
+            <label asp-for="TaxAmount" class="form-label">Tax Amount ($)</label>
+            <input asp-for="TaxAmount" class="form-control" type="number" step="1" />
             <span class="text-danger" asp-validation-for="TaxAmount"></span>
         </div>
         <div class="col-md-4">
-            <label asp-for="TotalAmount" class="form-label"></label>
-            <input asp-for="TotalAmount" class="form-control" type="number" step="0.01" />
+            <label asp-for="TotalAmount" class="form-label">Total Amount ($)</label>
+            <input asp-for="TotalAmount" class="form-control" type="number" step="1" />
             <span class="text-danger" asp-validation-for="TotalAmount"></span>
         </div>
     </div>

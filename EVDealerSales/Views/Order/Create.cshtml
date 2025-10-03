@@ -264,33 +264,11 @@
                 </div>
             </div>
 
-            <div class="form-section">
-                <div class="section-title">
-                    <span class="section-icon"><i class="fas fa-car"></i></span>
-                    Item Details
-                </div>
-
-                <!-- Hidden fields to ensure binding -->
-                <input type="hidden" asp-for="Items.VehicleId" />
-
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <label asp-for="Items.Quantity" class="form-label">Quantity</label>
-                        <input asp-for="Items.Quantity" class="form-control-modern" type="number" min="1" placeholder="1" />
-                        <span class="text-danger" asp-validation-for="Items.Quantity"></span>
-                    </div>
-                    <div class="col-md-4">
-                        <label asp-for="Items.UnitPrice" class="form-label">Unit Price</label>
-                        <input asp-for="Items.UnitPrice" class="form-control-modern" type="number" step="0.01" placeholder="0.00" />
-                        <span class="text-danger" asp-validation-for="Items.UnitPrice"></span>
-                    </div>
-                    <div class="col-md-4">
-                        <label asp-for="Items.LineTotal" class="form-label">Line Total</label>
-                        <input asp-for="Items.LineTotal" class="form-control-modern" type="number" step="0.01" placeholder="0.00" />
-                        <span class="text-danger" asp-validation-for="Items.LineTotal"></span>
-                    </div>
-                </div>
-            </div>
+            <!-- Item Details hidden (values still posted) -->
+            <input type="hidden" asp-for="Items.VehicleId" />
+            <input type="hidden" asp-for="Items.Quantity" />
+            <input type="hidden" asp-for="Items.UnitPrice" />
+            <input type="hidden" asp-for="Items.LineTotal" />
 
             <div class="form-actions">
                 <a asp-action="Index" class="btn-secondary-modern">

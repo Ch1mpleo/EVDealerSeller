@@ -22,16 +22,16 @@
     <dd class="col-sm-9">@Model.Status</dd>
 
     <dt class="col-sm-3">Amount</dt>
-    <dd class="col-sm-9">@Model.Amount.ToString("C")</dd>
+    <dd class="col-sm-9">@Model.Amount.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</dd>
 
     <dt class="col-sm-3">Invoice Total</dt>
-    <dd class="col-sm-9">@Model.InvoiceTotalAmount.ToString("C")</dd>
+    <dd class="col-sm-9">@Model.InvoiceTotalAmount.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</dd>
 
     <dt class="col-sm-3">Paid Total</dt>
-    <dd class="col-sm-9">@Model.PaidAmount.ToString("C")</dd>
+    <dd class="col-sm-9">@Model.PaidAmount.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</dd>
 
     <dt class="col-sm-3">Balance</dt>
-    <dd class="col-sm-9">@balance.ToString("C")</dd>
+    <dd class="col-sm-9">@balance.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</dd>
 </dl>
 
 <div class="mb-3">

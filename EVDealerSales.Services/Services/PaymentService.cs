@@ -45,6 +45,13 @@ namespace EVDealerSales.Services.Services
                 var now = DateTime.UtcNow;
                 var currentUserId = _claimsService.GetCurrentUserId;
 
+                if (invoice.Payments != null)
+                {
+                    var totalPaid = invoice.Payments.Where(p => !p.IsDeleted && p.Status == PaymentStatus.Paid).Sum(p => p.Amount);
+                    if (totalPaid + dto.Amount > invoice.TotalAmount)
+                        throw new ArgumentException("Payment amount exceeds the invoice total.");
+                }
+
                 var payment = new Payment
                 {
                     InvoiceId = invoice.Id,

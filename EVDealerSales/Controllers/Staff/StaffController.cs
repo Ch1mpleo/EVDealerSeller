@@ -155,5 +155,12 @@ namespace EVDealerSales.WebMVC.Controllers.Staff
             return Json(new { exists });
         }
         #endregion
+
+        [HttpGet]
+        public IActionResult SalesHub()
+        {
+            // A simple hub page with navigation buttons to other areas
+            return View();
+        }
     }
 }

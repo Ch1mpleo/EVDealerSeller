@@ -10,7 +10,6 @@
 <link rel="stylesheet" href="~/css/employee.css" />
 <link rel="stylesheet" href="~/css/quote.css" />
 
-
 <div class="employee-container">
     <div class="container-fluid">
         <div class="employee-header">
@@ -56,83 +55,57 @@
 
         @if (Model != null && Model.Any())
         {
-            var groupedByCustomer = Model.GroupBy(q => q.CustomerName).ToList();
-
             <div class="quotes-grid">
-                @foreach (var customerGroup in groupedByCustomer)
+                @foreach (var quote in Model)
                 {
-                    var customerName = customerGroup.Key;
-                    var quoteCount = customerGroup.Count();
+                    var statusClass = quote.Status.ToString() switch
+                    {
+                        "Pending" => "status-pending",
+                        "Accepted" => "status-accepted",
+                        "Rejected" => "status-rejected",
+                        "Expired" => "status-expired",
+                        _ => "status-pending"
+                    };
 
-                    <div class="customer-group-card">
-                        <div class="customer-group-header" onclick="toggleCustomerGroup(this)">
-                            <div class="customer-info-header">
-                                <h3 class="customer-name-header">
-                                    <i class="fas fa-user-circle"></i>
-                                    @customerName
-                                </h3>
-                                <div class="quotes-count">
-                                    <span class="badge">@quoteCount</span>
-                                    <span>@(quoteCount == 1 ? "Quote" : "Quotes")</span>
+                    <div class="quote-item">
+                        <div class="quote-item-header">
+                            <div>
+                                <h4 class="vehicle-name">
+                                    <i class="fas fa-car"></i>
+                                    @quote.VehicleModel
+                                </h4>
+                                <div class="text-muted small">
+                                    <i class="fas fa-user me-1"></i>@quote.CustomerName
                                 </div>
                             </div>
-                            <div class="expand-icon">
-                                <i class="fas fa-chevron-down"></i>
+                            <span class="quote-status @statusClass">@quote.Status</span>
+                        </div>
+
+                        <div class="quote-details">
+                            <div class="detail-row">
+                                <i class="fas fa-calendar"></i>
+                                <span>Valid until: @(quote.ValidUntil?.ToString("MMM dd, yyyy") ?? "No expiry")</span>
                             </div>
                         </div>
 
-                        <div class="quotes-list">
-                            @foreach (var quote in Model)
+                        <div class="quote-actions">
+                            <a asp-action="Detail" asp-route-id="@quote.Id" class="action-btn action-btn-primary">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                            <a asp-action="Edit" asp-route-id="@quote.Id" class="action-btn action-btn-secondary">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <form asp-action="Delete" asp-route-id="@quote.Id" method="post" class="d-inline" style="flex: 1;">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="action-btn action-btn-danger" style="width: 100%;" onclick="return confirm('Delete this quote?');">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </form>
+                            @if (quote.Status.ToString() == "Accepted")
                             {
-                                var statusClass = quote.Status.ToString() switch
-                                {
-                                    "Pending" => "status-pending",
-                                    "Accepted" => "status-accepted",
-                                    "Rejected" => "status-rejected",
-                                    "Expired" => "status-expired",
-                                    _ => "status-pending"
-                                };
-
-                                <div class="quote-item">
-                                    <div class="quote-item-header">
-                                        <div>
-                                            <h4 class="vehicle-name">
-                                                <i class="fas fa-car"></i>
-                                                @quote.VehicleModel
-                                            </h4>
-                                        </div>
-                                        <span class="quote-status @statusClass">@quote.Status</span>
-                                    </div>
-
-                                    <div class="quote-details">
-                                        <div class="detail-row">
-                                            <i class="fas fa-calendar"></i>
-                                            <span>Valid until: @(quote.ValidUntil?.ToString("MMM dd, yyyy") ?? "No expiry")</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="quote-actions">
-                                        <a asp-action="Detail" asp-route-id="@quote.Id" class="action-btn action-btn-primary">
-                                            <i class="fas fa-eye"></i> View
-                                        </a>
-                                        <a asp-action="Edit" asp-route-id="@quote.Id" class="action-btn action-btn-secondary">
-                                            <i class="fas fa-edit"></i> Edit
-                                        </a>
-                                        <form asp-action="Delete" asp-route-id="@quote.Id" method="post" class="d-inline" style="flex: 1;">
-                                            @Html.AntiForgeryToken()
-                                            <button type="submit" class="action-btn action-btn-danger" style="width: 100%;" onclick="return confirm('Delete this quote?');">
-                                                <i class="fas fa-trash"></i> Delete
-                                            </button>
-                                        </form>
-                                        @if (quote.Status.ToString() == "Accepted")
-                                        {
-                                            <a asp-controller="Order" asp-action="Create" asp-route-quoteId="@quote.Id" class="action-btn action-btn-success">
-                                                <i class="fas fa-shopping-cart"></i> Create Order
-                                            </a>
-                                        }
-
-                                    </div>
-                                </div>
+                                <a asp-controller="Order" asp-action="Create" asp-route-quoteId="@quote.Id" class="action-btn action-btn-success">
+                                    <i class="fas fa-shopping-cart"></i> Create Order
+                                </a>
                             }
                         </div>
                     </div>
@@ -183,10 +156,3 @@
         }
     </div>
 </div>
-
-<script>
-    function toggleCustomerGroup(header) {
-        const card = header.closest('.customer-group-card');
-        card.classList.toggle('expanded');
-    }
-</script>

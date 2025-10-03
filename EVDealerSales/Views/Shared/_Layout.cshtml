@@ -105,6 +105,39 @@
                                                 Manage Customer
                                             </a>
                                         </li>
+
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li class="dropdown-header">Sales</li>
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Quote" asp-action="Index">
+                                                <i class="bi bi-file-earmark-text me-2"></i>
+                                                Quotes
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Order" asp-action="Index">
+                                                <i class="bi bi-bag-check me-2"></i>
+                                                Orders
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Invoice" asp-action="Index">
+                                                <i class="bi bi-receipt me-2"></i>
+                                                Invoices
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Payment" asp-action="Index">
+                                                <i class="bi bi-credit-card me-2"></i>
+                                                Payments
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Delivery" asp-action="Index">
+                                                <i class="bi bi-truck me-2"></i>
+                                                Deliveries
+                                            </a>
+                                        </li>
                                     }
                                     else if (userRole == "DealerManager")
                                     {
