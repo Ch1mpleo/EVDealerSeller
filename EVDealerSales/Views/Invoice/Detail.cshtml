@@ -1,0 +1,50 @@
+@using EVDealerSales.BO.DTOs.InvoiceDTOs
+@model InvoiceResponseDto
+
+@{
+    ViewData["Title"] = "Invoice";
+    var balance = Model.TotalAmount - Model.PaidAmount;
+}
+
+<h2>Invoice</h2>
+
+<dl class="row">
+    <dt class="col-sm-3">Invoice #</dt>
+    <dd class="col-sm-9">@Model.InvoiceNumber</dd>
+
+    <dt class="col-sm-3">Customer</dt>
+    <dd class="col-sm-9">@Model.CustomerName</dd>
+
+    <dt class="col-sm-3">Order</dt>
+    <dd class="col-sm-9">@Model.OrderId</dd>
+
+    <dt class="col-sm-3">Due Date</dt>
+    <dd class="col-sm-9">@((Model.DueDate?.ToString("yyyy-MM-dd")) ?? "-")</dd>
+
+    <dt class="col-sm-3">Status</dt>
+    <dd class="col-sm-9">@Model.Status</dd>
+
+    <dt class="col-sm-3">Tax</dt>
+    <dd class="col-sm-9">@((Model.TaxAmount?.ToString("C")) ?? "-")</dd>
+
+    <dt class="col-sm-3">Total</dt>
+    <dd class="col-sm-9">@Model.TotalAmount.ToString("C")</dd>
+
+    <dt class="col-sm-3">Paid</dt>
+    <dd class="col-sm-9">@Model.PaidAmount.ToString("C")</dd>
+
+    <dt class="col-sm-3">Balance</dt>
+    <dd class="col-sm-9">@balance.ToString("C")</dd>
+
+    <dt class="col-sm-3">Notes</dt>
+    <dd class="col-sm-9">@Model.Notes</dd>
+</dl>
+
+<div class="mb-3">
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
+</div>
+
+<form asp-action="Delete" asp-route-id="@Model.Id" method="post">
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Delete this invoice?');">Delete</button>
+</form>

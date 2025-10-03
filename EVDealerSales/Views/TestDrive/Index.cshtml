@@ -66,8 +66,7 @@
                             {
                                 var statusClass = td.Status.ToString().ToLower() switch
                                 {
-                                    "pending" => "status-pending",
-                                    "confirmed" => "status-confirmed",
+                                    "scheduled" => "status-pending",
                                     "completed" => "status-completed",
                                     "cancelled" => "status-cancelled",
                                     _ => "status-pending"
@@ -104,6 +103,17 @@
                                         <a asp-action="Edit" asp-route-id="@td.Id" class="action-btn action-btn-secondary">
                                             <i class="fas fa-edit"></i> Edit
                                         </a>
+                                        @if (td.Status.ToString().ToLower() == "completed")
+                                        {
+                                            <a 
+                                                asp-controller="Quote" 
+                                                asp-action="Create"
+                                                asp-route-customerId="@td.CustomerId"
+                                                asp-route-vehicleId="@td.VehicleId"
+                                                class="action-btn action-btn-success">
+                                                <i class="fas fa-file-invoice-dollar"></i> Create Quote
+                                            </a>
+                                        }
                                     </div>
                                 </div>
                             }

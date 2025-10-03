@@ -45,7 +45,9 @@ namespace EVDealerSales.Services.Services
 
                 _logger.LogInformation("Creating a new order for Quote ID: {QuoteId}", dto.QuoteId);
 
-                var existingQuote = await _unitOfWork.Quotes.GetByIdAsync(dto.QuoteId, q => q.Customer, q => q.Staff, q => q.Vehicle);
+                var existingQuote = await _unitOfWork.Quotes.GetByIdAsync(
+                    dto.QuoteId, q => q.Customer, q => q.Staff, q => q.Vehicle);
+
                 if (existingQuote == null || existingQuote.IsDeleted)
                     throw new ArgumentException("Associated quote not found.");
 
@@ -55,15 +57,14 @@ namespace EVDealerSales.Services.Services
                 var currentUserId = _claimsService.GetCurrentUserId;
                 var now = DateTime.UtcNow;
 
-                // Create the single order item using the vehicle from the quote
                 var orderItem = new OrderItem
                 {
-                    VehicleId = existingQuote.VehicleId, // Always use the vehicle from the quote
+                    VehicleId = existingQuote.VehicleId,
                     Quantity = dto.Items.Quantity,
                     UnitPrice = dto.Items.UnitPrice,
                     LineTotal = dto.Items.LineTotal,
                     CreatedAt = now,
-                    CreatedBy = currentUserId
+                    CreatedBy = currentUserId,
                 };
 
                 var order = new Order
@@ -82,6 +83,10 @@ namespace EVDealerSales.Services.Services
                     CreatedBy = currentUserId,
                     Items = new List<OrderItem> { orderItem }
                 };
+
+                // Update quote status
+                existingQuote.Status = BO.Enums.QuoteStatus.Accepted;
+                await _unitOfWork.Quotes.Update(existingQuote);
 
                 var createdOrder = await _unitOfWork.Orders.AddAsync(order);
                 await _unitOfWork.SaveChangesAsync();
@@ -124,6 +129,7 @@ namespace EVDealerSales.Services.Services
                 throw new Exception("An error occurred while creating the order. Please try again later.");
             }
         }
+
 
         public async Task<OrderResponseDto?> GetOrderByIdAsync(Guid id)
         {
@@ -227,6 +233,8 @@ namespace EVDealerSales.Services.Services
                 throw new Exception("An error occurred while retrieving orders. Please try again later.");
             }
         }
+
+
 
         public async Task<bool> DeleteOrderAsync(Guid id)
         {

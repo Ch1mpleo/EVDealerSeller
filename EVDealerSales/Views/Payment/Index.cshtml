@@ -1,0 +1,51 @@
+@using EVDealerSales.BO.DTOs.PaymentDTOs
+@model IEnumerable<ListPaymentDto>
+
+@{
+    ViewData["Title"] = "Payments";
+}
+
+<h2>Payments</h2>
+
+<div class="mb-3">
+    <a asp-action="Create" class="btn btn-primary">Create Payment</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No payments found.</div>
+}
+else
+{
+    <table class="table table-striped align-middle">
+        <thead>
+        <tr>
+            <th>Invoice #</th>
+            <th>Customer</th>
+            <th>Payment Date</th>
+            <th class="text-end">Amount</th>
+            <th>Status</th>
+            <th class="text-end">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.InvoiceNumber</td>
+                <td>@p.CustomerName</td>
+                <td>@p.PaymentDate.ToString("yyyy-MM-dd")</td>
+                <td class="text-end">@p.Amount.ToString("C")</td>
+                <td>@p.Status</td>
+                <td class="text-end">
+                    <a asp-action="Detail" asp-route-id="@p.Id" class="btn btn-sm btn-outline-primary">Detail</a>
+                    <form asp-action="Delete" asp-route-id="@p.Id" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this payment?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

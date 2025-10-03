@@ -1,0 +1,52 @@
+@using EVDealerSales.BO.DTOs.DeliveryDTOs
+@model IEnumerable<ListDeliveryDto>
+
+@{
+    ViewData["Title"] = "Deliveries";
+}
+
+<h2>Deliveries</h2>
+
+<div class="mb-3">
+    <a asp-action="Create" class="btn btn-primary">Create Delivery</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No deliveries found.</div>
+}
+else
+{
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Order</th>
+                <th>Customer</th>
+                <th>Planned</th>
+                <th>Actual</th>
+                <th>Status</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var d in Model)
+        {
+            <tr>
+                <td>@d.OrderId</td>
+                <td>@d.CustomerName</td>
+                <td>@(d.PlannedDate?.ToString("yyyy-MM-dd") ?? "-")</td>
+                <td>@(d.ActualDate?.ToString("yyyy-MM-dd") ?? "-")</td>
+                <td>@d.Status</td>
+                <td class="text-end">
+                    <a asp-action="Detail" asp-route-id="@d.Id" class="btn btn-sm btn-outline-primary">Detail</a>
+                    <a asp-action="Edit" asp-route-id="@d.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
+                    <form asp-action="Delete" asp-route-id="@d.Id" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this delivery?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

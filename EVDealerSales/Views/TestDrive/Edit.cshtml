@@ -4,33 +4,85 @@
     ViewBag.Title = "Edit Test Drive";
 }
 
-<h2>Edit Test Drive</h2>
+<link rel="stylesheet" href="~/css/employee.css" />
 
-<form asp-action="Edit" method="post">
-    <input type="hidden" asp-for="Id" />
+<div class="employee-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="mb-3">
+                    <a href="@Url.Action("Index", "TestDrive")" class="btn-modern-secondary">
+                        <i class="bi bi-arrow-left"></i>
+                        Back to Appointments
+                    </a>
+                </div>
 
-    <div class="form-group">
-        <label asp-for="ScheduledAt"></label>
-        <input asp-for="ScheduledAt" type="datetime-local" class="form-control" />
-        <span asp-validation-for="ScheduledAt" class="text-danger"></span>
+                <div class="employee-card mb-4">
+                    <div class="employee-card-body text-center">
+                        <div class="mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#0070f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                        </div>
+                        <h2 class="text-white mb-2" style="font-size: 1.5rem; font-weight: 600;">Edit Test Drive</h2>
+                        <p class="text-muted mb-0" style="font-size: 0.875rem; color: #999;">Update appointment details and status</p>
+                    </div>
+                </div>
+
+                <div class="employee-card">
+                    <div class="employee-card-body">
+                        <form asp-action="Edit" method="post">
+                            <input type="hidden" asp-for="Id" />
+
+                            <div class="form-group-modern">
+                                <label asp-for="ScheduledAt" class="form-label-modern">
+                                    <i class="bi bi-calendar-event me-2" style="color: #0070f3;"></i>
+                                    Scheduled Date & Time
+                                </label>
+                                <input asp-for="ScheduledAt" type="datetime-local" class="form-control-modern" />
+                                <span asp-validation-for="ScheduledAt" class="text-danger" style="font-size: 0.75rem; margin-top: 0.25rem; display: block;"></span>
+                            </div>
+
+                            <div class="form-group-modern">
+                                <label asp-for="Status" class="form-label-modern">
+                                    <i class="bi bi-check-circle me-2" style="color: #0070f3;"></i>
+                                    Status
+                                </label>
+                                <select asp-for="Status" class="form-control-modern">
+                                    @foreach (var status in Enum.GetValues(typeof(EVDealerSales.BO.Enums.TestDriveStatus)))
+                                    {
+                                        <option value="@status" selected="@(Model.Status == (EVDealerSales.BO.Enums.TestDriveStatus)status)">
+                                            @status
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="d-flex gap-2 mt-4">
+                                <button type="submit" class="btn-modern w-100" style="height: 40px; justify-content: center;">
+                                    <i class="bi bi-check-lg"></i>
+                                    Save Changes
+                                </button>
+                                <a href="@Url.Action("Index", "TestDrive")" class="btn-modern-secondary" style="height: 40px; padding: 0 1.5rem; display: inline-flex; align-items: center; justify-content: center; text-decoration: none;">
+                                    Cancel
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-    <div class="form-group">
-        <label asp-for="Status"></label>
-        <select asp-for="Status" class="form-control">
-            @foreach (var status in Enum.GetValues(typeof(EVDealerSales.BO.Enums.TestDriveStatus)))
-            {
-                <option value="@status" selected="@(Model.Status == (EVDealerSales.BO.Enums.TestDriveStatus)status)">
-                    @status
-                </option>
-            }
-        </select>
-    </div>
+@section Scripts {
+    <style>
+        input[type="datetime-local"].form-control-modern {
+            color-scheme: dark;
+        }
 
-    <div class="form-group">
-        <label asp-for="Notes"></label>
-        <textarea asp-for="Notes" class="form-control"></textarea>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Save</button>
-</form>
+        select.form-control-modern {
+            cursor: pointer;
+        }
+    </style>
+}

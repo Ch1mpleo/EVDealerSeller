@@ -2,36 +2,170 @@
 
 @{
     ViewBag.Title = "Test Drive Details";
-}
-@{
     var customerName = ViewBag.CustomerName as string ?? Model.CustomerId.ToString();
-    var vehicleName = ViewBag.VehicleName as string ?? Model.VehicleId.ToString();
+    var vehicle = ViewBag.Vehicle;
 }
 
-<h2>Test Drive Details</h2>
+<link rel="stylesheet" href="~/css/employee.css" />
 
-<d<dl class="row">
-    <dt class="col-sm-2">Customer</dt>
-    <dd class="col-sm-10">@customerName</dd>
+<div class="employee-container">
+    <div class="container-fluid">
+        <div class="mb-3">
+            <a href="@Url.Action("Index", "TestDrive")" class="btn-modern">
+                <i class="bi bi-arrow-left"></i>
+                Back to Appointments
+            </a>
+        </div>
 
-    <dt class="col-sm-2">Vehicle</dt>
-    <dd class="col-sm-10">@vehicleName</dd>
+        <div class="employee-card mb-3" style="overflow: hidden; padding: 0;">
+            <div style="position: relative; height: 280px; overflow: hidden;">
+                <img src="@vehicle.ImageUrl" alt="@vehicle.ModelName" style="width: 100%; height: 100%; object-fit: cover;" />
+                <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.7) 100%);"></div>
+                <div style="position: absolute; bottom: 1.5rem; left: 1.5rem; right: 1.5rem;">
+                    <h1 style="color: #fff; margin: 0 0 0.25rem 0; font-size: 2.25rem; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
+                        @vehicle.ModelName
+                    </h1>
+                    <p style="color: rgba(255,255,255,0.85); margin: 0; font-size: 1rem;">
+                        @vehicle.ModelYear Model Year
+                    </p>
+                </div>
+            </div>
+        </div>
 
-    <dt class="col-sm-2">Scheduled At</dt>
-    <dd class="col-sm-10">@Model.ScheduledAt</dd>
+        <div class="row g-3 align-items-stretch">
+            <div class="col-lg-8 d-flex">
+                <div class="employee-card h-100 w-100">
+                    <div class="employee-card-body" style="padding: 1.5rem;">
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 1rem;">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(0, 112, 243, 0.1); display: flex; align-items: center; justify-content: center;">
+                                            <i class="bi bi-person" style="color: #0070f3; font-size: 1.125rem;"></i>
+                                        </div>
+                                        <div>
+                                            <div style="color: #888; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Customer</div>
+                                            <div class="text-white" style="font-size: 1rem; font-weight: 600;">@customerName</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-    <dt class="col-sm-2">Status</dt>
-    <dd class="col-sm-10">@Model.Status</dd>
+                            <div class="col-md-6">
+                                <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 1rem;">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(0, 112, 243, 0.1); display: flex; align-items: center; justify-content: center;">
+                                            <i class="bi bi-calendar-event" style="color: #0070f3; font-size: 1.125rem;"></i>
+                                        </div>
+                                        <div>
+                                            <div style="color: #888; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Scheduled</div>
+                                            <div class="text-white" style="font-size: 1rem; font-weight: 600;">@Model.ScheduledAt.ToString("MMM dd, yyyy")</div>
+                                            <div style="color: #888; font-size: 0.8rem;">@Model.ScheduledAt.ToString("hh:mm tt")</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-    <dt class="col-sm-2">Notes</dt>
-    <dd class="col-sm-10">@Model.Notes</dd>
-</dl>
+                        <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.25rem;">
+                            <h3 style="color: #aaa; margin: 0 0 1rem 0; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;">
+                                Vehicle Specifications
+                            </h3>
 
-<form asp-action="UpdateStatus" method="post">
-    <input type="hidden" name="id" value="@Model.Id" />
-    <div class="btn-group">
-        <a href="@Url.Action("Index", "TestDrive")" class="btn btn-success">Confirm</a>
-        <button type="submit" name="status" value="Completed" class="btn btn-primary">Complete</button>
-        <button type="submit" name="status" value="Canceled" class="btn btn-danger">Cancel</button>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 1rem; text-align: center;">
+                                        <div style="color: #0070f3; font-size: 1.125rem; margin-bottom: 0.25rem;">
+                                            <i class="bi bi-battery-full"></i>
+                                        </div>
+                                        <div style="color: #fff; font-size: 1.5rem; font-weight: 700;">
+                                            @vehicle.BatteryCapacity
+                                        </div>
+                                        <div style="color: #888; font-size: 0.8rem;">kWh</div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 1rem; text-align: center;">
+                                        <div style="color: #0070f3; font-size: 1.125rem; margin-bottom: 0.25rem;">
+                                            <i class="bi bi-speedometer2"></i>
+                                        </div>
+                                        <div style="color: #fff; font-size: 1.5rem; font-weight: 700;">
+                                            @vehicle.RangeKM
+                                        </div>
+                                        <div style="color: #888; font-size: 0.8rem;">km Range</div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(0, 112, 243, 0.3); border-radius: 8px; padding: 1rem; text-align: center;">
+                                        <div style="color: #0070f3; font-size: 1.125rem; margin-bottom: 0.25rem;">
+                                            <i class="bi bi-tag"></i>
+                                        </div>
+                                        <div style="color: #0070f3; font-size: 1.5rem; font-weight: 700;">
+                                            $@vehicle.BasePrice.ToString("N0")
+                                        </div>
+                                        <div style="color: #888; font-size: 0.8rem;">Base Price</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 d-flex">
+                <div class="employee-card h-100 w-100" style="position: sticky; top: 20px;">
+                    <div class="employee-card-body" style="padding: 1.5rem;">
+                        <div class="mb-3">
+                            <div style="color: #888; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">
+                                Status
+                            </div>
+                            @{
+                                var statusClass = Model.Status.ToString() switch
+                                {
+                                    "Scheduled" => "background: rgba(255, 193, 7, 0.1); color: #ffc107; border: 1px solid rgba(255, 193, 7, 0.2);",
+                                    "Completed" => "background: rgba(0, 170, 0, 0.1); color: #0a0; border: 1px solid rgba(0, 170, 0, 0.2);",
+                                    "Canceled" => "background: rgba(238, 0, 0, 0.1); color: #e00; border: 1px solid rgba(238, 0, 0, 0.2);",
+                                    _ => "background: rgba(102, 102, 102, 0.1); color: #666; border: 1px solid rgba(102, 102, 102, 0.2);"
+                                };
+                            }
+                            <div style="@statusClass padding: 0.625rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.5rem; width: 100%; justify-content: center;">
+                                <span style="width: 6px; height: 6px; border-radius: 50%; background: currentColor;"></span>
+                                @Model.Status
+                            </div>
+                        </div>
+
+                        <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1rem; margin-top: 1rem;">
+                            <div style="color: #888; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.75rem;">
+                                Actions
+                            </div>
+
+                            <form asp-action="UpdateStatus" method="post">
+                                <input type="hidden" name="id" value="@Model.Id" />
+                                <div class="d-grid gap-2">
+                                    <button type="submit" name="status" value="Confirmed" class="btn-modern" style="height: 42px; justify-content: center; font-size: 0.875rem;">
+                                        <i class="fa-solid fa-calendar-check"></i>
+                                        Schedule
+                                    </button>
+                                    <button type="submit" name="status" value="Completed" class="btn-modern" style="height: 42px; justify-content: center; font-size: 0.875rem;">
+                                        <i class="bi bi-check-circle"></i>
+                                        Complete
+                                    </button>
+                                    <button type="submit" name="status" value="Canceled" class="btn-modern-secondary" style="height: 42px; justify-content: center; font-size: 0.875rem;">
+                                        <i class="bi bi-x-lg"></i>
+                                        Cancel
+                                    </button>
+                                    <a href="@Url.Action("Edit", "TestDrive", new { id = Model.Id })" class="btn-modern-secondary" style="height: 42px; justify-content: center; font-size: 0.875rem; display: flex; align-items: center; text-decoration: none;">
+                                        <i class="bi bi-pencil"></i>
+                                        Edit Date
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</form>
+</div>
