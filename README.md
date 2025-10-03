@@ -17,6 +17,10 @@ EVDealerSeller is a web application designed to manage electric vehicle dealersh
 - JWT Authentication
 - SignalR
 
+## Account
+- Staff Dealer: staff@gmail.com / Password: 123
+- Manager Dealer: manager@gmail.com / Password: 123
+  
 ## Setup Instructions
 1. **Clone the repository**
    ```bash
