@@ -2,70 +2,405 @@
 @model OrderResponseDto
 
 @{
-    ViewData["Title"] = "Order";
+    ViewData["Title"] = "Order Details";
 }
 
-<h2>Order</h2>
+<style>
+    .detail-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
 
-<dl class="row">
-    <dt class="col-sm-3">Customer</dt>
-    <dd class="col-sm-9">@Model.CustomerName</dd>
+    .detail-header {
+        margin-bottom: 2rem;
+    }
 
-    <dt class="col-sm-3">Staff</dt>
-    <dd class="col-sm-9">@Model.StaffName</dd>
-
-    <dt class="col-sm-3">Order Date</dt>
-    <dd class="col-sm-9">@Model.OrderDate.ToString("yyyy-MM-dd")</dd>
-
-    <dt class="col-sm-3">Status</dt>
-    <dd class="col-sm-9">@Model.Status</dd>
-
-    <dt class="col-sm-3">Discount</dt>
-    <dd class="col-sm-9">
-        @if (!string.IsNullOrWhiteSpace(Model.DiscountType))
-        {
-            @($"{Model.DiscountType}: {(Model.DiscountValue?.ToString("C") ?? "-")}")
+        .detail-header h2 {
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
         }
-        else
-        {
-            @("-")
+
+        .detail-header p {
+            color: #999;
+            font-size: 0.9375rem;
+            margin: 0;
         }
-        @if (!string.IsNullOrWhiteSpace(Model.DiscountNote))
-        {
-            <div class="text-muted">@Model.DiscountNote</div>
+
+    .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        gap: 1.5rem;
+    }
+
+    @@media (max-width: 991px) {
+        .detail-grid {
+            grid-template-columns: 1fr;
         }
-    </dd>
+    }
 
-    <dt class="col-sm-3">Subtotal</dt>
-    <dd class="col-sm-9">@Model.SubtotalAmount.ToString("C")</dd>
+    .main-content {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
 
-    <dt class="col-sm-3">Total</dt>
-    <dd class="col-sm-9">@Model.TotalAmount.ToString("C")</dd>
-</dl>
+    .info-card {
+        background: #1a1a1a;
+        border: 1px solid #2a2a2a;
+        border-radius: 12px;
+        padding: 1.5rem;
+    }
 
-@if (Model.Items is not null)
-{
-    <h4>Item</h4>
-    <dl class="row">
-        <dt class="col-sm-3">Vehicle</dt>
-        <dd class="col-sm-9">@Model.Items.Name</dd>
+    .card-title {
+        color: #fff;
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin-bottom: 1.25rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid #2a2a2a;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
 
-        <dt class="col-sm-3">Quantity</dt>
-        <dd class="col-sm-9">@Model.Items.Quantity</dd>
+    .card-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: rgba(0, 112, 243, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.875rem;
+        color: #0070f3;
+    }
 
-        <dt class="col-sm-3">Unit Price</dt>
-        <dd class="col-sm-9">@Model.Items.UnitPrice.ToString("C")</dd>
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.25rem;
+    }
 
-        <dt class="col-sm-3">Line Total</dt>
-        <dd class="col-sm-9">@Model.Items.LineTotal.ToString("C")</dd>
-    </dl>
-}
+    .info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.375rem;
+    }
 
-<div class="mb-3">
-    <a asp-action="Index" class="btn btn-secondary">Back</a>
+    .info-label {
+        font-size: 0.8125rem;
+        color: #999;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 500;
+    }
+
+    .info-value {
+        font-size: 1rem;
+        color: #fff;
+        font-weight: 500;
+    }
+
+        .info-value.highlight {
+            color: #0070f3;
+            font-weight: 600;
+        }
+
+        .info-value.success {
+            color: #0a0;
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+
+    .discount-note {
+        margin-top: 0.5rem;
+        padding: 0.75rem;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 6px;
+        color: #ccc;
+        font-size: 0.875rem;
+    }
+
+    .sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .action-card {
+        background: #1a1a1a;
+        border: 1px solid #2a2a2a;
+        border-radius: 12px;
+        padding: 1.5rem;
+    }
+
+    .action-btn {
+        width: 100%;
+        padding: 0.875rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9375rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        text-decoration: none;
+    }
+
+    .action-btn-primary {
+        background: linear-gradient(135deg, #0070f3 0%, #00d4ff 100%);
+        color: #fff;
+        margin-bottom: 0.75rem;
+    }
+
+        .action-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 112, 243, 0.3);
+            color: #fff;
+        }
+
+    .action-btn-danger {
+        background: rgba(238, 0, 0, 0.1);
+        color: #e00;
+        border: 1px solid rgba(238, 0, 0, 0.2);
+    }
+
+        .action-btn-danger:hover {
+            background: rgba(238, 0, 0, 0.2);
+            border-color: #e00;
+            transform: translateY(-1px);
+        }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.625rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9375rem;
+        border: 1px solid;
+    }
+
+        .status-badge.pending {
+            background: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+            border-color: rgba(255, 193, 7, 0.2);
+        }
+
+        .status-badge.confirmed {
+            background: rgba(0, 112, 243, 0.1);
+            color: #0070f3;
+            border-color: rgba(0, 112, 243, 0.2);
+        }
+
+        .status-badge.completed {
+            background: rgba(0, 170, 0, 0.1);
+            color: #0a0;
+            border-color: rgba(0, 170, 0, 0.2);
+        }
+
+        .status-badge.cancelled {
+            background: rgba(238, 0, 0, 0.1);
+            color: #e00;
+            border-color: rgba(238, 0, 0, 0.2);
+        }
+
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+
+    .divider {
+        height: 1px;
+        background: #2a2a2a;
+        margin: 1.25rem 0;
+    }
+
+    .amounts-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+        .amounts-grid .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .amounts-grid .info-value {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+            .amounts-grid .info-value.success {
+                color: #0a0;
+                font-size: 1.25rem;
+            }
+
+    /* Style $ icon like other card icons */
+    .card-icon.money {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: #0070f3;
+        background: rgba(0, 112, 243, 0.1);
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+    }
+</style>
+
+<div class="detail-container">
+    <div class="detail-header">
+        <h2>Order Details</h2>
+        <p>View complete order information and manage order status</p>
+    </div>
+
+    <div class="detail-grid">
+        <div class="main-content">
+            <!-- Order Information -->
+            <div class="info-card">
+                <h3 class="card-title">
+                    <span class="card-icon"><i class="fas fa-file-invoice"></i></span>
+                    Order Information
+                </h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Customer</span>
+                        <span class="info-value highlight">@Model.CustomerName</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Staff</span>
+                        <span class="info-value">@Model.StaffName</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Order Date</span>
+                        <span class="info-value">@Model.OrderDate.ToString("MMMM dd, yyyy")</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Status</span>
+                        <span class="status-badge @Model.Status.ToString().ToLower()">
+                            <span class="status-dot"></span>
+                            @Model.Status
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Discount Information -->
+            @if (!string.IsNullOrWhiteSpace(Model.DiscountType) || Model.DiscountValue.HasValue)
+            {
+                <div class="info-card">
+                    <h3 class="card-title">
+                        <span class="card-icon"><i class="fas fa-tag"></i></span>
+                        Discount
+                    </h3>
+                    <div class="info-grid">
+                        @if (!string.IsNullOrWhiteSpace(Model.DiscountType))
+                        {
+                            <div class="info-item">
+                                <span class="info-label">Discount Type</span>
+                                <span class="info-value">@Model.DiscountType</span>
+                            </div>
+                        }
+                        @if (Model.DiscountValue.HasValue)
+                        {
+                            <div class="info-item">
+                                <span class="info-label">Discount Value</span>
+                                <span class="info-value">@Model.DiscountValue.Value.ToString("C")</span>
+                            </div>
+                        }
+                    </div>
+                    @if (!string.IsNullOrWhiteSpace(Model.DiscountNote))
+                    {
+                        <div class="discount-note">
+                            <strong style="color: #fff;">Note:</strong> @Model.DiscountNote
+                        </div>
+                    }
+                </div>
+            }
+
+            <!-- Amounts -->
+            <!-- Amounts -->
+            <div class="info-card">
+                <h3 class="card-title">
+                    <span class="card-icon money">$</span>
+                    Amounts
+                </h3>
+                <div class="amounts-grid">
+                    <div class="info-item">
+                        <span class="info-label">Subtotal</span>
+                        <span class="info-value">$@Model.SubtotalAmount.ToString("N0")</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Total Amount</span>
+                        <span class="info-value success">$@Model.TotalAmount.ToString("N0")</span>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Item Details -->
+            @if (Model.Items is not null)
+            {
+                <div class="info-card">
+                    <h3 class="card-title">
+                        <span class="card-icon"><i class="fas fa-car"></i></span>
+                        Item Details
+                    </h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Vehicle</span>
+                            <span class="info-value highlight">@Model.Items.Name</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Quantity</span>
+                            <span class="info-value">@Model.Items.Quantity</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Unit Price</span>
+                            <span class="info-value">@Model.Items.UnitPrice.ToString("C")</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Line Total</span>
+                            <span class="info-value success">@Model.Items.LineTotal.ToString("C")</span>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="action-card">
+                <h3 class="card-title">
+                    <span class="card-icon"><i class="fas fa-cog"></i></span>
+                    Actions
+                </h3>
+                <a asp-action="Index" class="action-btn action-btn-primary">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Orders
+                </a>
+                <form asp-action="Delete" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this order? This action cannot be undone.');">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="action-btn action-btn-danger">
+                        <i class="fas fa-trash"></i>
+                        Delete Order
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
-
-<form asp-action="Delete" asp-route-id="@Model.Id" method="post">
-    @Html.AntiForgeryToken()
-    <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Delete this order?');">Delete</button>
-</form>

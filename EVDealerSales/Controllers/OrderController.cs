@@ -48,6 +48,7 @@ namespace EVDealerSales.WebMVC.Controllers
 
             var dto = new OrderDto
             {
+                QuoteId = quoteId ?? Guid.Empty,
                 OrderDate = DateTime.UtcNow,
                 Status = OrderStatus.Pending,
                 Items = new OrderItemDto { Quantity = 1 }
@@ -58,20 +59,18 @@ namespace EVDealerSales.WebMVC.Controllers
                 var quote = await _quoteService.GetQuoteByIdAsync(quoteId.Value);
                 if (quote != null)
                 {
-                    dto.QuoteId = quote.Id;
-                    dto.SubtotalAmount = quote.QuotedPrice;
-                    dto.TotalAmount = quote.FinalPrice ?? quote.QuotedPrice;
-                    dto.Items = new OrderItemDto
-                    {
-                        Quantity = 1,
-                        UnitPrice = quote.FinalPrice ?? quote.QuotedPrice,
-                        LineTotal = quote.FinalPrice ?? quote.QuotedPrice
-                    };
+                    dto.Items.VehicleId = quote.VehicleId;
+                    dto.Items.Name = quote.VehicleModel;
+                    dto.Items.UnitPrice = quote.FinalPrice ?? quote.QuotedPrice;
+                    dto.Items.LineTotal = dto.Items.UnitPrice * dto.Items.Quantity;
                 }
             }
 
             return View(dto);
         }
+
+
+
 
 
         [HttpPost]

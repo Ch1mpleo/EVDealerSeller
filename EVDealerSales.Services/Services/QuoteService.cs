@@ -212,7 +212,7 @@ namespace EVDealerSales.Services.Services
             try
             {
                 var baseQuery = _unitOfWork.Quotes.GetQueryable()
-                    .Where(q => !q.IsDeleted);
+                    .Where(q => !q.IsDeleted && q.Status == QuoteStatus.Accepted);
 
                 var query = baseQuery
                     .Include(q => q.Customer)
@@ -235,7 +235,7 @@ namespace EVDealerSales.Services.Services
                 _logger.LogInformation("Successfully retrieved {Count} quotes out of {Total} total",
                     quotes.Count, totalCount);
 
-                return new List<QuoteListDto>();
+                return quotes;
             }
             catch (Exception ex)
             {
@@ -243,6 +243,7 @@ namespace EVDealerSales.Services.Services
                 throw new Exception("An error occurred while retrieving quotes. Please try again later.");
             }
         }
+
 
         public async Task<Pagination<QuoteListDto>> GetQuotesByCustomerIdAsync(Guid customerId, int pageNumber, int pageSize)
         {
