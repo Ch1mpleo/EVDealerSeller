@@ -110,5 +110,210 @@ namespace EVDealerSales.WebMVC.Helper
                 await context.SaveChangesAsync();
             }
         }
+        public static async Task SeedReportsDataAsync(EVDealerSalesDbContext context)
+        {
+            await context.Database.MigrateAsync();
+            // 1. Customers
+            if (!await context.Customers.AnyAsync())
+            {
+                await context.Customers.AddRangeAsync(new[]
+                {
+                    new Customer { Id = Guid.NewGuid(), FirstName = "Alice", LastName=" Nguyen", Email = "alice@example.com", Address = "Q9", Phone ="0786315267" },
+                    new Customer { Id = Guid.NewGuid(), FirstName= "Bob ", LastName="Tran", Email = "bob@example.com", Address ="Q10", Phone ="0786315267" }
+                });
+                await context.SaveChangesAsync();
+            }
+
+            var staff = await context.Users.FirstAsync(u => u.Role == RoleType.DealerStaff);
+            var customer1 = await context.Customers.FirstAsync();
+            var customer2 = await context.Customers.Skip(1).FirstAsync();
+            var vehicle1 = await context.Vehicles.FirstAsync(v => v.ModelName == "Model S");
+            var vehicle2 = await context.Vehicles.FirstAsync(v => v.ModelName == "iX");
+
+            // 2. Quotes
+            if (!await context.Quotes.AnyAsync())
+            {
+                await context.Quotes.AddRangeAsync(new[]
+                {
+            new Quote
+            {
+                Id = Guid.NewGuid(),
+                CustomerId = customer1.Id,
+                StaffId = staff.Id,
+                VehicleId = vehicle1.Id,
+                QuotedPrice = 50000M,
+                FinalPrice = 55000M,
+                Status = QuoteStatus.Accepted,
+                ValidUntil = DateTime.UtcNow.AddMonths(1),
+                Remarks = "Good discount"
+            },
+            new Quote
+            {
+                Id = Guid.NewGuid(),
+                CustomerId = customer2.Id,
+                StaffId = staff.Id,
+                VehicleId = vehicle2.Id,
+                QuotedPrice = 80000M,
+                FinalPrice = 88000M,
+                Status = QuoteStatus.Accepted,
+                ValidUntil = DateTime.UtcNow.AddMonths(1),
+                Remarks = "Special offer"
+            }
+        });
+                await context.SaveChangesAsync();
+            }
+
+            var quote1 = await context.Quotes.OrderBy(q => q.CreatedAt).FirstAsync();
+            var quote2 = await context.Quotes.OrderByDescending(q => q.CreatedAt).FirstAsync();
+
+            // 3. Orders
+            if (!await context.Orders.AnyAsync())
+            {
+                await context.Orders.AddRangeAsync(new[]
+                {
+            new Order
+            {
+                Id = Guid.NewGuid(),
+                QuoteId = quote1.Id,
+                CustomerId = customer1.Id,
+                StaffId = staff.Id,
+                OrderDate = DateTime.UtcNow.AddMonths(-1),
+                Status = OrderStatus.Confirmed,
+                DiscountType = "Seasonal",
+                DiscountValue = 5000M,
+                DiscountNote = "Year-end promotion",
+                SubtotalAmount = 50000M,
+                TotalAmount = 55000M
+            },
+            new Order
+            {
+                Id = Guid.NewGuid(),
+                QuoteId = quote2.Id,
+                CustomerId = customer2.Id,
+                StaffId = staff.Id,
+                OrderDate = DateTime.UtcNow.AddMonths(-2),
+                Status = OrderStatus.Confirmed,
+                DiscountType = "Loyalty",
+                DiscountValue = 8000M,
+                DiscountNote = "Returning customer",
+                SubtotalAmount = 80000M,
+                TotalAmount = 88000M
+            }
+        });
+                await context.SaveChangesAsync();
+            }
+
+            var order1 = await context.Orders.OrderBy(o => o.CreatedAt).FirstAsync();
+            var order2 = await context.Orders.OrderByDescending(o => o.CreatedAt).FirstAsync();
+
+            // 4. OrderItems
+            if (!await context.OrderItems.AnyAsync())
+            {
+                await context.OrderItems.AddRangeAsync(new[]
+                {
+            new OrderItem
+            {
+                OrderId = order1.Id,
+                VehicleId = vehicle1.Id,
+                Quantity = 1,
+                UnitPrice = 50000M,
+                LineTotal = 50000M
+            },
+            new OrderItem
+            {
+                OrderId = order2.Id,
+                VehicleId = vehicle2.Id,
+                Quantity = 1,
+                UnitPrice = 80000M,
+                LineTotal = 80000M
+            }
+        });
+                await context.SaveChangesAsync();
+            }
+
+            // 5. Invoices
+            if (!await context.Invoices.AnyAsync())
+            {
+                await context.Invoices.AddRangeAsync(new[]
+                {
+            new Invoice
+            {
+                OrderId = order1.Id,
+                CustomerId = order1.CustomerId,
+                InvoiceNumber = "INV001",
+                TotalAmount = order1.TotalAmount,
+                Status = InvoiceStatus.Paid,
+                DueDate = DateTime.UtcNow.AddMonths(-1).AddDays(7),
+                Notes = "Invoice paid in full"
+            },
+            new Invoice
+            {
+                OrderId = order2.Id,
+                CustomerId = order2.CustomerId,
+                InvoiceNumber = "INV002",
+                TotalAmount = order2.TotalAmount,
+                Status = InvoiceStatus.Paid,
+                DueDate = DateTime.UtcNow.AddMonths(-2).AddDays(7),
+                Notes = "Invoice paid in full"
+            }
+        });
+                await context.SaveChangesAsync();
+            }
+
+            var invoice1 = await context.Invoices.OrderBy(i => i.CreatedAt).FirstAsync();
+            var invoice2 = await context.Invoices.OrderByDescending(i => i.CreatedAt).FirstAsync();
+
+            // 6. Payments
+            if (!await context.Payments.AnyAsync())
+            {
+                await context.Payments.AddRangeAsync(new[]
+                {
+            new Payment
+            {
+                InvoiceId = invoice1.Id,
+                PaymentDate = DateTime.UtcNow.AddMonths(-1),
+                Amount = invoice1.TotalAmount,
+                Status = PaymentStatus.Paid
+            },
+            new Payment
+            {
+                InvoiceId = invoice2.Id,
+                PaymentDate = DateTime.UtcNow.AddMonths(-2),
+                Amount = invoice2.TotalAmount,
+                Status = PaymentStatus.Paid
+            }
+        });
+                await context.SaveChangesAsync();
+            }
+
+            // 7. TestDrives
+            if (!await context.TestDrives.AnyAsync())
+            {
+                var testDrives = new TestDrive[]
+                {
+            new TestDrive
+            {
+                CustomerId = customer1.Id,
+                VehicleId = vehicle1.Id,
+                Status = TestDriveStatus.Completed,
+                Notes = "Test drive for Model S",
+                ScheduledAt = DateTime.UtcNow.AddDays(-10),
+                StaffId = staff.Id
+            },
+            new TestDrive
+            {
+                CustomerId = customer2.Id,
+                VehicleId = vehicle2.Id,
+                Status = TestDriveStatus.Completed,
+                Notes = "Test drive for iX",
+                ScheduledAt = DateTime.UtcNow.AddDays(-5),
+                StaffId = staff.Id
+            }
+                };
+
+                await context.TestDrives.AddRangeAsync(testDrives); // <-- OK
+                await context.SaveChangesAsync();
+            }
+        }
     }
 }

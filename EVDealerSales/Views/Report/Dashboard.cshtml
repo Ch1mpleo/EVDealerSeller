@@ -1,0 +1,174 @@
+﻿@{
+    ViewBag.Title = "Báo cáo tổng hợp";
+    Layout = "_Layout";
+}
+
+<h2 class="mb-4">Báo cáo tổng hợp</h2>
+
+<div class="row">
+    <div class="col-md-12 mb-5">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Số lượng Test Drive theo Model Xe</h4>
+            </div>
+            <div class="card-body">
+                <canvas id="testDriveByModelChart" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12 mb-5">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">Doanh thu theo Nhân viên bán hàng</h4>
+            </div>
+            <div class="card-body">
+                <canvas id="incomeByStaffChart" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12 mb-5">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0">Thu nhập theo từng tháng</h4>
+            </div>
+            <div class="card-body">
+                <form id="yearForm" class="mb-3">
+                    <div class="input-group" style="max-width: 250px;">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Năm:</span>
+                        </div>
+                        <input type="number" class="form-control" id="yearInput" value="@DateTime.Now.Year" min="2000" max="2100" />
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary">Xem</button>
+                        </div>
+                    </div>
+                </form>
+                <canvas id="monthlyIncomeChart" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Cấu hình chung cho biểu đồ
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            }
+        };
+
+        // 1. Test Drive by Model - Đã xóa area="Manager"
+        fetch('@Url.Action("TestDriveByModel", "Report")')
+            .then(res => {
+                if (!res.ok) throw new Error('Network response was not ok');
+                return res.json();
+            })
+            .then(data => {
+                const labels = data.map(x => x.modelName + ' (' + x.modelYear + ')');
+                const values = data.map(x => x.testDriveCount);
+                new Chart(document.getElementById('testDriveByModelChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Số lượt Test Drive',
+                            data: values,
+                            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: chartOptions
+                });
+            })
+            .catch(error => {
+                console.error('Error loading test drive data:', error);
+                document.getElementById('testDriveByModelChart').insertAdjacentHTML('afterend',
+                    '<div class="alert alert-danger">Không thể tải dữ liệu Test Drive</div>');
+            });
+
+        // 2. Income by Staff
+        fetch('@Url.Action("IncomeByStaff", "Report")')
+            .then(res => {
+                if (!res.ok) throw new Error('Network response was not ok');
+                return res.json();
+            })
+            .then(data => {
+                const labels = data.map(x => x.staffName);
+                const values = data.map(x => x.totalIncome);
+                new Chart(document.getElementById('incomeByStaffChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Tổng doanh thu',
+                            data: values,
+                            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: chartOptions
+                });
+            })
+            .catch(error => {
+                console.error('Error loading staff income data:', error);
+                document.getElementById('incomeByStaffChart').insertAdjacentHTML('afterend',
+                    '<div class="alert alert-danger">Không thể tải dữ liệu doanh thu</div>');
+            });
+
+        // 3. Monthly Income
+        function loadMonthlyIncome(year) {
+            fetch('@Url.Action("MonthlyIncome", "Report")' + '?year=' + year)
+                .then(res => {
+                    if (!res.ok) throw new Error('Network response was not ok');
+                    return res.json();
+                })
+                .then(data => {
+                    const labels = data.map(x => 'Tháng ' + x.month);
+                    const values = data.map(x => x.totalIncome);
+
+                    if (window.monthlyIncomeChart) window.monthlyIncomeChart.destroy();
+
+                    window.monthlyIncomeChart = new Chart(document.getElementById('monthlyIncomeChart'), {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Thu nhập',
+                                data: values,
+                                fill: false,
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                tension: 0.1
+                            }]
+                        },
+                        options: chartOptions
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading monthly income data:', error);
+                    document.getElementById('monthlyIncomeChart').insertAdjacentHTML('afterend',
+                        '<div class="alert alert-danger">Không thể tải dữ liệu thu nhập theo tháng</div>');
+                });
+        }
+
+        // Tải dữ liệu mặc định theo năm hiện tại
+        loadMonthlyIncome(document.getElementById('yearInput').value);
+
+        // Xử lý sự kiện submit form
+        document.getElementById('yearForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const year = document.getElementById('yearInput').value;
+            loadMonthlyIncome(year);
+        });
+    </script>
+}
