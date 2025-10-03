@@ -40,7 +40,7 @@ EVDealerSeller is a web application designed to manage electric vehicle dealersh
    ```
 
 ## Usage
-- Access the application at `http://localhost:8080`
+- Access the application at `http://localhost:5000`
 - Use the default credentials to log in and explore the features.
 
 ## Contributing
