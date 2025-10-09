@@ -62,6 +62,5 @@ app.MapRazorPages();
 // Custom start up page
 // app.MapFallbackToPage("/Dashboard/Index");
 
-// TEst test test
 
 app.Run();
