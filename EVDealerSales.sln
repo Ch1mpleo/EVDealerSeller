@@ -13,6 +13,8 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVDealerSales.BO", "EVDealerSales.BO\EVDealerSales.BO.csproj", "{0E641CE8-2BA5-E0FE-9021-057D18103CE5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVDealerSales.RazorPages", "EVDealerSales.RazorPages\EVDealerSales.RazorPages.csproj", "{C197DE49-82D1-4BD0-86A8-71796A735F10}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{0E641CE8-2BA5-E0FE-9021-057D18103CE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E641CE8-2BA5-E0FE-9021-057D18103CE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E641CE8-2BA5-E0FE-9021-057D18103CE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C197DE49-82D1-4BD0-86A8-71796A735F10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C197DE49-82D1-4BD0-86A8-71796A735F10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C197DE49-82D1-4BD0-86A8-71796A735F10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C197DE49-82D1-4BD0-86A8-71796A735F10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
